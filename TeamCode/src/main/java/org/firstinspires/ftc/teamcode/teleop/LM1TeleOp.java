@@ -9,18 +9,21 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.drive.LM1Robot;
+import org.firstinspires.ftc.teamcode.drive.RobotBase;
+import org.firstinspires.ftc.teamcode.drive.RobotFactory;
 import org.firstinspires.ftc.teamcode.util.GamePad;
 
 //@Config
 @TeleOp(name = "LM1 TeleOp")
+@Config
 
 public class LM1TeleOp extends LinearOpMode {
 
-    private static final double MIN_DRIVE_POW = 0.001;
+    public static double VERTICAL_STAND_POWER = 0.001; //chng to private
+    public static double SLIDES_UP_POWER = 0.5;
+    public static double SLIDES_DOWN_POWER = -0.5;
 
-    private static final double DELIVERY_STAND_POWER = 0.1;
-
-    private LM1Robot robot;
+    private RobotBase robot;
     private GamePad gp1, gp2;
     private ElapsedTime intakeTimer;
     private boolean lastDelivery;
@@ -33,7 +36,7 @@ public class LM1TeleOp extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
-        robot = new LM1Robot(hardwareMap);
+        robot = (RobotBase) RobotFactory.createRobot(hardwareMap);
         gp1 = new GamePad(gamepad1);
         gp2 = new GamePad(gamepad2);
 
@@ -44,17 +47,20 @@ public class LM1TeleOp extends LinearOpMode {
         while (opModeIsActive()) {
             driveRobot();
             runIntake();
-            runDelivery();
-            gp1.update();
-            gp2.update();
+            runSlides();
+            update();
+
             telemetry.addData("cycle time", cycleTimer.milliseconds() - lastTime);
-            telemetry.addData("pose (may be inaccurate)", robot.pose);
+            telemetry.addData("pose (may be slightlyyyy inaccurate)", robot.pose);
             lastTime = cycleTimer.milliseconds();
-            telemetry.update();
-            robot.updateEverything();
         }
     }
-
+    private void update() {
+        gp1.update();
+        gp2.update();
+        telemetry.update();
+        robot.updateEverything();
+    }
     private void driveRobot() {
         double x = 0, y = 0, a = 0;
         if (gp1.dpadLeft() || gp1.dpadRight()) {
@@ -64,7 +70,7 @@ public class LM1TeleOp extends LinearOpMode {
         } else {
             x = -gp1.leftStickY();
             y = -gp1.leftStickX();
-            a = -gp1.rightStickX() * 0.8;
+            a = -gp1.rightStickY() * 0.8;
         }
         double pow = Math.sqrt(x * x + y * y);
 //        double limPow = driveLim.calculate(pow);
@@ -77,11 +83,44 @@ public class LM1TeleOp extends LinearOpMode {
         robot.setDrivePowers(new PoseVelocity2d(new Vector2d(x, y), a));
     }
 
-    private void runIntake() {
 
+    private void runSlides() {
+        if(robot.verticalSlidesBound()) {
+            robot.setVerticalSlidePower(VERTICAL_STAND_POWER);
+            //robot.setVerticalSlidePower(VERTICAL_STAND_POWER);
+        }
+        if(gp2.dpadDown()) {
+            robot.setVerticalSlidePower(SLIDES_DOWN_POWER);
+        }
+        else if(gp2.dpadUp()) {
+            robot.setVerticalSlidePower(SLIDES_UP_POWER);
+        }
+        else{
+            robot.setVerticalSlidePower(VERTICAL_STAND_POWER);
+        }
+
+//        if(Math.abs(gp2.rightStickY()) > MIN_DRIVE_POW) {
+//            robot.setHorizontalSlidePowerWithoutEncoder(-gp2.rightStickY());
+//        }
     }
 
-    private void runDelivery() {
+    private void runIntake() {
+        if(gp2.leftBumper() && gp2.rightBumper()){
+            robot.setDiffyPosition(LM1Robot.INTAKE_CENTER);
+        }else if(gp2.leftBumper()) {
+            robot.setDiffyPosition(LM1Robot.INTAKE_LEFT);
+        }else if(gp2.rightBumper()) {
+            robot.setDiffyPosition(LM1Robot.INTAKE_RIGHT);
+        }else if(gp2.onceA()){
+            robot.setDiffyPosition(LM1Robot.INTAKE_UP);
+        }
 
+        if(gp2.rightTrigger()>0.1){
+            robot.runIntakeIn();
+        } else if(gp2.leftTrigger()>0.1) {
+            robot.runIntakeOut();
+        } else{
+            robot.stopIntake();
+        }
     }
 }

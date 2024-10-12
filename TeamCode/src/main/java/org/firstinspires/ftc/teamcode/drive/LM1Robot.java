@@ -9,12 +9,17 @@ import org.firstinspires.ftc.teamcode.roadrunner.TwoDeadWheelLocalizer;
 public class LM1Robot extends RobotBase {
 
 
-    //constants here
+    // Intake Diffy Arm Positions
+    public static DiffyPosition INTAKE_LEFT = new DiffyPosition(1.0, 0.6);
+    public static DiffyPosition INTAKE_CENTER = new DiffyPosition(0.87, 0.47);
+    public static DiffyPosition INTAKE_RIGHT = new DiffyPosition(0.73, 0.33);
+    public static DiffyPosition INTAKE_UP = new DiffyPosition(0.53, 0.85);
 
     public LM1Robot(HardwareMap hardwareMap) {
         super(hardwareMap);
         setDriveParams();
-        init(hardwareMap, MecanumDrive.LocalizerMode.TWO_DEAD_WHEEL);
+        //init(hardwareMap, MecanumDrive.LocalizerMode.TWO_DEAD_WHEEL);
+        init(hardwareMap, MecanumDrive.LocalizerMode.DRIVE_ENCODER);
     }
 
     private void setDriveParams() {
@@ -53,5 +58,13 @@ public class LM1Robot extends RobotBase {
         TwoDeadWheelLocalizer.Params localizerParams = TwoDeadWheelLocalizer.PARAMS;
         localizerParams.perpXTicks = -0.375;
         localizerParams.parYTicks = 0.0;
+    }
+
+    public static class DiffyPosition {
+        double left, right;
+        public DiffyPosition(double a, double b){
+            this.left = a;
+            this.right = b;
+        }
     }
 }
