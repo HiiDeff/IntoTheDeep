@@ -5,6 +5,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.teamcode.roadrunner.MecanumDrive;
 import org.firstinspires.ftc.teamcode.roadrunner.TwoDeadWheelLocalizer;
+import org.firstinspires.ftc.teamcode.task.DiffyIntakeTask;
 
 public class LM1Robot extends RobotBase {
 
@@ -13,7 +14,8 @@ public class LM1Robot extends RobotBase {
     public static DiffyPosition INTAKE_LEFT = new DiffyPosition(1.0, 0.6);
     public static DiffyPosition INTAKE_CENTER = new DiffyPosition(0.87, 0.47);
     public static DiffyPosition INTAKE_RIGHT = new DiffyPosition(0.73, 0.33);
-    public static DiffyPosition INTAKE_UP = new DiffyPosition(0.53, 0.85);
+    public static DiffyPosition INTAKE_FORWARDS = new DiffyPosition(0.53, 0.85);
+    public static DiffyPosition INTAKE_UP = new DiffyPosition(0.4, 0.98);
 
     public LM1Robot(HardwareMap hardwareMap) {
         super(hardwareMap);
@@ -21,6 +23,7 @@ public class LM1Robot extends RobotBase {
         //init(hardwareMap, MecanumDrive.LocalizerMode.TWO_DEAD_WHEEL);
         init(hardwareMap, MecanumDrive.LocalizerMode.DRIVE_ENCODER);
     }
+
 
     private void setDriveParams() {
         MecanumDrive.Params p = MecanumDrive.PARAMS;
@@ -60,11 +63,20 @@ public class LM1Robot extends RobotBase {
         localizerParams.parYTicks = 0.0;
     }
 
-    public static class DiffyPosition {
-        double left, right;
-        public DiffyPosition(double a, double b){
-            this.left = a;
-            this.right = b;
+    @Override
+    public DiffyPosition setDiffyPosition(DiffyIntakeTask.DiffyPosition position) {
+        switch(position) {
+            case DOWN_CENTER:
+                return INTAKE_CENTER;
+            case DOWN_LEFT:
+                return INTAKE_LEFT;
+            case DOWN_RIGHT:
+                return INTAKE_RIGHT;
+            case FORWARD:
+                return INTAKE_FORWARDS;
+            case UP:
+            default:
+                return INTAKE_UP;
         }
     }
 }

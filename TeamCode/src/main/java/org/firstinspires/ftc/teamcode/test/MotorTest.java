@@ -23,7 +23,7 @@ public class MotorTest extends LinearOpMode {
     private GamePad gp1;
 
     //DcMotorEx testMotor;
-    public DcMotorEx verticalSlidesLeft, verticalSlidesRight;
+    public DcMotorEx horizontalSlides, verticalSlides;
 
     //public static motorMode mode = motorMode.RUN_WITHOUT_ENCODER;
 
@@ -34,20 +34,23 @@ public class MotorTest extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
         //robot = new LM1Robot(hardwareMap);
 
-        verticalSlidesLeft = hardwareMap.get(DcMotorEx.class, "verticalSlidesLeft");
-        verticalSlidesLeft.setDirection(DcMotorEx.Direction.REVERSE);
-        verticalSlidesLeft.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
+        horizontalSlides = hardwareMap.get(DcMotorEx.class, "hSlides");
+        horizontalSlides.setDirection(DcMotorEx.Direction.REVERSE);
+        horizontalSlides.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
+        horizontalSlides.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
 
-        verticalSlidesRight = hardwareMap.get(DcMotorEx.class, "verticalSlidesRight");
-        verticalSlidesRight.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
+        verticalSlides = hardwareMap.get(DcMotorEx.class, "vSlides");
+        verticalSlides.setDirection(DcMotorEx.Direction.REVERSE);
+        verticalSlides.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
+        verticalSlides.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
 
 
         waitForStart();
 
         while (opModeIsActive()) {
 
-            telemetry.addData("leftPos", verticalSlidesLeft.getCurrentPosition());
-            telemetry.addData("rightPos", verticalSlidesRight.getCurrentPosition());
+            telemetry.addData("h pos", horizontalSlides.getCurrentPosition());
+            telemetry.addData("v pos", verticalSlides.getCurrentPosition());
             telemetry.update();
 
         }

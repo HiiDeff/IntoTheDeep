@@ -10,10 +10,11 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.teamcode.roadrunner.MecanumDrive;
+import org.firstinspires.ftc.teamcode.task.DiffyIntakeTask;
 import org.firstinspires.ftc.teamcode.util.Utils;
 
 @Config
-public class RobotBase extends MecanumDrive {
+public abstract class RobotBase extends MecanumDrive {
 
 
     // Slides Constants
@@ -75,6 +76,7 @@ public class RobotBase extends MecanumDrive {
     }
 
     public void teleOpInit() {
+
         setVerticalSlidesHeight(VERTICAL_EXTEND_MIN_IN, 0.8);
         setDiffyPosition(LM1Robot.INTAKE_CENTER);
     }
@@ -105,8 +107,8 @@ public class RobotBase extends MecanumDrive {
     }
     // Utils for Vertical Slides
     public void setVerticalSlidePower(double power) {
-        verticalSlidesLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        verticalSlidesRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        verticalSlidesLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        verticalSlidesRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         verticalSlidesLeft.setPower(Utils.clamp(power, -1.0, 1.0));
         verticalSlidesRight.setPower(Utils.clamp(power, -1.0, 1.0));
     }
@@ -147,9 +149,20 @@ public class RobotBase extends MecanumDrive {
 //    }
 
     // Utils for Diffy Arm
+
+    public abstract DiffyPosition setDiffyPosition(DiffyIntakeTask.DiffyPosition position);
+
     public void setDiffyPosition(LM1Robot.DiffyPosition diffyPosition) {
         diffyLeft.setPosition(diffyPosition.left);
         diffyRight.setPosition(diffyPosition.right);
+    }
+
+    public static class DiffyPosition {
+        double left, right;
+        public DiffyPosition(double a, double b){
+            this.left = a;
+            this.right = b;
+        }
     }
 
 

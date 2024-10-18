@@ -104,7 +104,8 @@ public class MecanumDrive {
     public enum LocalizerMode {
         DRIVE_ENCODER,
         TWO_DEAD_WHEEL,
-        THREE_DEAD_WHEEL
+        THREE_DEAD_WHEEL,
+        TWO_DEAD_WHEEL_W_PINPOINT
     }
 
     public final MecanumKinematics kinematics = new MecanumKinematics(
@@ -231,7 +232,6 @@ public class MecanumDrive {
     }
     protected void init(HardwareMap hardwareMap, LocalizerMode localizerMode) {
 
-
         LynxFirmware.throwIfModulesAreOutdated(hardwareMap);
 
         for (LynxModule module : hardwareMap.getAll(LynxModule.class)) {
@@ -274,6 +274,9 @@ public class MecanumDrive {
                 break;
             case DRIVE_ENCODER:
                 localizer = new DriveLocalizer();
+                break;
+            case TWO_DEAD_WHEEL_W_PINPOINT:
+                localizer = new TwoDeadWheelWithPinpointLocalizer(hardwareMap);
                 break;
             default:
                 localizer = new DriveLocalizer();

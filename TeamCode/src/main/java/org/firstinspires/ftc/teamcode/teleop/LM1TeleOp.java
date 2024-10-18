@@ -87,7 +87,6 @@ public class LM1TeleOp extends LinearOpMode {
     private void runSlides() {
         if(robot.verticalSlidesBound()) {
             robot.setVerticalSlidePower(VERTICAL_STAND_POWER);
-            //robot.setVerticalSlidePower(VERTICAL_STAND_POWER);
         }
         if(gp2.dpadDown()) {
             robot.setVerticalSlidePower(SLIDES_DOWN_POWER);
