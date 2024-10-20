@@ -42,6 +42,7 @@ public class IntakeTest extends LinearOpMode {
 
         int runToPos = 0;
 
+        boolean rollerRunning = false;
         waitForStart();
         telemetry.addData("started", 0);
         telemetry.update();
@@ -77,17 +78,27 @@ public class IntakeTest extends LinearOpMode {
                 if (rollerTask.perform()) {
                     //rollerTask.cancel();
                     rollerTask = null;
+                    rollerRunning = false;
                 }
             }
             else if (gp1.leftBumper()) {
-                rollerTask = new IntakeMotorTask(robot, IntakeMotorTask.Direction.FORWARD);
-            }
-            else if (gp1.leftTrigger() > 0.5) {
+                if (rollerRunning)
+                {
+                    robot.stopIntake();
+                }
                 rollerTask = new IntakeMotorTask(robot, IntakeMotorTask.Direction.REVERSE);
+                rollerRunning = true;
+            }
+            else if (gp1.rightBumper()) {
+                if (rollerRunning)
+                {
+                    robot.stopIntake();
+                }
+                rollerTask = new IntakeMotorTask(robot, IntakeMotorTask.Direction.FORWARD);
+                rollerRunning = true;
             }
             else {
-                rollerTask = new IntakeMotorTask(robot, IntakeMotorTask.Direction.REVERSE);
-                rollerTask.cancel();
+
             }
             gp1.update();
         }

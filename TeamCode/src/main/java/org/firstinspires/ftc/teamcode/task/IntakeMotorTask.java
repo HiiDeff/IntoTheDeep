@@ -18,15 +18,14 @@ public class IntakeMotorTask implements Task{
     @Override
     public boolean perform() {
         if (!canceled) {
-            robot.runIntakeIn();
             switch (direction) {
                 case REVERSE:
                     //robot.intakeRoller.setDirection(DcMotorSimple.Direction.REVERSE);
-                    robot.intakeRoller.setPower(INTAKE_IN_POWER);
+                    robot.intakeRoller.setPower(INTAKE_OUT_POWER);
                     break;
                 case FORWARD:
                 default:
-                    robot.intakeRoller.setPower(INTAKE_OUT_POWER);
+                    robot.intakeRoller.setPower(INTAKE_IN_POWER);
                     break;
             }
         }
