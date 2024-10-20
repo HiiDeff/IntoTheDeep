@@ -14,7 +14,8 @@ public class V2Robot extends V2RobotBase {
     public static DiffyConstants DELIVER_POS = new DiffyConstants(0.505, 0.503);
     public static DiffyConstants CARRY_POS = new DiffyConstants(0.54, 0.465);
     public static DiffyConstants TRANSFER_POS = new DiffyConstants(0.559, 0.443);
-    public static double INTAKE_ARM_DOWN = 0.95, INTAKE_ARM_TRANSFER = 0.13; //change vals in base too TODO: make tasks for abstract functions
+    public static double INTAKE_ARM_DOWN = 0.95, INTAKE_ARM_TRANSFER = 0.13, INTAKE_ARM_CLEAR = 0.5; //change vals in base too TODO: make tasks for abstract functions
+    public static int INTAKE_ARM_RPM = 50, INTAKE_ARM_RANGE = 300;
     public static double CLAW_OPEN = 0.77, CLAW_CLOSE = 0.62;
     public V2Robot(HardwareMap hardwareMap) {
         super(hardwareMap);

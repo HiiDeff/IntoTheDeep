@@ -49,7 +49,7 @@ public class SlideMotorTest extends LinearOpMode {
 
         @Override
         public void cancel() {
-                motor.setPower(0.0);
+            motor.setPower(0.0);
         }
 
     }
@@ -67,7 +67,7 @@ public class SlideMotorTest extends LinearOpMode {
         multipleTelemetry = new MultipleTelemetry(telemetry,
                 dashboard.getTelemetry());
 
-        DcMotorEx motor = hardwareMap.get(DcMotorEx.class, "motor");
+        DcMotorEx motor = hardwareMap.get(DcMotorEx.class, "testMotor");
         TimedTask motorTask = null;
 
         gp1 = new GamePad(gamepad1);
@@ -88,10 +88,10 @@ public class SlideMotorTest extends LinearOpMode {
                 telemetry.addData("clicked", 1);
                 telemetry.update();
 
-                runToPos = (int) (LengthInInches / (Math.PI * 2) * 145.1);
+                runToPos = (int) (LengthInInches * 32.91);
                 multipleTelemetry.addData("run to pos", runToPos);
                 multipleTelemetry.update();
-                motorTask = new TestTimedMotorTask(motor, runToPos, POWER, 1000);
+                motorTask = new TestTimedMotorTask(motor, runToPos, POWER, 5000);
             }
             gp1.update();
 

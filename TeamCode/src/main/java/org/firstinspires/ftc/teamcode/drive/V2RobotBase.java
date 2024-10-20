@@ -20,14 +20,13 @@ public abstract class V2RobotBase extends MecanumDrive {
     // Slides Constants
     //TODO
     public static double VERTICAL_EXTEND_MIN_IN = -0.2;
-    public static double VERTICAL_EXTEND_MAX_IN = 38.3;
-    public static double VERTICAL_TICKS_PER_INCH = 1727/38.6;
+    public static double VERTICAL_EXTEND_MAX_IN = 39;
+    public static double VERTICAL_TICKS_PER_INCH = 32.91 * 14 / 10; // 14 / 10 gear ratio
 
     public static double HORIZONTAL_EXTEND_MIN_IN = -0.05;
     public static double HORIZONTAL_EXTEND_MAX_IN = 19.0;
-    public static double HORIZONTAL_TICKS_PER_INCH = 624/19.3;
+    public static double HORIZONTAL_TICKS_PER_INCH = 32.91;
     public static double HORIZONTAL_SLIDE_TRANSFER_POS = 147/HORIZONTAL_TICKS_PER_INCH;
-
 
     // States
 
@@ -84,7 +83,7 @@ public abstract class V2RobotBase extends MecanumDrive {
 
     public void teleOpInit() {
         setIntakeArmPos(V2Robot.INTAKE_ARM_DOWN); //very bad coding convention, fix later
-        setHorizontalSlideDist(HORIZONTAL_SLIDE_TRANSFER_POS, 0.8);
+       // setHorizontalSlideDist(HORIZONTAL_SLIDE_TRANSFER_POS, 0.8);
         setDiffyPosition(DiffyPosition.TRANSFER);
     }
     public void autoInit() {
@@ -133,11 +132,18 @@ public abstract class V2RobotBase extends MecanumDrive {
         verticalSlides.setPower(power);
     }
     public void setVerticalSlidesHeight(double posInches, double power) {
+        verticalSlides.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         verticalSlides.setTargetPosition((int) (
                 (Utils.clamp(posInches, VERTICAL_EXTEND_MIN_IN, VERTICAL_EXTEND_MAX_IN)
                         * VERTICAL_TICKS_PER_INCH)));
         verticalSlides.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
         verticalSlides.setPower(power);
+    }
+
+    public double getVerticalSlidesHeight()
+    {
+        int ticks = verticalSlides.getCurrentPosition();
+        return ((double)ticks)/VERTICAL_TICKS_PER_INCH;
     }
 
     // Utils for Horizontal Slides
@@ -149,11 +155,6 @@ public abstract class V2RobotBase extends MecanumDrive {
             setHorizontalSlideDist(HORIZONTAL_SLIDE_TRANSFER_POS);
         }
         horizontalSlideExtended = !horizontalSlideExtended;
-    }
-
-    public void setHorizontalSlidePowerWithoutEncoder(double power) {
-        horizontalSlides.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        horizontalSlides.setPower(Utils.clamp(power, -1.0, 1.0));
     }
 
     public void setHorizontalSlideDist(double posInches) {
@@ -169,6 +170,17 @@ public abstract class V2RobotBase extends MecanumDrive {
                         * HORIZONTAL_TICKS_PER_INCH)));
         horizontalSlides.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         horizontalSlides.setPower(power);
+    }
+
+    public void setHorizontalSlidesPower(double power)
+    {
+        horizontalSlides.setPower(power);
+    }
+
+    public double getHorizontalSlideDist()
+    {
+        int ticks = horizontalSlides.getCurrentPosition();
+        return ((double)ticks)/HORIZONTAL_TICKS_PER_INCH;
     }
 
     // Utils for Diffy Arm
