@@ -3,7 +3,7 @@ package org.firstinspires.ftc.teamcode.task;
 
 import org.firstinspires.ftc.teamcode.drive.V2RobotBase;
 
-public class HorizontalSlidesTask  extends TimedTask{
+public class HorizontalSlidesTask extends TimedTask{
 
     private V2RobotBase robot;
     private final double distInInches;
@@ -23,8 +23,7 @@ public class HorizontalSlidesTask  extends TimedTask{
             started = true;
             robot.setHorizontalSlideDist(this.distInInches, power);
         }
-        double currPos = robot.getHorizontalSlideDist();
-        if (Math.abs(currPos - distInInches) < 0.05) {
+        if (Math.abs(robot.getHorizontalSlideDist() - distInInches) < 0.5) {
             cancel();
             return true;
         }

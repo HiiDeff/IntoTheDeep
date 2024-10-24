@@ -10,6 +10,11 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.drive.RobotFactory;
 import org.firstinspires.ftc.teamcode.drive.V2RobotBase;
+import org.firstinspires.ftc.teamcode.task.ClawTask;
+import org.firstinspires.ftc.teamcode.task.HorizontalSlidesTask;
+import org.firstinspires.ftc.teamcode.task.IntakeArmTask;
+import org.firstinspires.ftc.teamcode.task.Task;
+import org.firstinspires.ftc.teamcode.task.V2DiffyTask;
 import org.firstinspires.ftc.teamcode.util.GamePad;
 
 //@Config
@@ -25,8 +30,10 @@ public class V2TeleOp extends LinearOpMode {
     private V2RobotBase robot;
     private GamePad gp1, gp2;
     private ElapsedTime intakeTimer;
-    private boolean lastDelivery;
+    private boolean horizontalSlideExtended, clawOpen;
 
+    private Task diffyTask;
+    private Task horizontalSlidesTask;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -39,9 +46,13 @@ public class V2TeleOp extends LinearOpMode {
         ElapsedTime cycleTimer = new ElapsedTime();
         double lastTime = cycleTimer.milliseconds();
         while (opModeIsActive()) {
-            //driveRobot();
+            driveRobot();
             runIntake();
             runDelivery();
+
+            if(diffyTask==null) runDiffy();
+            if(horizontalSlidesTask==null) runHorizontalSlides();
+
             update();
 
             telemetry.addData("cycle time", cycleTimer.milliseconds() - lastTime);
@@ -50,11 +61,60 @@ public class V2TeleOp extends LinearOpMode {
         }
     }
     private void update() {
+        if (horizontalSlidesTask != null && horizontalSlidesTask.perform()) {
+            horizontalSlidesTask = null;
+        }
+        if(diffyTask != null && diffyTask.perform()) {
+            diffyTask = null;
+        }
         gp1.update();
         gp2.update();
         telemetry.update();
         robot.updateEverything();
     }
+
+    private void runDiffy() {
+        if(gp2.onceX()) { //delivery slides up and diffy carry
+            robot.setDefaultVerticalSlidesHeight(VERTICAL_SLIDE_MAX_POWER);
+            robot.setDiffyPosition(V2DiffyTask.DiffyPosition.CARRY); //ALSO BAD CONVENTION TODO: FIX
+        }
+        else if(gp2.onceY()) { //diffy transfer
+            robot.setDiffyPosition(V2DiffyTask.DiffyPosition.TRANSFER);
+        }
+        else if(gp2.onceA()) { //diffy deliver
+            robot.setDiffyPosition(V2DiffyTask.DiffyPosition.DELIVER);
+        }
+        if(gp1.onceX()){
+            if(clawOpen) {
+                robot.setClawPosition(robot.getClawPosition(ClawTask.ClawPosition.CLOSE));
+            }else{
+                robot.setClawPosition(robot.getClawPosition(ClawTask.ClawPosition.OPEN));
+            }
+            clawOpen = !clawOpen;
+        }
+    }
+    private void runHorizontalSlides() {
+        if (gp2.onceLeftBumper()) {
+            if (horizontalSlidesTask != null) {
+                horizontalSlidesTask.cancel();
+                horizontalSlidesTask = null;
+            } else {
+                if (!horizontalSlideExtended) {
+                    horizontalSlidesTask = new HorizontalSlidesTask(robot, 18.0, 0.8, 2000);
+                } else {
+                    horizontalSlidesTask = new HorizontalSlidesTask(robot, 147 / 32.91, 0.8, 2000);
+                }
+                horizontalSlideExtended = !horizontalSlideExtended;
+            }
+        }
+        else if(gp2.dpadUp()) {
+            robot.setHorizontalSlidesPower(0.5);
+        }
+        else if(gp2.dpadDown()) {
+            robot.setHorizontalSlidesPower(-0.5);
+        }
+    }
+
     private void driveRobot() {
         double x = 0, y = 0, a = 0;
         if (gp1.dpadLeft() || gp1.dpadRight()) {
@@ -64,7 +124,7 @@ public class V2TeleOp extends LinearOpMode {
         } else {
             x = -gp1.leftStickY();
             y = -gp1.leftStickX();
-            a = -gp1.rightStickY() * 0.8;
+            a = -gp1.rightStickX() * 0.8;
         }
         double pow = Math.sqrt(x * x + y * y);
 //        double limPow = driveLim.calculate(pow);
@@ -79,18 +139,6 @@ public class V2TeleOp extends LinearOpMode {
 
 
     private void runDelivery() {
-        if(gp2.onceX()) { //delivery slides up and diffy carry
-            robot.setDefaultVerticalSlidesHeight(VERTICAL_SLIDE_MAX_POWER);
-            robot.setDiffyPosition(V2RobotBase.DiffyPosition.CARRY); //ALSO BAD CONVENTION TODO: FIX
-        }
-        else if(gp2.onceY()) { //diffy transfer
-            robot.setDiffyPosition(V2RobotBase.DiffyPosition.TRANSFER);
-        }
-        else if(gp2.onceA()) { //diffy deliver
-            robot.setDiffyPosition(V2RobotBase.DiffyPosition.DELIVER);
-        }
-
-
 
         if(Math.abs(gp2.leftStickY()) > MIN_DRIVE_POWER){
             robot.setVerticalSlidePower(-gp2.leftStickY()*VERTICAL_SLIDE_MAX_POWER, VERTICAL_STAND_POWER);
@@ -101,8 +149,11 @@ public class V2TeleOp extends LinearOpMode {
     }
 
     private void runIntake() {
-        if(gp2.onceLeftBumper()){
-            robot.toggleHorizontalSlides();
+//        if(gp2.onceLeftBumper()){
+//            robot.toggleHorizontalSlides();
+//        }
+        if(gp2.onceB()) {
+            robot.setIntakeArmPos(robot.getIntakeArmPos(IntakeArmTask.Position.CLEAR));
         }
         if(gp2.onceRightBumper()){
             robot.toggleIntakeArm();
@@ -116,4 +167,5 @@ public class V2TeleOp extends LinearOpMode {
             robot.stopIntake();
         }
     }
+
 }

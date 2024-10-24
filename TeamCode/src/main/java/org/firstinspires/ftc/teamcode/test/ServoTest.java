@@ -32,15 +32,15 @@ public class ServoTest extends LinearOpMode {
         //robot = new LM1Robot(hardwareMap);
 
 
-        leftDiffy = hardwareMap.get(Servo.class, "leftDiffy");
-        rightDiffy = hardwareMap.get(Servo.class, "rightDiffy");
+        leftDiffy = hardwareMap.get(Servo.class, "intakeArm");
+        //rightDiffy = hardwareMap.get(Servo.class, "diffyRight");
 
 
         waitForStart();
 
         while (opModeIsActive()) {
             leftDiffy.setPosition(leftPos);
-            rightDiffy.setPosition(rightPos);
+            //rightDiffy.setPosition(rightPos);
         }
     }
 }

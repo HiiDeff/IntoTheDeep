@@ -5,12 +5,12 @@ import com.acmerobotics.roadrunner.Pose2d;
 import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.teamcode.roadrunner.MecanumDrive;
-import org.firstinspires.ftc.teamcode.task.DiffyIntakeTask;
+import org.firstinspires.ftc.teamcode.task.V1DiffyTask;
+import org.firstinspires.ftc.teamcode.task.V2DiffyTask;
 import org.firstinspires.ftc.teamcode.util.Utils;
 
 @Config
@@ -78,7 +78,7 @@ public abstract class RobotBase extends MecanumDrive {
     public void teleOpInit() {
 
         setVerticalSlidesHeight(VERTICAL_EXTEND_MIN_IN, 0.8);
-        setDiffyPosition(LM1Robot.INTAKE_CENTER);
+        setDiffyPosition(V1DiffyTask.DiffyPosition.DOWN_CENTER);
     }
     public void autoInit() {
 
@@ -150,19 +150,11 @@ public abstract class RobotBase extends MecanumDrive {
 
     // Utils for Diffy Arm
 
-    public abstract DiffyPosition setDiffyPosition(DiffyIntakeTask.DiffyPosition position);
+    public abstract double getDiffyTargetPos(V1DiffyTask.WhichDiffy servo, V1DiffyTask.DiffyPosition position);
 
-    public void setDiffyPosition(LM1Robot.DiffyPosition diffyPosition) {
-        diffyLeft.setPosition(diffyPosition.left);
-        diffyRight.setPosition(diffyPosition.right);
-    }
-
-    public static class DiffyPosition {
-        double left, right;
-        public DiffyPosition(double a, double b){
-            this.left = a;
-            this.right = b;
-        }
+    public void setDiffyPosition(V1DiffyTask.DiffyPosition diffyPosition) {
+        V1DiffyTask.setDiffyPosition(this, V1DiffyTask.WhichDiffy.LEFT, diffyPosition);
+        V1DiffyTask.setDiffyPosition(this, V1DiffyTask.WhichDiffy.RIGHT, diffyPosition);
     }
 
 

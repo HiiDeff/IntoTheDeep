@@ -5,12 +5,13 @@ import com.acmerobotics.roadrunner.Pose2d;
 import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.teamcode.roadrunner.MecanumDrive;
-import org.firstinspires.ftc.teamcode.task.DiffyIntakeTask;
+import org.firstinspires.ftc.teamcode.task.ClawTask;
+import org.firstinspires.ftc.teamcode.task.IntakeArmTask;
+import org.firstinspires.ftc.teamcode.task.V2DiffyTask;
 import org.firstinspires.ftc.teamcode.util.Utils;
 
 @Config
@@ -30,7 +31,7 @@ public abstract class V2RobotBase extends MecanumDrive {
 
     // States
 
-    private boolean horizontalSlideExtended, intakeArmUp;
+    private boolean intakeArmUp; //horizontalSlideExtended,
 
     // Common
     protected final HardwareMap hardwareMap;
@@ -68,7 +69,6 @@ public abstract class V2RobotBase extends MecanumDrive {
         horizontalSlides = hardwareMap.get(DcMotorEx.class, "horizontalSlides");
         horizontalSlides.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         horizontalSlides.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        horizontalSlideExtended = false;
 
         intakeRoller = hardwareMap.get(DcMotorEx.class, "intakeRoller");
         intakeRoller.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
@@ -84,7 +84,7 @@ public abstract class V2RobotBase extends MecanumDrive {
     public void teleOpInit() {
         setIntakeArmPos(V2Robot.INTAKE_ARM_DOWN); //very bad coding convention, fix later
        // setHorizontalSlideDist(HORIZONTAL_SLIDE_TRANSFER_POS, 0.8);
-        setDiffyPosition(DiffyPosition.TRANSFER);
+        setDiffyPosition(V2DiffyTask.DiffyPosition.CARRY);
     }
     public void autoInit() {
 
@@ -148,14 +148,14 @@ public abstract class V2RobotBase extends MecanumDrive {
 
     // Utils for Horizontal Slides
 
-    public void toggleHorizontalSlides() {
-        if(!horizontalSlideExtended) {
-            setHorizontalSlideDist(HORIZONTAL_EXTEND_MAX_IN);
-        }else{
-            setHorizontalSlideDist(HORIZONTAL_SLIDE_TRANSFER_POS);
-        }
-        horizontalSlideExtended = !horizontalSlideExtended;
-    }
+//    public void toggleHorizontalSlides() {
+//        if(!horizontalSlideExtended) {
+//            setHorizontalSlideDist(HORIZONTAL_EXTEND_MAX_IN, 0.8);
+//        }else{
+//            setHorizontalSlideDist(HORIZONTAL_SLIDE_TRANSFER_POS, 0.8);
+//        }
+//        horizontalSlideExtended = !horizontalSlideExtended;
+//    }
 
     public void setHorizontalSlideDist(double posInches) {
         horizontalSlides.setTargetPosition((int) (
@@ -172,55 +172,45 @@ public abstract class V2RobotBase extends MecanumDrive {
         horizontalSlides.setPower(power);
     }
 
-    public void setHorizontalSlidesPower(double power)
-    {
+    public void setHorizontalSlidesPower(double power) {
+        if(horizontalSlides.getMode() != DcMotorEx.RunMode.RUN_USING_ENCODER) {
+            horizontalSlides.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
+        }
         horizontalSlides.setPower(power);
     }
 
-    public double getHorizontalSlideDist()
-    {
+    public double getHorizontalSlideDist() {
         int ticks = horizontalSlides.getCurrentPosition();
         return ((double)ticks)/HORIZONTAL_TICKS_PER_INCH;
     }
 
     // Utils for Diffy Arm
 
-    public abstract DiffyConstants getDiffyPosition(DiffyPosition position);
+    public abstract double getDiffyTargetPos(V2DiffyTask.WhichDiffy servo, V2DiffyTask.DiffyPosition position);
 
-    public void setDiffyPosition(DiffyPosition diffyPosition) {
-        diffyLeft.setPosition(getDiffyPosition(diffyPosition).left);
-        diffyRight.setPosition(getDiffyPosition(diffyPosition).right);
+    public void setDiffyPosition(V2DiffyTask.DiffyPosition diffyPosition) {
+        V2DiffyTask.setDiffyPosition(this, V2DiffyTask.WhichDiffy.LEFT, diffyPosition);
+        V2DiffyTask.setDiffyPosition(this, V2DiffyTask.WhichDiffy.RIGHT, diffyPosition);
     }
+
 
     // Temporary Solution
     //TODO: make tasks and stop being lazy
-    public static class DiffyConstants {
-        double left, right;
-        public DiffyConstants(double a, double b){
-            this.left = a;
-            this.right = b;
-        }
-    }
 
-    public enum DiffyPosition {
-        DELIVER,
-        CARRY,
-        TRANSFER
-    }
 
     // Utils for Intake Arm
     public void toggleIntakeArm() {
         if(!intakeArmUp) {
-            setIntakeArmPos(V2Robot.INTAKE_ARM_TRANSFER); //VERY BAD CONVENTION, FIX LATER
+            setIntakeArmPos(getIntakeArmPos(IntakeArmTask.Position.TRANSFER));
         }else{
-            setIntakeArmPos(V2Robot.INTAKE_ARM_DOWN);
+            setIntakeArmPos(getIntakeArmPos(IntakeArmTask.Position.DOWN));
         }
         intakeArmUp = !intakeArmUp;
     }
+    public abstract double getIntakeArmPos(IntakeArmTask.Position position);
     public void setIntakeArmPos(double pos) {
         intakeArm.setPosition(Utils.clamp(pos, 0, 1));
     }
-
 
     // Utils for Roller Intake
     public void runIntakeIn() {
@@ -231,5 +221,12 @@ public abstract class V2RobotBase extends MecanumDrive {
     }
     public void stopIntake() {
         intakeRoller.setPower(0.0);
+    }
+
+    // Utils for claw
+
+    public abstract double getClawPosition(ClawTask.ClawPosition position);
+    public void setClawPosition(double pos) {
+        outtakeClaw.setPosition(Utils.clamp(pos, 0.0, 1.0));
     }
 }
