@@ -5,17 +5,18 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.teamcode.roadrunner.MecanumDrive;
 import org.firstinspires.ftc.teamcode.roadrunner.TwoDeadWheelLocalizer;
-import org.firstinspires.ftc.teamcode.task.DiffyIntakeTask;
+import org.firstinspires.ftc.teamcode.task.V1DiffyTask;
+import org.firstinspires.ftc.teamcode.task.V2DiffyTask;
 
 public class LM1Robot extends RobotBase {
 
 
     // Intake Diffy Arm Positions
-    public static DiffyPosition INTAKE_LEFT = new DiffyPosition(1.0, 0.6);
-    public static DiffyPosition INTAKE_CENTER = new DiffyPosition(0.87, 0.47);
-    public static DiffyPosition INTAKE_RIGHT = new DiffyPosition(0.73, 0.33);
-    public static DiffyPosition INTAKE_FORWARDS = new DiffyPosition(0.53, 0.85);
-    public static DiffyPosition INTAKE_UP = new DiffyPosition(0.4, 0.98);
+    public static double DOWN_LEFT_LEFT_POS = 1.0, DOWN_LEFT_RIGHT_POS = 0.6;
+    public static double DOWN_CENTER_LEFT_POS = 0.87, DOWN_CENTER_RIGHT_POS = 0.47;
+    public static double DOWN_RIGHT_LEFT_POS = 0.73, DOWN_RIGHT_RIGHT_POS = 0.33;
+    public static double FORWARD_LEFT_POS = 0.53, FORWARD_RIGHT_POS = 0.85;
+    public static double UP_LEFT_POS = 0.4, UP_RIGHT_POS = 0.98;
 
     public LM1Robot(HardwareMap hardwareMap) {
         super(hardwareMap);
@@ -64,19 +65,19 @@ public class LM1Robot extends RobotBase {
     }
 
     @Override
-    public DiffyPosition setDiffyPosition(DiffyIntakeTask.DiffyPosition position) {
+    public double getDiffyTargetPos(V1DiffyTask.WhichDiffy servo, V1DiffyTask.DiffyPosition position) {
         switch(position) {
-            case DOWN_CENTER:
-                return INTAKE_CENTER;
             case DOWN_LEFT:
-                return INTAKE_LEFT;
+                return servo == V1DiffyTask.WhichDiffy.LEFT ? DOWN_LEFT_LEFT_POS : DOWN_LEFT_RIGHT_POS;
+            case DOWN_CENTER:
+                return servo == V1DiffyTask.WhichDiffy.LEFT ? DOWN_CENTER_LEFT_POS : DOWN_CENTER_RIGHT_POS;
             case DOWN_RIGHT:
-                return INTAKE_RIGHT;
-            case FORWARD:
-                return INTAKE_FORWARDS;
+                return servo == V1DiffyTask.WhichDiffy.LEFT ? DOWN_RIGHT_LEFT_POS : DOWN_RIGHT_RIGHT_POS;
             case UP:
+                return servo == V1DiffyTask.WhichDiffy.LEFT ? UP_LEFT_POS : UP_RIGHT_POS;
+            case FORWARD:
             default:
-                return INTAKE_UP;
+                return servo == V1DiffyTask.WhichDiffy.LEFT ? FORWARD_LEFT_POS : FORWARD_RIGHT_POS;
         }
     }
 }

@@ -11,7 +11,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.teamcode.drive.RobotFactory;
 import org.firstinspires.ftc.teamcode.drive.V2RobotBase;
-import org.firstinspires.ftc.teamcode.task.IntakeLiftTask;
+import org.firstinspires.ftc.teamcode.task.IntakeArmTask;
 import org.firstinspires.ftc.teamcode.task.IntakeMotorTask;
 import org.firstinspires.ftc.teamcode.task.Task;
 import org.firstinspires.ftc.teamcode.task.TimedTask;
@@ -59,19 +59,19 @@ public class IntakeTest extends LinearOpMode {
                 telemetry.update();
 
 
-                liftTask = new IntakeLiftTask(robot, IntakeLiftTask.Position.DOWN);
+                liftTask = new IntakeArmTask(robot, IntakeArmTask.Position.DOWN);
             }
             else if (gp1.onceA()) {
                 telemetry.addData("clicked A", 1);
                 telemetry.update();
 
-                liftTask = new IntakeLiftTask(robot, IntakeLiftTask.Position.TRANSFER);
+                liftTask = new IntakeArmTask(robot, IntakeArmTask.Position.TRANSFER);
             }
             else if (gp1.onceX()) {
                 telemetry.addData("clicked X", 1);
                 telemetry.update();
 
-                liftTask = new IntakeLiftTask(robot, IntakeLiftTask.Position.CLEAR);
+                liftTask = new IntakeArmTask(robot, IntakeArmTask.Position.CLEAR);
             }
             if (rollerTask != null)
             {

@@ -5,22 +5,24 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.teamcode.roadrunner.MecanumDrive;
 import org.firstinspires.ftc.teamcode.roadrunner.TwoDeadWheelLocalizer;
-import org.firstinspires.ftc.teamcode.task.DiffyIntakeTask;
+import org.firstinspires.ftc.teamcode.task.ClawTask;
+import org.firstinspires.ftc.teamcode.task.IntakeArmTask;
+import org.firstinspires.ftc.teamcode.task.V2DiffyTask;
 
 public class V2Robot extends V2RobotBase {
 
 
     // Intake Diffy Arm Positions
-    public static DiffyConstants DELIVER_POS = new DiffyConstants(0.505, 0.503);
-    public static DiffyConstants CARRY_POS = new DiffyConstants(0.54, 0.465);
-    public static DiffyConstants TRANSFER_POS = new DiffyConstants(0.559, 0.443);
+    public static double DELIVER_LEFT_POS = 0.505, DELIVER_RIGHT_POS = 0.503;
+    public static double CARRY_LEFT_POS = 0.54, CARRY_RIGHT_POS = 0.465;
+    public static double TRANSFER_LEFT_POS = 0.559, TRANSFER_RIGHT_POS = 0.443;
     public static double INTAKE_ARM_DOWN = 0.95, INTAKE_ARM_TRANSFER = 0.13, INTAKE_ARM_CLEAR = 0.5; //change vals in base too TODO: make tasks for abstract functions
     public static int INTAKE_ARM_RPM = 50, INTAKE_ARM_RANGE = 300;
-    public static double CLAW_OPEN = 0.77, CLAW_CLOSE = 0.62;
+    public static double CLAW_OPEN_POS = 0.77, CLAW_CLOSE_POS = 0.62;
     public V2Robot(HardwareMap hardwareMap) {
         super(hardwareMap);
         //setDriveParams();
-        //init(hardwareMap, MecanumDrive.LocalizerMode.DRIVE_ENCODER);
+        init(hardwareMap, MecanumDrive.LocalizerMode.DRIVE_ENCODER);
     }
 
 
@@ -63,15 +65,39 @@ public class V2Robot extends V2RobotBase {
     }
 
     @Override
-    public DiffyConstants getDiffyPosition(DiffyPosition position) {
+    public double getDiffyTargetPos(V2DiffyTask.WhichDiffy servo, V2DiffyTask.DiffyPosition position) {
         switch(position) {
             case DELIVER:
-                return DELIVER_POS;
+                return servo == V2DiffyTask.WhichDiffy.LEFT ? DELIVER_LEFT_POS : DELIVER_RIGHT_POS;
             case CARRY:
-                return CARRY_POS;
+                return servo == V2DiffyTask.WhichDiffy.LEFT ? CARRY_LEFT_POS : CARRY_RIGHT_POS;
             case TRANSFER:
             default:
-                return TRANSFER_POS;
+                return servo == V2DiffyTask.WhichDiffy.LEFT ? TRANSFER_LEFT_POS : TRANSFER_RIGHT_POS;
+        }
+    }
+
+    @Override
+    public double getIntakeArmPos(IntakeArmTask.Position position) {
+        switch(position) {
+            case TRANSFER:
+                return INTAKE_ARM_TRANSFER;
+            case CLEAR:
+                return INTAKE_ARM_CLEAR;
+            case DOWN:
+            default:
+                return INTAKE_ARM_DOWN;
+        }
+    }
+
+    @Override
+    public double getClawPosition(ClawTask.ClawPosition position) {
+        switch(position) {
+            case CLOSE:
+                return CLAW_CLOSE_POS;
+            case OPEN:
+            default:
+                return CLAW_OPEN_POS;
         }
     }
 }

@@ -11,13 +11,9 @@ import org.firstinspires.ftc.teamcode.util.Utils;
  * Dual mode speed servo has 90 RPM under 4.8 v and 300 degree max rotation.
  */
 @Config
-public class IntakeLiftTask extends TimedTask {
+public class IntakeArmTask extends TimedTask {
 
 
-    public static double LEFT_UP_POS = 0.16;
-    public static double LEFT_DOWN_POS = 0.69;
-    public static double RIGHT_UP_POS = 0.82;
-    public static double RIGHT_DOWN_POS = 0.36;
     private static final int RPM = 90;
     private static final int MAX_ROTATION_DEGREE = 300;
 
@@ -25,11 +21,11 @@ public class IntakeLiftTask extends TimedTask {
     private Position position;
     private boolean started;
 
-    public static void setPlacerPosition(V2RobotBase robot, Position position) {
+    public static void setPosition(V2RobotBase robot, Position position) {
         robot.intakeArm.setPosition(getTargetPos(position));
     }
 
-    public IntakeLiftTask(V2RobotBase robot, Position position) {
+    public IntakeArmTask(V2RobotBase robot, Position position) {
         this.robot = robot;
         this.position = position;
     }

@@ -11,6 +11,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.teamcode.drive.LM1Robot;
 import org.firstinspires.ftc.teamcode.drive.RobotBase;
 import org.firstinspires.ftc.teamcode.drive.RobotFactory;
+import org.firstinspires.ftc.teamcode.task.V1DiffyTask;
 import org.firstinspires.ftc.teamcode.util.GamePad;
 
 //@Config
@@ -105,13 +106,15 @@ public class LM1TeleOp extends LinearOpMode {
 
     private void runIntake() {
         if(gp2.leftBumper() && gp2.rightBumper()){
-            robot.setDiffyPosition(LM1Robot.INTAKE_CENTER);
+            robot.setDiffyPosition(V1DiffyTask.DiffyPosition.DOWN_CENTER);
         }else if(gp2.leftBumper()) {
-            robot.setDiffyPosition(LM1Robot.INTAKE_LEFT);
+            robot.setDiffyPosition(V1DiffyTask.DiffyPosition.DOWN_LEFT);
         }else if(gp2.rightBumper()) {
-            robot.setDiffyPosition(LM1Robot.INTAKE_RIGHT);
+            robot.setDiffyPosition(V1DiffyTask.DiffyPosition.DOWN_RIGHT);
         }else if(gp2.onceA()){
-            robot.setDiffyPosition(LM1Robot.INTAKE_UP);
+            robot.setDiffyPosition(V1DiffyTask.DiffyPosition.FORWARD);
+        }else if(gp2.onceB()) {
+            robot.setDiffyPosition(V1DiffyTask.DiffyPosition.UP);
         }
 
         if(gp2.rightTrigger()>0.1){
