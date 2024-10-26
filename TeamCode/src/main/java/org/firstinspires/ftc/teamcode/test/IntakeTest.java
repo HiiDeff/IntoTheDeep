@@ -11,7 +11,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.teamcode.drive.RobotFactory;
 import org.firstinspires.ftc.teamcode.drive.V2RobotBase;
-import org.firstinspires.ftc.teamcode.task.IntakeArmTask;
+import org.firstinspires.ftc.teamcode.task.IntakeArmTask;;
 import org.firstinspires.ftc.teamcode.task.IntakeMotorTask;
 import org.firstinspires.ftc.teamcode.task.Task;
 import org.firstinspires.ftc.teamcode.task.TimedTask;
@@ -78,27 +78,31 @@ public class IntakeTest extends LinearOpMode {
                 if (rollerTask.perform()) {
                     //rollerTask.cancel();
                     rollerTask = null;
-                    rollerRunning = false;
                 }
             }
-            else if (gp1.leftBumper()) {
-                if (rollerRunning)
+            if (gp1.leftBumper()) {
+                if (rollerTask != null)
                 {
-                    robot.stopIntake();
+                    rollerTask.cancel();
                 }
                 rollerTask = new IntakeMotorTask(robot, IntakeMotorTask.Direction.REVERSE);
-                rollerRunning = true;
             }
             else if (gp1.rightBumper()) {
-                if (rollerRunning)
+                if (rollerTask != null)
+                {
+                    rollerTask.cancel();
+                }
+                rollerTask = new IntakeMotorTask(robot, IntakeMotorTask.Direction.FORWARD);
+            }
+            else if (gp1.onceY()){
+                if (rollerTask != null)
+                {
+                    rollerTask.cancel();
+                }
+                else
                 {
                     robot.stopIntake();
                 }
-                rollerTask = new IntakeMotorTask(robot, IntakeMotorTask.Direction.FORWARD);
-                rollerRunning = true;
-            }
-            else {
-
             }
             gp1.update();
         }

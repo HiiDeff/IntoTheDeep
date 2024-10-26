@@ -26,6 +26,7 @@ public class V2TeleOp extends LinearOpMode {
     public static double VERTICAL_STAND_POWER = 0.001; //chng to private
     public static double VERTICAL_SLIDE_MAX_POWER = 0.5;
     public static double MIN_DRIVE_POWER = 0.01;
+    public static double HORIZONTALSLIDE_DELTA = 2;
 
     private V2RobotBase robot;
     private GamePad gp1, gp2;
@@ -108,10 +109,21 @@ public class V2TeleOp extends LinearOpMode {
             }
         }
         else if(gp2.dpadUp()) {
-            robot.setHorizontalSlidesPower(0.5);
+            if (horizontalSlidesTask != null)
+            {
+                horizontalSlidesTask.cancel();
+            }
+            double currPos = robot.getHorizontalSlideDist();
+            horizontalSlidesTask = new HorizontalSlidesTask(robot, currPos + HORIZONTALSLIDE_DELTA, 0.6, 2000);
+
         }
         else if(gp2.dpadDown()) {
-            robot.setHorizontalSlidesPower(-0.5);
+            if (horizontalSlidesTask != null)
+            {
+                horizontalSlidesTask.cancel();
+            }
+            double currPos = robot.getHorizontalSlideDist();
+            horizontalSlidesTask = new HorizontalSlidesTask(robot, currPos - HORIZONTALSLIDE_DELTA, 0.6, 2000);
         }
     }
 
