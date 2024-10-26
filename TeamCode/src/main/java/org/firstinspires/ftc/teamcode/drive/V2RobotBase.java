@@ -82,7 +82,7 @@ public abstract class V2RobotBase extends MecanumDrive {
     }
 
     public void teleOpInit() {
-        setIntakeArmPos(V2Robot.INTAKE_ARM_DOWN); //very bad coding convention, fix later
+        setIntakeArmPos(V2Robot.INTAKE_ARM_TRANSFER); //very bad coding convention, fix later
        // setHorizontalSlideDist(HORIZONTAL_SLIDE_TRANSFER_POS, 0.8);
         setDiffyPosition(V2DiffyTask.DiffyPosition.CARRY);
     }
