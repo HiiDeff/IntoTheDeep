@@ -9,6 +9,7 @@ public class HorizontalSlidesTask extends TimedTask{
     private final double distInInches;
     private final double power;
     private boolean started = false;
+
     public HorizontalSlidesTask(V2RobotBase robot, double distInInches, double power,
                                 int finishTimeMillis) {
         this.robot = robot;
@@ -23,7 +24,8 @@ public class HorizontalSlidesTask extends TimedTask{
             started = true;
             robot.setHorizontalSlideDist(this.distInInches, power);
         }
-        if (Math.abs(robot.getHorizontalSlideDist() - distInInches) < 0.5) {
+        if (Math.abs(robot.getHorizontalSlideDist() - distInInches) < 0.1)
+        {
             cancel();
             return true;
         }
@@ -34,6 +36,4 @@ public class HorizontalSlidesTask extends TimedTask{
     public void cancel() {
         robot.setHorizontalSlidesPower(0.0);
     }
-
-
 }

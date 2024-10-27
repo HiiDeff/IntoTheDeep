@@ -15,6 +15,7 @@ import org.firstinspires.ftc.teamcode.task.HorizontalSlidesTask;
 import org.firstinspires.ftc.teamcode.task.IntakeArmTask;
 import org.firstinspires.ftc.teamcode.task.Task;
 import org.firstinspires.ftc.teamcode.task.V2DiffyTask;
+import org.firstinspires.ftc.teamcode.task.VerticalSlidesTask;
 import org.firstinspires.ftc.teamcode.util.GamePad;
 
 //@Config
@@ -35,6 +36,7 @@ public class V2TeleOp extends LinearOpMode {
 
     private Task diffyTask;
     private Task horizontalSlidesTask;
+    private Task verticalSlidesTask;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -65,6 +67,9 @@ public class V2TeleOp extends LinearOpMode {
         if (horizontalSlidesTask != null && horizontalSlidesTask.perform()) {
             horizontalSlidesTask = null;
         }
+        if (verticalSlidesTask != null && verticalSlidesTask.perform()) {
+            verticalSlidesTask = null;
+        }
         if(diffyTask != null && diffyTask.perform()) {
             diffyTask = null;
         }
@@ -76,7 +81,7 @@ public class V2TeleOp extends LinearOpMode {
 
     private void runDiffy() {
         if(gp2.onceX()) { //delivery slides up and diffy carry
-            robot.setDefaultVerticalSlidesHeight(VERTICAL_SLIDE_MAX_POWER);
+       //     robot.setDefaultVerticalSlidesHeight(VERTICAL_SLIDE_MAX_POWER);
             robot.setDiffyPosition(V2DiffyTask.DiffyPosition.CARRY); //ALSO BAD CONVENTION TODO: FIX
         }
         else if(gp2.onceY()) { //diffy transfer
@@ -101,9 +106,9 @@ public class V2TeleOp extends LinearOpMode {
                 horizontalSlidesTask = null;
             } else {
                 if (!horizontalSlideExtended) {
-                    horizontalSlidesTask = new HorizontalSlidesTask(robot, 18.0, 0.8, 2000);
+                    horizontalSlidesTask = new HorizontalSlidesTask(robot, 18.0, 0.9, 2000);
                 } else {
-                    horizontalSlidesTask = new HorizontalSlidesTask(robot, 147 / 32.91, 0.8, 2000);
+                    horizontalSlidesTask = new HorizontalSlidesTask(robot, V2RobotBase.HORIZONTAL_SLIDE_TRANSFER_POS, 0.9, 2000);
                 }
                 horizontalSlideExtended = !horizontalSlideExtended;
             }
@@ -152,11 +157,36 @@ public class V2TeleOp extends LinearOpMode {
 
     private void runDelivery() {
 
-        if(Math.abs(gp2.leftStickY()) > MIN_DRIVE_POWER){
-            robot.setVerticalSlidePower(-gp2.leftStickY()*VERTICAL_SLIDE_MAX_POWER, VERTICAL_STAND_POWER);
+        if(gp1.onceLeftBumper()){
+            if (verticalSlidesTask != null)
+            {
+                verticalSlidesTask.cancel();
+            }
+            verticalSlidesTask = new VerticalSlidesTask(robot, V2RobotBase.VERTICAL_EXTEND_MAX_IN, 1.0, 2000);
         }
-        else{
-            robot.setVerticalSlidePower(VERTICAL_STAND_POWER);
+        else if (gp1.onceRightBumper()){
+            if (verticalSlidesTask != null)
+            {
+                verticalSlidesTask.cancel();
+            }
+            verticalSlidesTask = new VerticalSlidesTask(robot, V2RobotBase.VERTICAL_EXTEND_MIN_IN, 1.0, 2000);
+
+        }
+        else if (gp1.onceLeftTrigger())
+        {
+            if (verticalSlidesTask != null)
+            {
+                verticalSlidesTask.cancel();
+            }
+            verticalSlidesTask = new VerticalSlidesTask(robot, V2RobotBase.VERTICAL_EXTEND_HIGH_CHAMBER_IN, 1.0, 2000);
+        }
+        else if (gp1.onceRightTrigger())
+        {
+            if (verticalSlidesTask != null)
+            {
+                verticalSlidesTask.cancel();
+            }
+            verticalSlidesTask = new VerticalSlidesTask(robot, V2RobotBase.VERTICAL_EXTEND_LOW_CHAMBER_IN, 1.0, 2000);
         }
     }
 

@@ -14,9 +14,9 @@ public class V2Robot extends V2RobotBase {
 
 
     // Intake Diffy Arm Positions
-    public static double DELIVER_LEFT_POS = 0.505, DELIVER_RIGHT_POS = 0.503;
-    public static double CARRY_LEFT_POS = 0.54, CARRY_RIGHT_POS = 0.42;
-    public static double TRANSFER_LEFT_POS = 0.58, TRANSFER_RIGHT_POS = 0.41;
+    public static double DELIVER_LEFT_POS = 0.57, DELIVER_RIGHT_POS = 0.493;
+    public static double CARRY_LEFT_POS = 0.595, CARRY_RIGHT_POS = 0.475;
+    public static double TRANSFER_LEFT_POS = 0.615, TRANSFER_RIGHT_POS = 0.445;
     public static double INTAKE_ARM_DOWN = 0.91, INTAKE_ARM_TRANSFER = 0.13, INTAKE_ARM_CLEAR = 0.55; //change vals in base too TODO: make tasks for abstract functions
     public static int INTAKE_ARM_RPM = 50, INTAKE_ARM_RANGE = 300;
     public static double CLAW_OPEN_POS = 0.77, CLAW_CLOSE_POS = 0.62;

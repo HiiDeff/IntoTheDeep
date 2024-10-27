@@ -22,12 +22,14 @@ public abstract class V2RobotBase extends MecanumDrive {
     //TODO
     public static double VERTICAL_EXTEND_MIN_IN = -0.2;
     public static double VERTICAL_EXTEND_MAX_IN = 39;
+    public static double VERTICAL_EXTEND_LOW_CHAMBER_IN = 10;
+    public static double VERTICAL_EXTEND_HIGH_CHAMBER_IN = 17;
     public static double VERTICAL_TICKS_PER_INCH = 32.91 * 14 / 10; // 14 / 10 gear ratio
 
     public static double HORIZONTAL_EXTEND_MIN_IN = -0.05;
     public static double HORIZONTAL_EXTEND_MAX_IN = 19.0;
     public static double HORIZONTAL_TICKS_PER_INCH = 32.91;
-    public static double HORIZONTAL_SLIDE_TRANSFER_POS = 147/HORIZONTAL_TICKS_PER_INCH;
+    public static double HORIZONTAL_SLIDE_TRANSFER_POS = 6.7;
 
     // States
 
