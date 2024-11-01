@@ -40,7 +40,7 @@ public class ImageProcessor {
     }
 
     public static boolean isYellow(HSV hsv) {
-        return hsv.h > 50 && hsv.h  < 100;
+        return hsv.h > 60 && hsv.h  < 100;
     }
 
     public static boolean isBlue(HSV hsv) {

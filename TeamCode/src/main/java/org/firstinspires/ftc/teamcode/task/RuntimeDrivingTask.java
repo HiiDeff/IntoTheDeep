@@ -5,15 +5,16 @@ import com.acmerobotics.roadrunner.Action;
 
 import org.firstinspires.ftc.teamcode.common.TrajectoryActioner;
 import org.firstinspires.ftc.teamcode.drive.RobotBase;
+import org.firstinspires.ftc.teamcode.drive.V2RobotBase;
 
 public class RuntimeDrivingTask implements Task {
 
-    private final RobotBase robot;
+    private final V2RobotBase robot;
     private final TrajectoryActioner actioner;
     private boolean started = false;
     private Action action;
 
-    public RuntimeDrivingTask(RobotBase robot, TrajectoryActioner actioner) {
+    public RuntimeDrivingTask(V2RobotBase robot, TrajectoryActioner actioner) {
         this.robot = robot;
         this.actioner = actioner;
     }
