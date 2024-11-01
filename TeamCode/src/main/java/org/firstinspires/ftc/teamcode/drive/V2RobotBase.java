@@ -3,6 +3,8 @@ package org.firstinspires.ftc.teamcode.drive;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.qualcomm.hardware.lynx.LynxModule;
+import com.qualcomm.hardware.rev.RevBlinkinLedDriver;
+import com.qualcomm.hardware.rev.RevColorSensorV3;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -22,12 +24,14 @@ public abstract class V2RobotBase extends MecanumDrive {
     //TODO
     public static double VERTICAL_EXTEND_MIN_IN = -0.2;
     public static double VERTICAL_EXTEND_MAX_IN = 39;
+    public static double VERTICAL_EXTEND_LOW_CHAMBER_IN = 10;
+    public static double VERTICAL_EXTEND_HIGH_CHAMBER_IN = 17;
     public static double VERTICAL_TICKS_PER_INCH = 32.91 * 14 / 10; // 14 / 10 gear ratio
 
     public static double HORIZONTAL_EXTEND_MIN_IN = -0.05;
     public static double HORIZONTAL_EXTEND_MAX_IN = 19.0;
     public static double HORIZONTAL_TICKS_PER_INCH = 32.91;
-    public static double HORIZONTAL_SLIDE_TRANSFER_POS = 147/HORIZONTAL_TICKS_PER_INCH;
+    public static double HORIZONTAL_SLIDE_TRANSFER_POS = 5.1; // 6.7; 167/32.91 = 5.074
 
     // States
 
@@ -48,6 +52,12 @@ public abstract class V2RobotBase extends MecanumDrive {
     public final Servo outtakeClaw;
     public final Servo intakeArm;
 
+    // Sensors
+    public final RevColorSensorV3 leftIntakeColorSensor, rightIntakeColorSensor;
+    public final IntakeSampleState intakeSampleState;
+
+    // Light
+    private final RevBlinkinLedDriver light;
     // Cached Encoder Vals
     private int verticalSlidesPos = 0;
     private int horizontalSlidesPos = 0;
@@ -79,19 +89,31 @@ public abstract class V2RobotBase extends MecanumDrive {
         outtakeClaw = hardwareMap.get(Servo.class, "outtakeClaw");
         intakeArm = hardwareMap.get(Servo.class, "intakeArm");
         intakeArmUp = false;
+
+        //Sensors:
+        leftIntakeColorSensor = hardwareMap.get(RevColorSensorV3.class, "intakeColorLeft");
+        rightIntakeColorSensor = hardwareMap.get(RevColorSensorV3.class, "intakeColorRight");
+
+        //Lights:
+        light = hardwareMap.get(RevBlinkinLedDriver.class, "light");
+
+        intakeSampleState = new IntakeSampleState(this);
     }
 
     public void teleOpInit() {
-        setIntakeArmPos(V2Robot.INTAKE_ARM_TRANSFER); //very bad coding convention, fix later
+        setIntakeArmPos(V2Robot.INTAKE_ARM_DOWN);
        // setHorizontalSlideDist(HORIZONTAL_SLIDE_TRANSFER_POS, 0.8);
-        setDiffyPosition(V2DiffyTask.DiffyPosition.CARRY);
+        setDiffyPosition(V2DiffyTask.DiffyPosition.FLAT);
     }
     public void autoInit() {
-
+        setIntakeArmPos(V2Robot.INTAKE_ARM_DOWN);
+        // setHorizontalSlideDist(HORIZONTAL_SLIDE_TRANSFER_POS, 0.8);
+        setDiffyPosition(V2DiffyTask.DiffyPosition.CARRY);
     }
     public void updateEverything() {
         updateEncoders();
-        //updatePoseEstimate();
+        updatePoseEstimate();
+        intakeSampleState.update();
     }
 
     public void updateEncoders() {
@@ -194,19 +216,24 @@ public abstract class V2RobotBase extends MecanumDrive {
     }
 
 
-    // Temporary Solution
-    //TODO: make tasks and stop being lazy
-
-
     // Utils for Intake Arm
-    public void toggleIntakeArm() {
-        if(!intakeArmUp) {
-            setIntakeArmPos(getIntakeArmPos(IntakeArmTask.Position.TRANSFER));
-        }else{
-            setIntakeArmPos(getIntakeArmPos(IntakeArmTask.Position.DOWN));
-        }
-        intakeArmUp = !intakeArmUp;
+    public void setIntakeArmUp() {
+        setIntakeArmPos(getIntakeArmPos(IntakeArmTask.Position.TRANSFER));
     }
+    public void setIntakeArmClear(){
+        setIntakeArmPos(getIntakeArmPos(IntakeArmTask.Position.CLEAR));
+    }
+    public void setIntakeArmDown() {
+        setIntakeArmPos(getIntakeArmPos(IntakeArmTask.Position.DOWN));
+    }
+//    public void toggleIntakeArm() {
+//        if(!intakeArmUp) {
+//            setIntakeArmPos(getIntakeArmPos(IntakeArmTask.Position.TRANSFER));
+//        }else{
+//            setIntakeArmPos(getIntakeArmPos(IntakeArmTask.Position.DOWN));
+//        }
+//        intakeArmUp = !intakeArmUp;
+//    }
     public abstract double getIntakeArmPos(IntakeArmTask.Position position);
     public void setIntakeArmPos(double pos) {
         intakeArm.setPosition(Utils.clamp(pos, 0, 1));
@@ -229,4 +256,14 @@ public abstract class V2RobotBase extends MecanumDrive {
     public void setClawPosition(double pos) {
         outtakeClaw.setPosition(Utils.clamp(pos, 0.0, 1.0));
     }
+
+    // Utils for lights
+    public void setLightColor(RevBlinkinLedDriver.BlinkinPattern pattern) {
+        light.setPattern(pattern);
+    }
+    public String getIntakeColorToString() {
+        return intakeSampleState.getStripLightColors();
+    }
+
+
 }

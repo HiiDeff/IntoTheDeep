@@ -44,5 +44,4 @@ public class VerticalSlidesTask extends TimedTask{
             robot.setVerticalSlidePower(0.0);
         }
     }
-
 }

@@ -25,15 +25,15 @@ public class ServoTest extends LinearOpMode {
 
     Servo leftDiffy;
     Servo rightDiffy;
-    public static double leftPos = 0.54, rightPos = 0.465;
+    public static double leftPos = 0.58, rightPos = 0.41;
 
     @Override
     public void runOpMode() throws InterruptedException {
         //robot = new LM1Robot(hardwareMap);
 
 
-        leftDiffy = hardwareMap.get(Servo.class, "leftDiffy");
-        rightDiffy = hardwareMap.get(Servo.class, "rightDiffy");
+        leftDiffy = hardwareMap.get(Servo.class, "diffyLeft");
+        rightDiffy = hardwareMap.get(Servo.class, "diffyRight");
 
         waitForStart();
 

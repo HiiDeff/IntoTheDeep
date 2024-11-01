@@ -34,12 +34,12 @@ public class MotorTest extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
         //robot = new LM1Robot(hardwareMap);
 
-        horizontalSlides = hardwareMap.get(DcMotorEx.class, "hSlides");
+        horizontalSlides = hardwareMap.get(DcMotorEx.class, "horizontalSlides");
         horizontalSlides.setDirection(DcMotorEx.Direction.REVERSE);
         horizontalSlides.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
         horizontalSlides.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
 
-        verticalSlides = hardwareMap.get(DcMotorEx.class, "vSlides");
+        verticalSlides = hardwareMap.get(DcMotorEx.class, "verticalSlides");
         verticalSlides.setDirection(DcMotorEx.Direction.REVERSE);
         verticalSlides.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
         verticalSlides.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);

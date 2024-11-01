@@ -14,38 +14,39 @@ public class V2Robot extends V2RobotBase {
 
 
     // Intake Diffy Arm Positions
-    public static double DELIVER_LEFT_POS = 0.505, DELIVER_RIGHT_POS = 0.503;
-    public static double CARRY_LEFT_POS = 0.54, CARRY_RIGHT_POS = 0.42;
-    public static double TRANSFER_LEFT_POS = 0.58, TRANSFER_RIGHT_POS = 0.41;
+    public static double DELIVER_LEFT_POS = 0.56, DELIVER_RIGHT_POS = 0.5;
+    public static double CARRY_LEFT_POS = 0.595, CARRY_RIGHT_POS = 0.475;
+    public static double TRANSFER_LEFT_POS = 0.615, TRANSFER_RIGHT_POS = 0.445;
+    public static double FLAT_LEFT_POS = 0.58, FLAT_RIGHT_POS = 0.475;
+
     public static double INTAKE_ARM_DOWN = 0.91, INTAKE_ARM_TRANSFER = 0.13, INTAKE_ARM_CLEAR = 0.55; //change vals in base too TODO: make tasks for abstract functions
     public static int INTAKE_ARM_RPM = 50, INTAKE_ARM_RANGE = 300;
-    public static double CLAW_OPEN_POS = 0.77, CLAW_CLOSE_POS = 0.62;
+    public static double CLAW_OPEN_POS = 0.77, CLAW_CLOSE_POS = 0.61;
     public V2Robot(HardwareMap hardwareMap) {
         super(hardwareMap);
-        //setDriveParams();
-        init(hardwareMap, MecanumDrive.LocalizerMode.DRIVE_ENCODER);
+        setDriveParams();
+        init(hardwareMap, LocalizerMode.TWO_DEAD_WHEEL);
     }
-
 
     private void setDriveParams() {
         MecanumDrive.Params p = MecanumDrive.PARAMS;
-        p.logoFacingDirection = RevHubOrientationOnRobot.LogoFacingDirection.LEFT;
-        p.usbFacingDirection = RevHubOrientationOnRobot.UsbFacingDirection.BACKWARD;
+        p.logoFacingDirection = RevHubOrientationOnRobot.LogoFacingDirection.RIGHT;
+        p.usbFacingDirection = RevHubOrientationOnRobot.UsbFacingDirection.FORWARD;
 
         // drive model parameters
-        p.inPerTick = 0.002955;
-        p.lateralInPerTick = 0.0020686; // p.inPerTick;
-        p.trackWidthTicks = 4438;
+        p.inPerTick = 0.00198392652123995407577497129736;
+        p.lateralInPerTick = 0.0013201097409470458; // p.inPerTick;
+        p.trackWidthTicks = 6999.207445758258;
 
         // feedforward parameters (in tick units)
-        p.kS = 0.85203712;
-        p.kV = 0.000433642;
-        p.kA = 0.00008;
+        p.kS = 1.201743834589251;
+        p.kV = 0.0002683471418159556;
+        p.kA = 0.000045;
 
         // path profile parameters (in inches)
-        p.maxWheelVel = 60;
-        p.minProfileAccel = -40;
-        p.maxProfileAccel = 60;
+        p.maxWheelVel = 50;
+        p.minProfileAccel = -30;
+        p.maxProfileAccel = 50;
 
         // turn profile parameters (in radians)
         p.maxAngVel = Math.PI; // shared with path
@@ -54,20 +55,22 @@ public class V2Robot extends V2RobotBase {
         // path controller gains
         p.axialGain = 5.0;
         p.lateralGain = 5.0;
-        p.headingGain = 3.0; // shared with turn
+        p.headingGain = 8.0; // shared with turn
 
         p.axialVelGain = 0.0;
         p.lateralVelGain = 0.0;
         p.headingVelGain = 0.0; // shared with turn
 
         TwoDeadWheelLocalizer.Params localizerParams = TwoDeadWheelLocalizer.PARAMS;
-        localizerParams.perpXTicks = -0.375;
-        localizerParams.parYTicks = 0.0;
+        localizerParams.perpXTicks = -1166.809201791706;
+        localizerParams.parYTicks = 556.7862908481188;
     }
 
     @Override
     public double getDiffyTargetPos(V2DiffyTask.WhichDiffy servo, V2DiffyTask.DiffyPosition position) {
         switch(position) {
+            case FLAT:
+                return servo == V2DiffyTask.WhichDiffy.LEFT ? FLAT_LEFT_POS : FLAT_RIGHT_POS;
             case DELIVER:
                 return servo == V2DiffyTask.WhichDiffy.LEFT ? DELIVER_LEFT_POS : DELIVER_RIGHT_POS;
             case CARRY:

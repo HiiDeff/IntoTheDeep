@@ -53,6 +53,7 @@ public class V2DiffyTask extends TimedTask {
     public enum DiffyPosition {
         DELIVER,
         CARRY,
-        TRANSFER
+        TRANSFER,
+        FLAT
     }
 }
