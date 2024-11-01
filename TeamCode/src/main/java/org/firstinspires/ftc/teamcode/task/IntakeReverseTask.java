@@ -1,4 +1,6 @@
 package org.firstinspires.ftc.teamcode.task;
+import com.qualcomm.robotcore.util.ElapsedTime;
+
 import org.firstinspires.ftc.teamcode.drive.V2RobotBase;
 
 public class IntakeReverseTask extends TimedTask {
@@ -22,6 +24,26 @@ public class IntakeReverseTask extends TimedTask {
             started = true;
             robot.runIntakeOut();
         }
+/*        else
+        {
+            if (!robot.intakeSampleState.IsSampleIn())
+            {
+                if (timer == null)
+                {
+                    timer = new ElapsedTime();
+                }
+                else
+                {
+                    if (timer.milliseconds() > 200)
+                    {
+                        robot.stopIntake();
+                        return true;
+                    }
+                }
+            }
+
+        }
+*/
         return false;
     }
 }

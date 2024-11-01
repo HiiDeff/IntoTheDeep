@@ -56,6 +56,15 @@ public class IntakeSampleState {
         this.robot = robot;
     }
 
+    public boolean IsSampleIn()
+    {
+//        double leftDist = robot.leftIntakeColorSensor.getDistance(DistanceUnit.INCH);
+//        double rightDist = robot.rightIntakeColorSensor.getDistance(DistanceUnit.INCH);
+
+//        return leftDist < MIN_DIST_WITH_SAMPLE || rightDist < MIN_DIST_WITH_SAMPLE;
+        return numOfPixels > 0;
+    }
+
     public void update() {
         numOfPixels = 0;
         double leftDist = robot.leftIntakeColorSensor.getDistance(DistanceUnit.INCH);

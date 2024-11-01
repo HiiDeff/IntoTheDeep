@@ -10,6 +10,7 @@ import org.firstinspires.ftc.teamcode.task.HorizontalSlidesTask;
 import org.firstinspires.ftc.teamcode.task.IntakeArmTask;
 import org.firstinspires.ftc.teamcode.task.IntakeReverseTask;
 import org.firstinspires.ftc.teamcode.task.IntakeTask;
+import org.firstinspires.ftc.teamcode.task.IntakeWithExtensionTask;
 import org.firstinspires.ftc.teamcode.task.ParallelTask;
 import org.firstinspires.ftc.teamcode.task.RuntimeDrivingTask;
 import org.firstinspires.ftc.teamcode.task.SeriesTask;
@@ -51,20 +52,6 @@ public abstract class SamplesAutoPath extends AutoBase {
                 ),
                 new SleepTask(500)
         ));
-        task.add(new ParallelTask(
-                new ParallelTask(
-                        new V2DiffyTask(robot, V2DiffyTask.WhichDiffy.LEFT, V2DiffyTask.DiffyPosition.TRANSFER),
-                        new V2DiffyTask(robot, V2DiffyTask.WhichDiffy.RIGHT, V2DiffyTask.DiffyPosition.TRANSFER)
-                ),
-                new RuntimeDrivingTask(
-                        robot,
-                        builder -> {
-                            Pose2d pos = getSample1IntakeAlignPos();
-                            return builder.strafeToLinearHeading(pos.position, pos.heading, new TranslationalVelConstraint(45)).build();
-                        }
-                ),
-                new VerticalSlidesTask(robot, 0, 0.9, 3000)
-        ));
         return task;
     }
     @Override
@@ -73,9 +60,29 @@ public abstract class SamplesAutoPath extends AutoBase {
         SeriesTask task = new SeriesTask();
         //SAMPLE 1
         task.add(new ParallelTask(
-                new IntakeArmTask(robot, IntakeArmTask.Position.DOWN),
-                new IntakeTask(robot, 500),
-                new HorizontalSlidesTask(robot, 8.0, 1.0, 1000)//,
+                new ParallelTask(
+                        new ParallelTask(
+                                new V2DiffyTask(robot, V2DiffyTask.WhichDiffy.LEFT, V2DiffyTask.DiffyPosition.TRANSFER),
+                                new V2DiffyTask(robot, V2DiffyTask.WhichDiffy.RIGHT, V2DiffyTask.DiffyPosition.TRANSFER)
+                        ),
+                        new RuntimeDrivingTask(
+                                robot,
+                                builder -> {
+                                    Pose2d pos = getSample1IntakeAlignPos();
+                                    return builder.strafeToLinearHeading(pos.position, pos.heading, new TranslationalVelConstraint(45)).build();
+                                }
+                        ),
+                        new VerticalSlidesTask(robot, 0, 0.9, 1000)
+                ),
+                new SeriesTask(
+                        new SleepTask(getIntakeDelay()),
+                    new ParallelTask(
+                       new IntakeArmTask(robot, IntakeArmTask.Position.DOWN),
+                       new IntakeWithExtensionTask(robot, 8, 1000)
+                    )
+                )
+//                new IntakeTask(robot, 500),
+//                new HorizontalSlidesTask(robot, 8.0, 1.0, 1000)//,
 //                new RuntimeDrivingTask(
 //                        robot,
 //                        builder -> {
@@ -88,7 +95,7 @@ public abstract class SamplesAutoPath extends AutoBase {
                 new SeriesTask(
                         new ParallelTask(
                                 new IntakeArmTask(robot, IntakeArmTask.Position.TRANSFER),
-                                new HorizontalSlidesTask(robot, V2RobotBase.HORIZONTAL_SLIDE_TRANSFER_POS, 1.0, 1500)
+                                new HorizontalSlidesTask(robot, V2RobotBase.HORIZONTAL_SLIDE_TRANSFER_POS, 1.0, 1200)
                         ),
                         new SleepTask(300),
                         new IntakeReverseTask(robot, 800),
@@ -101,10 +108,10 @@ public abstract class SamplesAutoPath extends AutoBase {
                 new RuntimeDrivingTask(
                         robot,
                         builder -> {
-                            Pose2d pos1 = getSample1BucketAlignPos();
+//                            Pose2d pos1 = getSample1BucketAlignPos();
                             Pose2d pos2 = getSample1BucketDeliverPos();
                             return builder
-                                    .strafeToLinearHeading(pos1.position, pos1.heading)
+//                                    .strafeToLinearHeading(pos1.position, pos1.heading)
                                     .strafeToLinearHeading(pos2.position, pos2.heading)
                                     .build();
                         }
@@ -141,8 +148,10 @@ public abstract class SamplesAutoPath extends AutoBase {
                 new VerticalSlidesTask(robot, 0, 0.9, 1000)
         ));
         task.add(new ParallelTask(
-                new IntakeTask(robot, 500),
-                new HorizontalSlidesTask(robot, 14.0, 1.0, 1000)//,
+                new IntakeWithExtensionTask(robot, 14, 1200)
+
+//                new IntakeTask(robot, 500),
+//                new HorizontalSlidesTask(robot, 14.0, 1.0, 1000)//,
 //                new RuntimeDrivingTask(
 //                        robot,
 //                        builder -> {
@@ -157,7 +166,7 @@ public abstract class SamplesAutoPath extends AutoBase {
                                 new IntakeArmTask(robot, IntakeArmTask.Position.TRANSFER),
                                 new HorizontalSlidesTask(robot, V2RobotBase.HORIZONTAL_SLIDE_TRANSFER_POS, 1.0, 1500)
                         ),
-                        new SleepTask(300),
+                        new SleepTask(100),
                         new IntakeReverseTask(robot, 800),
                         new ParallelTask(
                                 new V2DiffyTask(robot, V2DiffyTask.WhichDiffy.LEFT, V2DiffyTask.DiffyPosition.CARRY),
@@ -168,10 +177,10 @@ public abstract class SamplesAutoPath extends AutoBase {
                 new RuntimeDrivingTask(
                         robot,
                         builder -> {
-                            Pose2d pos1 = getSample2BucketAlignPos();
+//                            Pose2d pos1 = getSample2BucketAlignPos();
                             Pose2d pos2 = getSample2BucketDeliverPos();
                             return builder
-                                    .strafeToLinearHeading(pos1.position, pos1.heading)
+//                                    .strafeToLinearHeading(pos1.position, pos1.heading)
                                     .strafeToLinearHeading(pos2.position, pos2.heading).build();
                         }
                 )
@@ -207,8 +216,10 @@ public abstract class SamplesAutoPath extends AutoBase {
                 new VerticalSlidesTask(robot, 0, 0.9, 1000)
         ));
         task.add(new ParallelTask(
-                new IntakeTask(robot, 500),
-                new HorizontalSlidesTask(robot, 14.0, 1.0, 1000)//,
+                new IntakeWithExtensionTask(robot, 12, 1000)
+
+//                new IntakeTask(robot, 500),
+//                new HorizontalSlidesTask(robot, 12.0, 1.0, 1000)//,
 //                new RuntimeDrivingTask(
 //                        robot,
 //                        builder -> {
@@ -221,7 +232,7 @@ public abstract class SamplesAutoPath extends AutoBase {
                 new SeriesTask(
                         new ParallelTask(
                                 new IntakeArmTask(robot, IntakeArmTask.Position.TRANSFER),
-                                new HorizontalSlidesTask(robot, V2RobotBase.HORIZONTAL_SLIDE_TRANSFER_POS, 1.0, 1500)
+                                new HorizontalSlidesTask(robot, V2RobotBase.HORIZONTAL_SLIDE_TRANSFER_POS, 1.0, 1200)
                         ),
                         new SleepTask(300),
                         new IntakeReverseTask(robot, 800),
@@ -234,10 +245,10 @@ public abstract class SamplesAutoPath extends AutoBase {
                 new RuntimeDrivingTask(
                         robot,
                         builder -> {
-                            Pose2d pos1 = getSample3BucketAlignPos();
+//                            Pose2d pos1 = getSample3BucketAlignPos();
                             Pose2d pos2 = getSample3BucketDeliverPos();
                             return builder
-                                    .strafeToLinearHeading(pos1.position, pos1.heading)
+//                                    .strafeToLinearHeading(pos1.position, pos1.heading)
                                     .strafeToLinearHeading(pos2.position, pos2.heading)
                                     .build();
                         }
@@ -299,5 +310,5 @@ public abstract class SamplesAutoPath extends AutoBase {
     protected abstract Pose2d getSample3BucketAlignPos();
     protected abstract Pose2d getSample3BucketDeliverPos();
     protected abstract Pose2d getParkPos();
-
+    protected abstract int getIntakeDelay();
 }

@@ -244,7 +244,7 @@ public abstract class V2RobotBase extends MecanumDrive {
         intakeRoller.setPower(1.0);
     }
     public void runIntakeOut() {
-        intakeRoller.setPower(-1.0);
+        intakeRoller.setPower(-0.8);
     }
     public void stopIntake() {
         intakeRoller.setPower(0.0);

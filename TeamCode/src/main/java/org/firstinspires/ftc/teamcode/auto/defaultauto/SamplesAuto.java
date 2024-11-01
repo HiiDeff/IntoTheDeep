@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.auto.defaultauto;
 
+import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -7,8 +8,18 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import org.firstinspires.ftc.teamcode.drive.V2Robot;
 import org.firstinspires.ftc.teamcode.drive.V2RobotBase;
 
+@Config
 @Autonomous(name = "V2 Robot - Sample Auto")
 public class SamplesAuto extends SamplesAutoPath {
+
+    public static double Sample1IntakeAlignPosX = 37.0738;
+    public static double Sample1IntakeAlignPosY = 0.0592;
+    public static double Sample2IntakeAlignPosX = 35.9134;
+    public static double Sample2IntakeAlignPosY = 2.4237;
+    public static double Sample3IntakeAlignPosX = 35.0852;
+    public static double Sample3IntakeAlignPosY = 10.1009;
+
+    public static int INTAKE_DELAY = 2000;
 
     @Override
     protected V2RobotBase createRobot(HardwareMap hardwareMap) {
@@ -27,7 +38,7 @@ public class SamplesAuto extends SamplesAutoPath {
 
     @Override
     protected Pose2d getSample1IntakeAlignPos() {
-        return new Pose2d(37.0738, 0.0592, Math.PI/2);
+        return new Pose2d(Sample1IntakeAlignPosX, Sample1IntakeAlignPosY, Math.PI/2);
     }
 
     @Override
@@ -47,7 +58,7 @@ public class SamplesAuto extends SamplesAutoPath {
 
     @Override
     protected Pose2d getSample2IntakeAlignPos() {
-        return new Pose2d(35.9134, 2.4237, Math.PI/2);
+        return new Pose2d(Sample2IntakeAlignPosX, Sample2IntakeAlignPosY, Math.PI/2);
     }
 
     @Override
@@ -67,12 +78,12 @@ public class SamplesAuto extends SamplesAutoPath {
 
     @Override
     protected Pose2d getSample3IntakeAlignPos() {
-        return new Pose2d(35.0852, 10.1009, Math.PI/2);
+        return new Pose2d(Sample3IntakeAlignPosX, Sample3IntakeAlignPosY, Math.PI/2);
     }
 
     @Override
     protected Pose2d getSample3IntakePos() {
-        return new Pose2d(35.0852, 17.4767, Math.PI/2);
+        return new Pose2d(35.0852, 18.4767, Math.PI/2);
     }
 
     @Override
@@ -88,5 +99,10 @@ public class SamplesAuto extends SamplesAutoPath {
     @Override
     protected Pose2d getParkPos() {
         return new Pose2d(51.906, -8.8614, Math.PI/2);
+    }
+
+    @Override
+    protected int getIntakeDelay() {
+        return INTAKE_DELAY;
     }
 }
