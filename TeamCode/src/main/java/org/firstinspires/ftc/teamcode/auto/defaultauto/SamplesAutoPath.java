@@ -12,6 +12,7 @@ import org.firstinspires.ftc.teamcode.task.IntakeReverseTask;
 import org.firstinspires.ftc.teamcode.task.IntakeTask;
 import org.firstinspires.ftc.teamcode.task.IntakeWithExtensionTask;
 import org.firstinspires.ftc.teamcode.task.ParallelTask;
+import org.firstinspires.ftc.teamcode.task.RungStickTask;
 import org.firstinspires.ftc.teamcode.task.RuntimeDrivingTask;
 import org.firstinspires.ftc.teamcode.task.SeriesTask;
 import org.firstinspires.ftc.teamcode.task.SleepTask;
@@ -292,7 +293,8 @@ public abstract class SamplesAutoPath extends AutoBase {
                 ),
                 new VerticalSlidesTask(robot, 0, 0.9, 3000),
                 new HorizontalSlidesTask(robot, 0, 1.0,1500),
-                new IntakeArmTask(robot, IntakeArmTask.Position.DOWN)
+                new IntakeArmTask(robot, IntakeArmTask.Position.DOWN),
+                new RungStickTask(robot, RungStickTask.Position.UP)
         ));
         return task;
     }

@@ -54,6 +54,7 @@ public class V2DiffyTask extends TimedTask {
         DELIVER,
         CARRY,
         TRANSFER,
+        CHAMBER_DELIVERY,
         FLAT
     }
 }

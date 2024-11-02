@@ -18,6 +18,7 @@ public class V2Robot extends V2RobotBase {
     public static double CARRY_LEFT_POS = 0.595, CARRY_RIGHT_POS = 0.475;
     public static double TRANSFER_LEFT_POS = 0.615, TRANSFER_RIGHT_POS = 0.445;
     public static double FLAT_LEFT_POS = 0.58, FLAT_RIGHT_POS = 0.475;
+    public static double CHAMBER_LEFT_POS = 0.575, CHAMBER_RIGHT_POS = 0.48;
 
     public static double INTAKE_ARM_DOWN = 0.91, INTAKE_ARM_TRANSFER = 0.13, INTAKE_ARM_CLEAR = 0.55; //change vals in base too TODO: make tasks for abstract functions
     public static int INTAKE_ARM_RPM = 50, INTAKE_ARM_RANGE = 300;
@@ -75,6 +76,8 @@ public class V2Robot extends V2RobotBase {
                 return servo == V2DiffyTask.WhichDiffy.LEFT ? DELIVER_LEFT_POS : DELIVER_RIGHT_POS;
             case CARRY:
                 return servo == V2DiffyTask.WhichDiffy.LEFT ? CARRY_LEFT_POS : CARRY_RIGHT_POS;
+            case CHAMBER_DELIVERY:
+                return servo == V2DiffyTask.WhichDiffy.LEFT ? CHAMBER_LEFT_POS : CHAMBER_RIGHT_POS;
             case TRANSFER:
             default:
                 return servo == V2DiffyTask.WhichDiffy.LEFT ? TRANSFER_LEFT_POS : TRANSFER_RIGHT_POS;

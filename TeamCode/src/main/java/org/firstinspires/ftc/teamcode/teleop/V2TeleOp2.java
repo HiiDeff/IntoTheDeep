@@ -118,6 +118,10 @@ public class V2TeleOp2 extends LinearOpMode {
         else if(gp1.onceY()) { //diffy deliver
             robot.setDiffyPosition(V2DiffyTask.DiffyPosition.DELIVER);
         }
+        else if (gp1.onceB())
+        {
+            robot.setDiffyPosition(V2DiffyTask.DiffyPosition.CHAMBER_DELIVERY);
+        }
         if(gp2.onceB()){
             if(clawOpen) {
                 robot.setClawPosition(robot.getClawPosition(ClawTask.ClawPosition.CLOSE));
@@ -198,6 +202,10 @@ public class V2TeleOp2 extends LinearOpMode {
 //        a = turnLim.calculate(a);
 //        telemetry.addData("driving", x + " " + y + " " + a);
         robot.setDrivePowers(new PoseVelocity2d(new Vector2d(x, y), a));
+
+        if(gp1.back() && gp1.onceA()){
+            robot.toggleRungStick();
+        }
     }
 
 
@@ -208,8 +216,14 @@ public class V2TeleOp2 extends LinearOpMode {
         } else if(gp2.dpadDown()) {
             robot.setVerticalSlidePower(-1.0);
         }
-        else if(resetTask == null){
-            robot.setVerticalSlidePower(VERTICAL_STAND_POWER);
+        else if(resetTask == null) {
+            if (robot.getVerticalSlidesHeight() < 0.5) {
+                robot.setVerticalSlidePowerWithoutEncoder(0);
+            }
+            else
+            {
+                robot.setVerticalSlidePower(VERTICAL_STAND_POWER);
+            }
         }
     }
 
