@@ -14,9 +14,9 @@ public class SamplesAuto extends SamplesAutoPath {
 
     public static double Sample1IntakeAlignPosX = 37.0738;
     public static double Sample1IntakeAlignPosY = 0.0592;
-    public static double Sample2IntakeAlignPosX = 35.9134;
+    public static double Sample2IntakeAlignPosX = 34.9134;
     public static double Sample2IntakeAlignPosY = 2.4237;
-    public static double Sample3IntakeAlignPosX = 35.0852;
+    public static double Sample3IntakeAlignPosX = 34.0852;
     public static double Sample3IntakeAlignPosY = 10.1009;
 
     public static int INTAKE_DELAY = 2000;
@@ -73,7 +73,7 @@ public class SamplesAuto extends SamplesAutoPath {
 
     @Override
     protected Pose2d getSample2BucketDeliverPos() {
-        return new Pose2d(3.6991, 20.6653, -Math.PI/4);
+        return new Pose2d(3.1991, 21.1653, -Math.PI/4);
     }
 
     @Override
@@ -93,13 +93,20 @@ public class SamplesAuto extends SamplesAutoPath {
 
     @Override
     protected Pose2d getSample3BucketDeliverPos() {
-        return new Pose2d(4.6098, 19.991, -Math.PI/4);
+        return new Pose2d(2.6098, 19.591, -Math.PI/4);
+    }
+
+    @Override
+    protected Pose2d getParkAlignPos() {
+        return new Pose2d(51.906, -8.8614, Math.PI/2);
     }
 
     @Override
     protected Pose2d getParkPos() {
-        return new Pose2d(51.906, -8.8614, Math.PI/2);
+        return new Pose2d(51.906, -16.8614, Math.PI/2);
     }
+
+
 
     @Override
     protected int getIntakeDelay() {

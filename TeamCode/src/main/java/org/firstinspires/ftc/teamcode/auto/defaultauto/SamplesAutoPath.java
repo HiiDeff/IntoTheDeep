@@ -97,7 +97,7 @@ public abstract class SamplesAutoPath extends AutoBase {
                                 new IntakeArmTask(robot, IntakeArmTask.Position.TRANSFER),
                                 new HorizontalSlidesTask(robot, V2RobotBase.HORIZONTAL_SLIDE_TRANSFER_POS, 1.0, 1200)
                         ),
-                        new SleepTask(300),
+                        new SleepTask(500),
                         new IntakeReverseTask(robot, 800),
                         new ParallelTask(
                                 new V2DiffyTask(robot, V2DiffyTask.WhichDiffy.LEFT, V2DiffyTask.DiffyPosition.CARRY),
@@ -166,7 +166,7 @@ public abstract class SamplesAutoPath extends AutoBase {
                                 new IntakeArmTask(robot, IntakeArmTask.Position.TRANSFER),
                                 new HorizontalSlidesTask(robot, V2RobotBase.HORIZONTAL_SLIDE_TRANSFER_POS, 1.0, 1500)
                         ),
-                        new SleepTask(100),
+                        new SleepTask(500),
                         new IntakeReverseTask(robot, 800),
                         new ParallelTask(
                                 new V2DiffyTask(robot, V2DiffyTask.WhichDiffy.LEFT, V2DiffyTask.DiffyPosition.CARRY),
@@ -232,9 +232,9 @@ public abstract class SamplesAutoPath extends AutoBase {
                 new SeriesTask(
                         new ParallelTask(
                                 new IntakeArmTask(robot, IntakeArmTask.Position.TRANSFER),
-                                new HorizontalSlidesTask(robot, V2RobotBase.HORIZONTAL_SLIDE_TRANSFER_POS, 1.0, 1200)
+                                new HorizontalSlidesTask(robot, V2RobotBase.HORIZONTAL_SLIDE_TRANSFER_POS, 1.0, 1500)
                         ),
-                        new SleepTask(300),
+                        new SleepTask(500),
                         new IntakeReverseTask(robot, 800),
                         new ParallelTask(
                                 new V2DiffyTask(robot, V2DiffyTask.WhichDiffy.LEFT, V2DiffyTask.DiffyPosition.CARRY),
@@ -282,8 +282,12 @@ public abstract class SamplesAutoPath extends AutoBase {
                 new RuntimeDrivingTask(
                         robot,
                         builder -> {
-                            Pose2d pos = getParkPos();
-                            return builder.strafeToLinearHeading(pos.position, pos.heading, new TranslationalVelConstraint(45)).build();
+                            Pose2d pos1 = getParkAlignPos();
+                            Pose2d pos2 = getParkPos();
+                            return builder
+                                    .strafeToLinearHeading(pos1.position, pos1.heading, new TranslationalVelConstraint(45))
+                                    .strafeToLinearHeading(pos2.position, pos2.heading, new TranslationalVelConstraint(45))
+                                    .build();
                         }
                 ),
                 new VerticalSlidesTask(robot, 0, 0.9, 3000),
@@ -309,6 +313,7 @@ public abstract class SamplesAutoPath extends AutoBase {
     protected abstract Pose2d getSample3IntakePos();
     protected abstract Pose2d getSample3BucketAlignPos();
     protected abstract Pose2d getSample3BucketDeliverPos();
+    protected abstract Pose2d getParkAlignPos();
     protected abstract Pose2d getParkPos();
     protected abstract int getIntakeDelay();
 }

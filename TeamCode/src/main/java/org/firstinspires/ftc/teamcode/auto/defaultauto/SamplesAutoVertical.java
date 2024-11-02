@@ -95,6 +95,11 @@ public class SamplesAutoVertical extends SamplesAutoPath {
     }
 
     @Override
+    protected Pose2d getParkAlignPos() {
+        return getParkPos();
+    }
+
+    @Override
     protected Pose2d getParkPos() {
         return new Pose2d(51.906, -8.8614, Math.PI/2);
     }

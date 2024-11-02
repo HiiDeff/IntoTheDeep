@@ -91,7 +91,7 @@ public class V2TeleOp2 extends LinearOpMode {
     }
 
     private void runReset() {
-        if(gp1.onceRightBumper()) {
+        if(gp1.onceRightBumper() || gp2.onceRightBumper()) {
             resetTask = new SeriesTask(
                     new ParallelTask(
                             new V2DiffyTask(robot, V2DiffyTask.WhichDiffy.LEFT, V2DiffyTask.DiffyPosition.TRANSFER),
