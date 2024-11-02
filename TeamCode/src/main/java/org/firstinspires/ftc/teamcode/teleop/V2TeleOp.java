@@ -198,7 +198,7 @@ public class V2TeleOp extends LinearOpMode {
             robot.setIntakeArmPos(robot.getIntakeArmPos(IntakeArmTask.Position.CLEAR));
         }
         if(gp2.onceRightBumper()){
-            robot.toggleIntakeArm();
+       //     robot.toggleIntakeArm();
         }
 
         if(gp2.rightTrigger()>0.1){

@@ -23,7 +23,7 @@ public abstract class V2RobotBase extends MecanumDrive {
     // Slides Constants
     //TODO
     public static double VERTICAL_EXTEND_MIN_IN = -0.2;
-    public static double VERTICAL_EXTEND_MAX_IN = 39;
+    public static double VERTICAL_EXTEND_MAX_IN = 40;
     public static double VERTICAL_EXTEND_LOW_CHAMBER_IN = 10;
     public static double VERTICAL_EXTEND_HIGH_CHAMBER_IN = 17;
     public static double VERTICAL_TICKS_PER_INCH = 32.91 * 14 / 10; // 14 / 10 gear ratio
@@ -244,7 +244,7 @@ public abstract class V2RobotBase extends MecanumDrive {
         intakeRoller.setPower(1.0);
     }
     public void runIntakeOut() {
-        intakeRoller.setPower(-1.0);
+        intakeRoller.setPower(-0.8);
     }
     public void stopIntake() {
         intakeRoller.setPower(0.0);
