@@ -13,6 +13,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 import org.firstinspires.ftc.teamcode.roadrunner.MecanumDrive;
 import org.firstinspires.ftc.teamcode.task.ClawTask;
 import org.firstinspires.ftc.teamcode.task.IntakeArmTask;
+import org.firstinspires.ftc.teamcode.task.RungStickTask;
 import org.firstinspires.ftc.teamcode.task.V2DiffyTask;
 import org.firstinspires.ftc.teamcode.util.Utils;
 
@@ -31,7 +32,7 @@ public abstract class V2RobotBase extends MecanumDrive {
     public static double HORIZONTAL_EXTEND_MIN_IN = -0.05;
     public static double HORIZONTAL_EXTEND_MAX_IN = 19.0;
     public static double HORIZONTAL_TICKS_PER_INCH = 32.91;
-    public static double HORIZONTAL_SLIDE_TRANSFER_POS = 5.1; // 6.7; 167/32.91 = 5.074
+    public static double HORIZONTAL_SLIDE_TRANSFER_POS = 172 / 32.91; //4.95; // 6.7; 167/32.91 = 5.074
 
     // States
 
@@ -51,6 +52,7 @@ public abstract class V2RobotBase extends MecanumDrive {
     public final Servo diffyRight;
     public final Servo outtakeClaw;
     public final Servo intakeArm;
+    public final Servo rungStick;
 
     // Sensors
     public final RevColorSensorV3 leftIntakeColorSensor, rightIntakeColorSensor;
@@ -61,6 +63,7 @@ public abstract class V2RobotBase extends MecanumDrive {
     // Cached Encoder Vals
     private int verticalSlidesPos = 0;
     private int horizontalSlidesPos = 0;
+    private RungStickTask.Position rungStickPos = RungStickTask.Position.INIT;
 
 
     public V2RobotBase(HardwareMap hardwareMap) {
@@ -89,6 +92,7 @@ public abstract class V2RobotBase extends MecanumDrive {
         outtakeClaw = hardwareMap.get(Servo.class, "outtakeClaw");
         intakeArm = hardwareMap.get(Servo.class, "intakeArm");
         intakeArmUp = false;
+        rungStick = hardwareMap.get(Servo.class, "rungStick");
 
         //Sensors:
         leftIntakeColorSensor = hardwareMap.get(RevColorSensorV3.class, "intakeColorLeft");
@@ -104,12 +108,15 @@ public abstract class V2RobotBase extends MecanumDrive {
         setIntakeArmPos(V2Robot.INTAKE_ARM_DOWN);
        // setHorizontalSlideDist(HORIZONTAL_SLIDE_TRANSFER_POS, 0.8);
         setDiffyPosition(V2DiffyTask.DiffyPosition.FLAT);
+        RungStickTask.setPosition(this, RungStickTask.Position.INIT);
     }
     public void autoInit() {
         setIntakeArmPos(V2Robot.INTAKE_ARM_DOWN);
         // setHorizontalSlideDist(HORIZONTAL_SLIDE_TRANSFER_POS, 0.8);
         setDiffyPosition(V2DiffyTask.DiffyPosition.CARRY);
+        RungStickTask.setPosition(this, RungStickTask.Position.INIT);
     }
+
     public void updateEverything() {
         updateEncoders();
         updatePoseEstimate();
@@ -137,6 +144,12 @@ public abstract class V2RobotBase extends MecanumDrive {
         verticalSlides.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         verticalSlides.setPower(Utils.clamp(power, -1.0, 1.0));
     }// Utils for Vertical Slides
+
+
+    public void setVerticalSlidePowerWithoutEncoder(double power) {
+        verticalSlides.setPower(Utils.clamp(power, -1.0, 1.0));
+    }// Utils for Vertical Slides
+
     public void setVerticalSlidePower(double power, double standPower) {
         verticalSlides.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         if(verticalSlidesPos > VERTICAL_EXTEND_MAX_IN*VERTICAL_TICKS_PER_INCH) {
@@ -244,7 +257,7 @@ public abstract class V2RobotBase extends MecanumDrive {
         intakeRoller.setPower(1.0);
     }
     public void runIntakeOut() {
-        intakeRoller.setPower(-0.8);
+        intakeRoller.setPower(-0.9);
     }
     public void stopIntake() {
         intakeRoller.setPower(0.0);
@@ -265,5 +278,13 @@ public abstract class V2RobotBase extends MecanumDrive {
         return intakeSampleState.getStripLightColors();
     }
 
-
+    public void toggleRungStick(){
+        if (rungStickPos == RungStickTask.Position.UP) {
+            rungStickPos = RungStickTask.Position.DOWN;
+        }
+        else{
+            rungStickPos = RungStickTask.Position.UP;
+        }
+        RungStickTask.setPosition(this, rungStickPos);
+    }
 }

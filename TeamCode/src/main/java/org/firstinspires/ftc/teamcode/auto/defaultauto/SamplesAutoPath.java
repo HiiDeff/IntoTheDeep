@@ -12,6 +12,7 @@ import org.firstinspires.ftc.teamcode.task.IntakeReverseTask;
 import org.firstinspires.ftc.teamcode.task.IntakeTask;
 import org.firstinspires.ftc.teamcode.task.IntakeWithExtensionTask;
 import org.firstinspires.ftc.teamcode.task.ParallelTask;
+import org.firstinspires.ftc.teamcode.task.RungStickTask;
 import org.firstinspires.ftc.teamcode.task.RuntimeDrivingTask;
 import org.firstinspires.ftc.teamcode.task.SeriesTask;
 import org.firstinspires.ftc.teamcode.task.SleepTask;
@@ -33,7 +34,7 @@ public abstract class SamplesAutoPath extends AutoBase {
                         robot,
                         builder -> {
                             Pose2d pos = getPreloadBucketAlignPos();
-                            return builder.strafeToLinearHeading(pos.position, pos.heading, new TranslationalVelConstraint(45)).build();
+                            return builder.strafeToLinearHeading(pos.position, pos.heading, new TranslationalVelConstraint(60)).build();
                         }
                 ),
                 new VerticalSlidesTask(robot, 39, 1.0, 2000)
@@ -97,8 +98,10 @@ public abstract class SamplesAutoPath extends AutoBase {
                                 new IntakeArmTask(robot, IntakeArmTask.Position.TRANSFER),
                                 new HorizontalSlidesTask(robot, V2RobotBase.HORIZONTAL_SLIDE_TRANSFER_POS, 1.0, 1200)
                         ),
-                        new SleepTask(500),
-                        new IntakeReverseTask(robot, 800),
+                        new ParallelTask(
+                                new IntakeReverseTask(robot, 800),
+                                new HorizontalSlidesTask(robot, V2RobotBase.HORIZONTAL_SLIDE_TRANSFER_POS, 1.0, 800)
+                        ),
                         new ParallelTask(
                                 new V2DiffyTask(robot, V2DiffyTask.WhichDiffy.LEFT, V2DiffyTask.DiffyPosition.CARRY),
                                 new V2DiffyTask(robot, V2DiffyTask.WhichDiffy.RIGHT, V2DiffyTask.DiffyPosition.CARRY),
@@ -164,10 +167,12 @@ public abstract class SamplesAutoPath extends AutoBase {
                 new SeriesTask(
                         new ParallelTask(
                                 new IntakeArmTask(robot, IntakeArmTask.Position.TRANSFER),
-                                new HorizontalSlidesTask(robot, V2RobotBase.HORIZONTAL_SLIDE_TRANSFER_POS, 1.0, 1500)
+                                new HorizontalSlidesTask(robot, V2RobotBase.HORIZONTAL_SLIDE_TRANSFER_POS, 1.0, 1200)
                         ),
-                        new SleepTask(500),
-                        new IntakeReverseTask(robot, 800),
+                        new ParallelTask(
+                            new IntakeReverseTask(robot, 800),
+                                new HorizontalSlidesTask(robot, V2RobotBase.HORIZONTAL_SLIDE_TRANSFER_POS, 1.0, 800)
+                        ),
                         new ParallelTask(
                                 new V2DiffyTask(robot, V2DiffyTask.WhichDiffy.LEFT, V2DiffyTask.DiffyPosition.CARRY),
                                 new V2DiffyTask(robot, V2DiffyTask.WhichDiffy.RIGHT, V2DiffyTask.DiffyPosition.CARRY),
@@ -216,7 +221,7 @@ public abstract class SamplesAutoPath extends AutoBase {
                 new VerticalSlidesTask(robot, 0, 0.9, 1000)
         ));
         task.add(new ParallelTask(
-                new IntakeWithExtensionTask(robot, 12, 1000)
+                new IntakeWithExtensionTask(robot, 13, 1000)
 
 //                new IntakeTask(robot, 500),
 //                new HorizontalSlidesTask(robot, 12.0, 1.0, 1000)//,
@@ -232,10 +237,12 @@ public abstract class SamplesAutoPath extends AutoBase {
                 new SeriesTask(
                         new ParallelTask(
                                 new IntakeArmTask(robot, IntakeArmTask.Position.TRANSFER),
-                                new HorizontalSlidesTask(robot, V2RobotBase.HORIZONTAL_SLIDE_TRANSFER_POS, 1.0, 1500)
+                                new HorizontalSlidesTask(robot, V2RobotBase.HORIZONTAL_SLIDE_TRANSFER_POS, 1.0, 1200)
                         ),
-                        new SleepTask(500),
-                        new IntakeReverseTask(robot, 800),
+                        new ParallelTask(
+                                new IntakeReverseTask(robot, 800),
+                                new HorizontalSlidesTask(robot, V2RobotBase.HORIZONTAL_SLIDE_TRANSFER_POS, 1.0, 800)
+                        ),
                         new ParallelTask(
                                 new V2DiffyTask(robot, V2DiffyTask.WhichDiffy.LEFT, V2DiffyTask.DiffyPosition.CARRY),
                                 new V2DiffyTask(robot, V2DiffyTask.WhichDiffy.RIGHT, V2DiffyTask.DiffyPosition.CARRY),
@@ -284,15 +291,25 @@ public abstract class SamplesAutoPath extends AutoBase {
                         builder -> {
                             Pose2d pos1 = getParkAlignPos();
                             Pose2d pos2 = getParkPos();
+//                            return builder
+//                                    .setTangent(0)
+//                                    .splineToSplineHeading(pos2, Math.PI/2)
+//                                    //.strafeToLinearHeading(pos2.position, pos2.heading, new TranslationalVelConstraint(60))
+//                                    .build();
                             return builder
-                                    .strafeToLinearHeading(pos1.position, pos1.heading, new TranslationalVelConstraint(45))
-                                    .strafeToLinearHeading(pos2.position, pos2.heading, new TranslationalVelConstraint(45))
+                                    .strafeToLinearHeading(pos1.position, pos1.heading, new TranslationalVelConstraint(70))
+                                    .strafeToLinearHeading(pos2.position, pos2.heading, new TranslationalVelConstraint(70))
                                     .build();
                         }
                 ),
                 new VerticalSlidesTask(robot, 0, 0.9, 3000),
                 new HorizontalSlidesTask(robot, 0, 1.0,1500),
-                new IntakeArmTask(robot, IntakeArmTask.Position.DOWN)
+                new IntakeArmTask(robot, IntakeArmTask.Position.DOWN),
+                new RungStickTask(robot, RungStickTask.Position.UP),
+                new SeriesTask(
+                        new SleepTask(1000),
+                        new HorizontalSlidesTask(robot, 0, 1.0,1500)
+                )
         ));
         return task;
     }

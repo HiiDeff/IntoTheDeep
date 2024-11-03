@@ -32,6 +32,7 @@ public class V2TeleOp2 extends LinearOpMode {
     public static double VERTICAL_SLIDE_MAX_POWER = 0.5;
     public static double MIN_DRIVE_POWER = 0.01;
     public static double HORIZONTALSLIDE_DELTA = 2;
+    public static double chamberHeight = 18.2745;
 
     private V2RobotBase robot;
     private GamePad gp1, gp2;
@@ -68,6 +69,7 @@ public class V2TeleOp2 extends LinearOpMode {
 
             telemetry.addData("cycle time", cycleTimer.milliseconds() - lastTime);
             telemetry.addData("pose (may be slightlyyyy inaccurate)", robot.pose);
+            telemetry.addData("verticalSlidePos", robot.getVerticalSlidesHeight());
             lastTime = cycleTimer.milliseconds();
         }
     }
@@ -112,17 +114,31 @@ public class V2TeleOp2 extends LinearOpMode {
             //     robot.setDefaultVerticalSlidesHeight(VERTICAL_SLIDE_MAX_POWER);
             robot.setDiffyPosition(V2DiffyTask.DiffyPosition.FLAT); //ALSO BAD CONVENTION TODO: FIX
         }
-        else if(gp1.onceA()) { //diffy transfer
+        else if(!gp1.back() && gp1.onceA()) { //diffy transfer
             robot.setDiffyPosition(V2DiffyTask.DiffyPosition.TRANSFER);
         }
         else if(gp1.onceY()) { //diffy deliver
             robot.setDiffyPosition(V2DiffyTask.DiffyPosition.DELIVER);
+        }
+        else if (gp1.onceB())
+        {
+            robot.setDiffyPosition(V2DiffyTask.DiffyPosition.CHAMBER_DELIVERY);
+            if(verticalSlidesTask == null) {
+                verticalSlidesTask = new VerticalSlidesTask(robot, chamberHeight, 1.0, 3000);
+            }
+
         }
         if(gp2.onceB()){
             if(clawOpen) {
                 robot.setClawPosition(robot.getClawPosition(ClawTask.ClawPosition.CLOSE));
             }else{
                 robot.setClawPosition(robot.getClawPosition(ClawTask.ClawPosition.OPEN));
+                if(diffyTask == null) {
+                    diffyTask = new ParallelTask(
+                            new V2DiffyTask(robot, V2DiffyTask.WhichDiffy.LEFT, V2DiffyTask.DiffyPosition.FLAT),
+                            new V2DiffyTask(robot, V2DiffyTask.WhichDiffy.RIGHT, V2DiffyTask.DiffyPosition.FLAT)
+                    );
+                }
             }
             clawOpen = !clawOpen;
         }
@@ -198,18 +214,36 @@ public class V2TeleOp2 extends LinearOpMode {
 //        a = turnLim.calculate(a);
 //        telemetry.addData("driving", x + " " + y + " " + a);
         robot.setDrivePowers(new PoseVelocity2d(new Vector2d(x, y), a));
+
+        if(gp1.back() && gp1.onceA()){
+            robot.toggleRungStick();
+        }
     }
 
 
     private void runDelivery() {
 
         if(gp2.dpadUp()){
+            if(verticalSlidesTask != null) {
+                verticalSlidesTask.cancel();
+                verticalSlidesTask = null;
+            }
             robot.setVerticalSlidePower(1.0);
         } else if(gp2.dpadDown()) {
+            if(verticalSlidesTask != null) {
+                verticalSlidesTask.cancel();
+                verticalSlidesTask = null;
+            }
             robot.setVerticalSlidePower(-1.0);
         }
-        else if(resetTask == null){
-            robot.setVerticalSlidePower(VERTICAL_STAND_POWER);
+        else if(resetTask == null && verticalSlidesTask == null) {
+            if (robot.getVerticalSlidesHeight() < 0.5) {
+                robot.setVerticalSlidePowerWithoutEncoder(0);
+            }
+            else
+            {
+                robot.setVerticalSlidePower(VERTICAL_STAND_POWER);
+            }
         }
     }
 

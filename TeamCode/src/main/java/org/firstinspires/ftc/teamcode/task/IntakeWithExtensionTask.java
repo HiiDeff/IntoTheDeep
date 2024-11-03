@@ -37,7 +37,7 @@ public class IntakeWithExtensionTask extends TimedTask {
                 }
                 else
                 {
-                    if (timer.milliseconds() > 200)
+                    if (timer.milliseconds() > 100)
                     {
                         robot.setHorizontalSlidesPower(0.2);
                         return true;

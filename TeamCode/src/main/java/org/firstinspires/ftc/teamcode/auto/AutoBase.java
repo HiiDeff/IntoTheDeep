@@ -51,6 +51,7 @@ public abstract class AutoBase extends LinearOpMode {
             if(task.perform()) {
                 if(state == AutoState.INIT){
                     task = createCycleTask();
+                    //task = createFinishTask();
                 }
                 else if(state == AutoState.CYCLE) {
                     task = createFinishTask();
