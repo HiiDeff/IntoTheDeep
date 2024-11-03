@@ -32,7 +32,7 @@ public abstract class V2RobotBase extends MecanumDrive {
     public static double HORIZONTAL_EXTEND_MIN_IN = -0.05;
     public static double HORIZONTAL_EXTEND_MAX_IN = 19.0;
     public static double HORIZONTAL_TICKS_PER_INCH = 32.91;
-    public static double HORIZONTAL_SLIDE_TRANSFER_POS = 5.1; // 6.7; 167/32.91 = 5.074
+    public static double HORIZONTAL_SLIDE_TRANSFER_POS = 172 / 32.91; //4.95; // 6.7; 167/32.91 = 5.074
 
     // States
 
@@ -257,7 +257,7 @@ public abstract class V2RobotBase extends MecanumDrive {
         intakeRoller.setPower(1.0);
     }
     public void runIntakeOut() {
-        intakeRoller.setPower(-0.8);
+        intakeRoller.setPower(-0.9);
     }
     public void stopIntake() {
         intakeRoller.setPower(0.0);

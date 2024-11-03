@@ -16,7 +16,7 @@ public class V2Robot extends V2RobotBase {
     // Intake Diffy Arm Positions
     public static double DELIVER_LEFT_POS = 0.56, DELIVER_RIGHT_POS = 0.5;
     public static double CARRY_LEFT_POS = 0.595, CARRY_RIGHT_POS = 0.475;
-    public static double TRANSFER_LEFT_POS = 0.615, TRANSFER_RIGHT_POS = 0.445;
+    public static double TRANSFER_LEFT_POS = 0.62, TRANSFER_RIGHT_POS = 0.445;
     public static double FLAT_LEFT_POS = 0.58, FLAT_RIGHT_POS = 0.475;
     public static double CHAMBER_LEFT_POS = 0.575, CHAMBER_RIGHT_POS = 0.48;
 

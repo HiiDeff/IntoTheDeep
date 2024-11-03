@@ -24,11 +24,11 @@ public class HorizontalSlidesTask extends TimedTask{
             started = true;
             robot.setHorizontalSlideDist(this.distInInches, power);
         }
-        if (Math.abs(robot.getHorizontalSlideDist() - distInInches) < 0.1)
-        {
-            cancel();
-            return true;
-        }
+//        if (Math.abs(robot.getHorizontalSlideDist() - distInInches) < 0.1)
+//        {
+//            cancel();
+//            return true;
+//        }
         return false;
     }
 
