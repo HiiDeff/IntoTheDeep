@@ -26,6 +26,8 @@ import org.firstinspires.ftc.teamcode.task.VerticalSlidesTask;
 @Config
 public abstract class SamplesAutoPath extends AutoBase {
 
+    public static int verticalSlidesDelay = 500;
+
     @Override
     protected Task createStartTask() {
         SeriesTask task = new SeriesTask();
@@ -73,7 +75,10 @@ public abstract class SamplesAutoPath extends AutoBase {
                                     return builder.strafeToLinearHeading(pos.position, pos.heading, new TranslationalVelConstraint(45)).build();
                                 }
                         ),
-                        new VerticalSlidesTask(robot, 0, 0.9, 1000)
+                        new SeriesTask(
+                                new SleepTask(verticalSlidesDelay),
+                                new VerticalSlidesTask(robot, 0, 0.9, 1000)
+                        )
                 ),
                 new SeriesTask(
                         new SleepTask(getIntakeDelay()),
@@ -148,7 +153,10 @@ public abstract class SamplesAutoPath extends AutoBase {
                             return builder.strafeToLinearHeading(pos.position, pos.heading, new TranslationalVelConstraint(45)).build();
                         }
                 ),
-                new VerticalSlidesTask(robot, 0, 0.9, 1000)
+                new SeriesTask(
+                        new SleepTask(verticalSlidesDelay),
+                        new VerticalSlidesTask(robot, 0, 0.9, 1000)
+                )
         ));
         task.add(new ParallelTask(
                 new IntakeWithExtensionTask(robot, 14, 1200)
@@ -218,7 +226,10 @@ public abstract class SamplesAutoPath extends AutoBase {
                             return builder.strafeToLinearHeading(pos.position, pos.heading, new TranslationalVelConstraint(45)).build();
                         }
                 ),
-                new VerticalSlidesTask(robot, 0, 0.9, 1000)
+                new SeriesTask(
+                        new SleepTask(verticalSlidesDelay),
+                        new VerticalSlidesTask(robot, 0, 0.9, 1000)
+                )
         ));
         task.add(new ParallelTask(
                 new IntakeWithExtensionTask(robot, 13, 1000)
@@ -302,14 +313,13 @@ public abstract class SamplesAutoPath extends AutoBase {
                                     .build();
                         }
                 ),
-                new VerticalSlidesTask(robot, 0, 0.9, 3000),
-                new HorizontalSlidesTask(robot, 0, 1.0,1500),
-                new IntakeArmTask(robot, IntakeArmTask.Position.DOWN),
-                new RungStickTask(robot, RungStickTask.Position.UP),
                 new SeriesTask(
-                        new SleepTask(1000),
-                        new HorizontalSlidesTask(robot, 0, 1.0,1500)
-                )
+                        new SleepTask(verticalSlidesDelay),
+                        new VerticalSlidesTask(robot, 0, 0.9, 1000)
+                ),
+                new HorizontalSlidesTask(robot, 0, 1.0,5000),
+                new IntakeArmTask(robot, IntakeArmTask.Position.DOWN),
+                new RungStickTask(robot, RungStickTask.Position.UP)
         ));
         return task;
     }

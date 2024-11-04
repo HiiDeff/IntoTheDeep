@@ -101,7 +101,7 @@ public class V2TeleOp2 extends LinearOpMode {
                     ),
                     new ParallelTask(
                             new VerticalSlidesTask(robot, 0, 0.9, 3000),
-                            new HorizontalSlidesTask(robot, V2RobotBase.HORIZONTAL_SLIDE_TRANSFER_POS, 0.9,500),
+                            new HorizontalSlidesTask(robot, V2RobotBase.HORIZONTAL_SLIDE_TRANSFER_POS, 0.9,1500),
                             new IntakeArmTask(robot, IntakeArmTask.Position.TRANSFER)
                     ),
                     new SleepTask(1000)
