@@ -5,6 +5,7 @@ import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.teamcode.roadrunner.MecanumDrive;
+import org.firstinspires.ftc.teamcode.roadrunner.PinpointDrive;
 import org.firstinspires.ftc.teamcode.roadrunner.TwoDeadWheelLocalizer;
 import org.firstinspires.ftc.teamcode.task.ClawTask;
 import org.firstinspires.ftc.teamcode.task.IntakeArmTask;
@@ -26,10 +27,15 @@ public class V2Robot extends V2RobotBase {
     public V2Robot(HardwareMap hardwareMap) {
         super(hardwareMap);
         setDriveParams();
-        init(hardwareMap, LocalizerMode.TWO_DEAD_WHEEL);
+        init(hardwareMap);
     }
 
     private void setDriveParams() {
+
+        PinpointDrive.Params pinpointParams = PinpointDrive.PARAMS;
+        pinpointParams.xOffset = -3.3071;
+        pinpointParams.yOffset = -6.6142;
+
         MecanumDrive.Params p = MecanumDrive.PARAMS;
         p.logoFacingDirection = RevHubOrientationOnRobot.LogoFacingDirection.RIGHT;
         p.usbFacingDirection = RevHubOrientationOnRobot.UsbFacingDirection.FORWARD;
@@ -62,9 +68,9 @@ public class V2Robot extends V2RobotBase {
         p.lateralVelGain = 0.0;
         p.headingVelGain = 0.0; // shared with turn
 
-        TwoDeadWheelLocalizer.Params localizerParams = TwoDeadWheelLocalizer.PARAMS;
-        localizerParams.perpXTicks = -1166.809201791706;
-        localizerParams.parYTicks = 556.7862908481188;
+//        TwoDeadWheelLocalizer.Params localizerParams = TwoDeadWheelLocalizer.PARAMS;
+//        localizerParams.perpXTicks = -1166.809201791706;
+//        localizerParams.parYTicks = 556.7862908481188;
     }
 
     @Override

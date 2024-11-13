@@ -19,7 +19,7 @@ public class TestRobotDeadWheels extends MecanumDrive {
     public TestRobotDeadWheels(HardwareMap hardwareMap) {
         super(new Pose2d(0, 0, 0));
         setDriveParams();
-        super.init(hardwareMap, LocalizerMode.TWO_DEAD_WHEEL);
+        super.initWithLocalizer(hardwareMap, LocalizerMode.TWO_DEAD_WHEEL);
     }
 
     public static void setDriveParams() {
