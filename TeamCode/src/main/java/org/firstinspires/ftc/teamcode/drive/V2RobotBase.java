@@ -11,6 +11,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.teamcode.roadrunner.MecanumDrive;
+import org.firstinspires.ftc.teamcode.roadrunner.PinpointDrive;
 import org.firstinspires.ftc.teamcode.task.ClawTask;
 import org.firstinspires.ftc.teamcode.task.IntakeArmTask;
 import org.firstinspires.ftc.teamcode.task.RungStickTask;
@@ -18,7 +19,7 @@ import org.firstinspires.ftc.teamcode.task.V2DiffyTask;
 import org.firstinspires.ftc.teamcode.util.Utils;
 
 @Config
-public abstract class V2RobotBase extends MecanumDrive {
+public abstract class V2RobotBase extends PinpointDrive {
 
 
     // Slides Constants
@@ -67,7 +68,7 @@ public abstract class V2RobotBase extends MecanumDrive {
 
 
     public V2RobotBase(HardwareMap hardwareMap) {
-        super(new Pose2d(0.0, 0.0, 0.0));
+        super(hardwareMap, new Pose2d(0.0, 0.0, 0.0));
         this.hardwareMap = hardwareMap;
         for (LynxModule module : hardwareMap.getAll(LynxModule.class)) {
             module.setBulkCachingMode(LynxModule.BulkCachingMode.AUTO);

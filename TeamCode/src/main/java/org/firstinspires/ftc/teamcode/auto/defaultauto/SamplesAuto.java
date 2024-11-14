@@ -33,7 +33,7 @@ public class SamplesAuto extends SamplesAutoPath {
 
     @Override
     protected Pose2d getPreloadBucketDeliverPos() {
-        return new Pose2d(5.9913, 25.6989, -Math.PI/4);
+        return new Pose2d(5.1913, 25.1689, -Math.PI/4);
     }
 
     @Override
@@ -53,7 +53,7 @@ public class SamplesAuto extends SamplesAutoPath {
 
     @Override
     protected Pose2d getSample1BucketDeliverPos() {
-        return new Pose2d(4.8532, 23.5903, -Math.PI/4);
+        return new Pose2d(3.6532, 23.2903, -Math.PI/4);
     }
 
     @Override
@@ -73,7 +73,7 @@ public class SamplesAuto extends SamplesAutoPath {
 
     @Override
     protected Pose2d getSample2BucketDeliverPos() {
-        return new Pose2d(3.1991, 21.1653, -Math.PI/4);
+        return new Pose2d(2.3991, 21.1653, -Math.PI/4);
     }
 
     @Override
@@ -93,17 +93,17 @@ public class SamplesAuto extends SamplesAutoPath {
 
     @Override
     protected Pose2d getSample3BucketDeliverPos() {
-        return new Pose2d(2.6098, 19.591, -Math.PI/4);
+        return new Pose2d(1.8098, 19.591, -Math.PI/4);
     }
 
     @Override
     protected Pose2d getParkAlignPos() {
-        return new Pose2d(45.906, -4.8614, Math.PI/2);
+        return new Pose2d(46.906, -4.8614, Math.PI/2);
     }
 
     @Override
     protected Pose2d getParkPos() {
-        return new Pose2d(45.906, -20.8614, Math.PI/2);
+        return new Pose2d(46.906, -20.8614, Math.PI/2);
     }
 
 

@@ -22,7 +22,7 @@ public class LM1Robot extends RobotBase {
         super(hardwareMap);
         setDriveParams();
         //init(hardwareMap, MecanumDrive.LocalizerMode.TWO_DEAD_WHEEL);
-        init(hardwareMap, MecanumDrive.LocalizerMode.DRIVE_ENCODER);
+        super.initWithLocalizer(hardwareMap, MecanumDrive.LocalizerMode.DRIVE_ENCODER);
     }
 
 
