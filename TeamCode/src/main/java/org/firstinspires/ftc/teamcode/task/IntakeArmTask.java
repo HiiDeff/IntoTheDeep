@@ -14,16 +14,12 @@ import org.firstinspires.ftc.teamcode.util.Utils;
 public class IntakeArmTask extends TimedTask {
 
 
-    private static final int RPM = 90;
+    private static final int RPM = 50;
     private static final int MAX_ROTATION_DEGREE = 300;
 
     private V2RobotBase robot;
     private Position position;
     private boolean started;
-
-    public static void setPosition(V2RobotBase robot, Position position) {
-        robot.intakeArm.setPosition(getTargetPos(position));
-    }
 
     public IntakeArmTask(V2RobotBase robot, Position position) {
         this.robot = robot;
@@ -38,7 +34,7 @@ public class IntakeArmTask extends TimedTask {
             double targetPos = getTargetPos(position);
             // Only consider the half of normal time since we don't have to wait for the servo to
             // finish.
-            setFinishTimeMillis(Utils.getEstimatedServoTime(V2Robot.INTAKE_ARM_RPM, V2Robot.INTAKE_ARM_RANGE,
+            setFinishTimeMillis(Utils.getEstimatedServoTime(RPM, MAX_ROTATION_DEGREE,
                     targetPos - currPos) / 2);
             servo.setPosition(targetPos);
             started = true;

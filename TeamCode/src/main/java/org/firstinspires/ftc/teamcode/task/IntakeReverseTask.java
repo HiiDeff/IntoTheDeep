@@ -14,36 +14,16 @@ public class IntakeReverseTask extends TimedTask {
     }
 
     @Override
-    public void cancel() {
-        robot.stopIntake();
-    }
-
-    @Override
     protected boolean performInternal() {
         if(!started) {
             started = true;
             robot.runIntakeOut();
         }
-/*        else
-        {
-            if (!robot.intakeSampleState.IsSampleIn())
-            {
-                if (timer == null)
-                {
-                    timer = new ElapsedTime();
-                }
-                else
-                {
-                    if (timer.milliseconds() > 200)
-                    {
-                        robot.stopIntake();
-                        return true;
-                    }
-                }
-            }
-
-        }
-*/
         return false;
+    }
+
+    @Override
+    public void cancel() {
+        robot.stopIntake();
     }
 }

@@ -14,19 +14,19 @@ public class IntakeSampleState {
 
     public static double MIN_DIST_WITH_SAMPLE = 1.2;
     private V2RobotBase robot;
-    private PixelColor[] pixelColors = {PixelColor.COLOR_UNSPECIFIED, PixelColor.COLOR_UNSPECIFIED};
-    private int numOfPixels = 0;
+    private SampleColor[] sampleColors = {SampleColor.COLOR_UNSPECIFIED, SampleColor.COLOR_UNSPECIFIED};
+    private int numOfSamples = 0;
     private boolean leftSensorDetected;
 
     private void setStripLightColors() {
         RevBlinkinLedDriver.BlinkinPattern pattern = RevBlinkinLedDriver.BlinkinPattern.BLACK;
 
-        if(pixelColors[0] != PixelColor.COLOR_UNSPECIFIED && pixelColors[1] != PixelColor.COLOR_UNSPECIFIED && pixelColors[0] != pixelColors[1]){
+        if(sampleColors[0] != SampleColor.COLOR_UNSPECIFIED && sampleColors[1] != SampleColor.COLOR_UNSPECIFIED && sampleColors[0] != sampleColors[1]){
             pattern = RevBlinkinLedDriver.BlinkinPattern.WHITE;
         }
-        else if (numOfPixels > 0) {
+        else if (numOfSamples > 0) {
             int idx = leftSensorDetected? 0:1;
-            switch (pixelColors[idx]) {
+            switch (sampleColors[idx]) {
                 case COLOR_YELLOW:
                     pattern = RevBlinkinLedDriver.BlinkinPattern.YELLOW;
                     break;
@@ -45,11 +45,11 @@ public class IntakeSampleState {
         robot.setLightColor(pattern);
     }
     public String getStripLightColors() {
-        return pixelColors[0].name()+" "+pixelColors[1].name();
+        return sampleColors[0].name()+" "+sampleColors[1].name();
     }
 
-    private boolean colorIsNotSet(PixelColor color) {
-        return color == PixelColor.COLOR_UNSPECIFIED;
+    private boolean colorIsNotSet(SampleColor color) {
+        return color == SampleColor.COLOR_UNSPECIFIED;
     }
 
     public IntakeSampleState(V2RobotBase robot) {
@@ -62,52 +62,52 @@ public class IntakeSampleState {
 //        double rightDist = robot.rightIntakeColorSensor.getDistance(DistanceUnit.INCH);
 
 //        return leftDist < MIN_DIST_WITH_SAMPLE || rightDist < MIN_DIST_WITH_SAMPLE;
-        return numOfPixels > 0;
+        return numOfSamples > 0;
     }
 
     public void update() {
-        numOfPixels = 0;
+        numOfSamples = 0;
         double leftDist = robot.leftIntakeColorSensor.getDistance(DistanceUnit.INCH);
         double rightDist = robot.rightIntakeColorSensor.getDistance(DistanceUnit.INCH);
-        pixelColors[0] = PixelColor.COLOR_UNSPECIFIED;
-        pixelColors[1] = PixelColor.COLOR_UNSPECIFIED;
+        sampleColors[0] = SampleColor.COLOR_UNSPECIFIED;
+        sampleColors[1] = SampleColor.COLOR_UNSPECIFIED;
         leftSensorDetected = false;
         if (leftDist < MIN_DIST_WITH_SAMPLE) {
-            numOfPixels++;
-            pixelColors[0] = toHDColor(robot.leftIntakeColorSensor.getNormalizedColors());
+            numOfSamples++;
+            sampleColors[0] = toHDColor(robot.leftIntakeColorSensor.getNormalizedColors());
             leftSensorDetected = true;
         }
         if (rightDist < MIN_DIST_WITH_SAMPLE) {
-            numOfPixels++;
-            pixelColors[1] = toHDColor(robot.rightIntakeColorSensor.getNormalizedColors());
+            numOfSamples++;
+            sampleColors[1] = toHDColor(robot.rightIntakeColorSensor.getNormalizedColors());
         }
         setStripLightColors();
     }
 
     public int getNumOfPixels() {
-        return numOfPixels;
+        return numOfSamples;
     }
 
-    public PixelColor getPixelColor(int index) {
-        if (index < 0 || index > 1) return PixelColor.COLOR_UNSPECIFIED;
-        return pixelColors[index];
+    public SampleColor getPixelColor(int index) {
+        if (index < 0 || index > 1) return SampleColor.COLOR_UNSPECIFIED;
+        return sampleColors[index];
     }
 
-    private PixelColor toHDColor(NormalizedRGBA color) {
+    private SampleColor toHDColor(NormalizedRGBA color) {
         HSV hsv = ImageProcessor.ColorToHsv(color);
         if (ImageProcessor.isYellow(hsv)) {
-            return IntakeSampleState.PixelColor.COLOR_YELLOW;
+            return IntakeSampleState.SampleColor.COLOR_YELLOW;
         }
         if (ImageProcessor.isRed(hsv)) {
-            return IntakeSampleState.PixelColor.COLOR_RED;
+            return IntakeSampleState.SampleColor.COLOR_RED;
         }
         if (ImageProcessor.isBlue(hsv)) {
-            return IntakeSampleState.PixelColor.COLOR_BLUE;
+            return IntakeSampleState.SampleColor.COLOR_BLUE;
         }
-        return IntakeSampleState.PixelColor.COLOR_UNSPECIFIED;
+        return IntakeSampleState.SampleColor.COLOR_UNSPECIFIED;
     }
 
-    public enum PixelColor {
+    public enum SampleColor {
         COLOR_UNSPECIFIED,
         COLOR_YELLOW,
         COLOR_BLUE,

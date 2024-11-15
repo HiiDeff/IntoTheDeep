@@ -6,7 +6,10 @@ import org.firstinspires.ftc.teamcode.drive.V2Robot;
 import org.firstinspires.ftc.teamcode.drive.V2RobotBase;
 import org.firstinspires.ftc.teamcode.util.Utils;
 
-public class ClawTask implements Task {
+public class ClawTask extends TimedTask {
+
+    private static final int RPM = 90;
+    private static final int MAX_ROTATION_DEGREE = 300;
 
     private final V2RobotBase robot;
     private boolean started;
@@ -18,18 +21,17 @@ public class ClawTask implements Task {
     }
 
     @Override
-    public boolean perform() {
-//        if (!started) {
-//            Servo servo = robot.intakeArm;
-//            double currPos = servo.getPosition();
-//            double targetPos = getTargetPos(position);
-//            // Only consider the half of normal time since we don't have to wait for the servo to
-//            // finish.
-//            setFinishTimeMillis(Utils.getEstimatedServoTime(V2Robot.INTAKE_ARM_RPM, V2Robot.INTAKE_ARM_RANGE,
-//                    targetPos - currPos) / 2);
-//            servo.setPosition(targetPos);
-//            started = true;
-//        }
+    public boolean performInternal() {
+        if (!started) {
+            double currPos = robot.claw.getPosition();
+            double targetPos = robot.getClawPosition(position);
+            // Only consider the half of normal time since we don't have to wait for the servo to
+            // finish.
+            setFinishTimeMillis(Utils.getEstimatedServoTime(RPM, MAX_ROTATION_DEGREE,
+                    targetPos - currPos) / 2);
+            robot.claw.setPosition(targetPos);
+            started = true;
+        }
         return false;
     }
 

@@ -10,12 +10,11 @@ import org.firstinspires.ftc.teamcode.roadrunner.MecanumDrive;
 @Config
 public class RobotFactory {
     public enum Robot {
-        LM1_ROBOT,
-        V2_ROBOT,
+        LM2_ROBOT,
         TEST_ROBOT_DEAD_WHEELS,
         TEST_ROBOT_PINPOINT;
     }
-    public static Robot ACTIVE_ROBOT = Robot.V2_ROBOT;
+    public static Robot ACTIVE_ROBOT = Robot.LM2_ROBOT;
 
     public static MecanumDrive createRobot(HardwareMap hardwareMap) {
         switch (ACTIVE_ROBOT) {
@@ -23,9 +22,7 @@ public class RobotFactory {
                 return new TestRobotDeadWheels(hardwareMap);
             case TEST_ROBOT_PINPOINT:
                 return new TestRobotPinpoint(hardwareMap);
-            case LM1_ROBOT:
-                return new LM1Robot(hardwareMap);
-            case V2_ROBOT:
+            case LM2_ROBOT:
             default:
                 return new V2Robot(hardwareMap);
         }

@@ -558,7 +558,7 @@ public class MecanumDrive {
                                 0.25, 0.1, 1e-2
                         )
                 ),
-                beginPose, 0.0,
+                beginPose, 0.0, // TODO: cry changing this to decrease cycle times?
                 defaultTurnConstraints,
                 defaultVelConstraint, defaultAccelConstraint
         );

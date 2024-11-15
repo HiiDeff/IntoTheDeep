@@ -6,10 +6,10 @@ import com.acmerobotics.roadrunner.TranslationalVelConstraint;
 
 import org.firstinspires.ftc.teamcode.auto.AutoBase;
 import org.firstinspires.ftc.teamcode.drive.V2RobotBase;
+import org.firstinspires.ftc.teamcode.task.BucketTask;
 import org.firstinspires.ftc.teamcode.task.HorizontalSlidesTask;
 import org.firstinspires.ftc.teamcode.task.IntakeArmTask;
 import org.firstinspires.ftc.teamcode.task.IntakeReverseTask;
-import org.firstinspires.ftc.teamcode.task.IntakeTask;
 import org.firstinspires.ftc.teamcode.task.IntakeWithExtensionTask;
 import org.firstinspires.ftc.teamcode.task.ParallelTask;
 import org.firstinspires.ftc.teamcode.task.RungStickTask;
@@ -17,10 +17,6 @@ import org.firstinspires.ftc.teamcode.task.RuntimeDrivingTask;
 import org.firstinspires.ftc.teamcode.task.SeriesTask;
 import org.firstinspires.ftc.teamcode.task.SleepTask;
 import org.firstinspires.ftc.teamcode.task.Task;
-import org.firstinspires.ftc.teamcode.task.UnboundedIntakeReverseTask;
-import org.firstinspires.ftc.teamcode.task.UnboundedIntakeTask;
-import org.firstinspires.ftc.teamcode.task.UnboundedSeriesTask;
-import org.firstinspires.ftc.teamcode.task.V2DiffyTask;
 import org.firstinspires.ftc.teamcode.task.VerticalSlidesTask;
 
 @Config
@@ -49,10 +45,7 @@ public abstract class SamplesAutoPath extends AutoBase {
                             return builder.strafeToLinearHeading(pos.position, pos.heading, new TranslationalVelConstraint(45)).build();
                         }
                 ),
-                new ParallelTask(
-                        new V2DiffyTask(robot, V2DiffyTask.WhichDiffy.LEFT, V2DiffyTask.DiffyPosition.DELIVER),
-                        new V2DiffyTask(robot, V2DiffyTask.WhichDiffy.RIGHT, V2DiffyTask.DiffyPosition.DELIVER)
-                ),
+                new BucketTask(robot, BucketTask.Position.DELIVER),
                 new SleepTask(500)
         ));
         return task;
@@ -64,10 +57,7 @@ public abstract class SamplesAutoPath extends AutoBase {
         //SAMPLE 1
         task.add(new ParallelTask(
                 new ParallelTask(
-                        new ParallelTask(
-                                new V2DiffyTask(robot, V2DiffyTask.WhichDiffy.LEFT, V2DiffyTask.DiffyPosition.TRANSFER),
-                                new V2DiffyTask(robot, V2DiffyTask.WhichDiffy.RIGHT, V2DiffyTask.DiffyPosition.TRANSFER)
-                        ),
+                        new BucketTask(robot, BucketTask.Position.TRANSFER),
                         new RuntimeDrivingTask(
                                 robot,
                                 builder -> {
@@ -108,8 +98,7 @@ public abstract class SamplesAutoPath extends AutoBase {
                                 new HorizontalSlidesTask(robot, V2RobotBase.HORIZONTAL_SLIDE_TRANSFER_POS, 1.0, 800)
                         ),
                         new ParallelTask(
-                                new V2DiffyTask(robot, V2DiffyTask.WhichDiffy.LEFT, V2DiffyTask.DiffyPosition.CARRY),
-                                new V2DiffyTask(robot, V2DiffyTask.WhichDiffy.RIGHT, V2DiffyTask.DiffyPosition.CARRY),
+                                new BucketTask(robot, BucketTask.Position.CARRY),
                                 new VerticalSlidesTask(robot, 39, 1.0, 2000)
                         )
                 ),
@@ -133,18 +122,12 @@ public abstract class SamplesAutoPath extends AutoBase {
 //                            return builder.strafeToLinearHeading(pos.position, pos.heading).build();
 //                        }
 //                ),
-                new ParallelTask(
-                        new V2DiffyTask(robot, V2DiffyTask.WhichDiffy.LEFT, V2DiffyTask.DiffyPosition.DELIVER),
-                        new V2DiffyTask(robot, V2DiffyTask.WhichDiffy.RIGHT, V2DiffyTask.DiffyPosition.DELIVER)
-                ),
+                new BucketTask(robot, BucketTask.Position.DELIVER),
                 new SleepTask(500)
         ));
         //SECOND SAMPLE
         task.add(new ParallelTask(
-                new ParallelTask(
-                        new V2DiffyTask(robot, V2DiffyTask.WhichDiffy.LEFT, V2DiffyTask.DiffyPosition.TRANSFER),
-                        new V2DiffyTask(robot, V2DiffyTask.WhichDiffy.RIGHT, V2DiffyTask.DiffyPosition.TRANSFER)
-                ),
+                new BucketTask(robot, BucketTask.Position.TRANSFER),
                 new IntakeArmTask(robot, IntakeArmTask.Position.DOWN),
                 new RuntimeDrivingTask(
                         robot,
@@ -182,8 +165,7 @@ public abstract class SamplesAutoPath extends AutoBase {
                                 new HorizontalSlidesTask(robot, V2RobotBase.HORIZONTAL_SLIDE_TRANSFER_POS, 1.0, 800)
                         ),
                         new ParallelTask(
-                                new V2DiffyTask(robot, V2DiffyTask.WhichDiffy.LEFT, V2DiffyTask.DiffyPosition.CARRY),
-                                new V2DiffyTask(robot, V2DiffyTask.WhichDiffy.RIGHT, V2DiffyTask.DiffyPosition.CARRY),
+                                new BucketTask(robot, BucketTask.Position.CARRY),
                                 new VerticalSlidesTask(robot, 39, 1.0, 2000)
                         )
                 ),
@@ -206,18 +188,12 @@ public abstract class SamplesAutoPath extends AutoBase {
 //                            return builder.strafeToLinearHeading(pos.position, pos.heading).build();
 //                        }
 //                ),
-                new ParallelTask(
-                        new V2DiffyTask(robot, V2DiffyTask.WhichDiffy.LEFT, V2DiffyTask.DiffyPosition.DELIVER),
-                        new V2DiffyTask(robot, V2DiffyTask.WhichDiffy.RIGHT, V2DiffyTask.DiffyPosition.DELIVER)
-                ),
+                new BucketTask(robot, BucketTask.Position.DELIVER),
                 new SleepTask(500)
         ));
         //THIRD SAMPLE
         task.add(new ParallelTask(
-                new ParallelTask(
-                        new V2DiffyTask(robot, V2DiffyTask.WhichDiffy.LEFT, V2DiffyTask.DiffyPosition.TRANSFER),
-                        new V2DiffyTask(robot, V2DiffyTask.WhichDiffy.RIGHT, V2DiffyTask.DiffyPosition.TRANSFER)
-                ),
+                new BucketTask(robot, BucketTask.Position.TRANSFER),
                 new IntakeArmTask(robot, IntakeArmTask.Position.DOWN),
                 new RuntimeDrivingTask(
                         robot,
@@ -255,8 +231,7 @@ public abstract class SamplesAutoPath extends AutoBase {
                                 new HorizontalSlidesTask(robot, V2RobotBase.HORIZONTAL_SLIDE_TRANSFER_POS, 1.0, 800)
                         ),
                         new ParallelTask(
-                                new V2DiffyTask(robot, V2DiffyTask.WhichDiffy.LEFT, V2DiffyTask.DiffyPosition.CARRY),
-                                new V2DiffyTask(robot, V2DiffyTask.WhichDiffy.RIGHT, V2DiffyTask.DiffyPosition.CARRY),
+                                new BucketTask(robot, BucketTask.Position.CARRY),
                                 new VerticalSlidesTask(robot, 39, 1.0, 2000)
                         )
                 ),
@@ -280,10 +255,7 @@ public abstract class SamplesAutoPath extends AutoBase {
 //                            return builder.strafeToLinearHeading(pos.position, pos.heading).build();
 //                        }
 //                ),
-                new ParallelTask(
-                        new V2DiffyTask(robot, V2DiffyTask.WhichDiffy.LEFT, V2DiffyTask.DiffyPosition.DELIVER),
-                        new V2DiffyTask(robot, V2DiffyTask.WhichDiffy.RIGHT, V2DiffyTask.DiffyPosition.DELIVER)
-                ),
+                new BucketTask(robot, BucketTask.Position.DELIVER),
                 new SleepTask(500)
         ));
         return task;
@@ -293,10 +265,7 @@ public abstract class SamplesAutoPath extends AutoBase {
         state = AutoState.FINISH;
         SeriesTask task = new SeriesTask();
         task.add(new ParallelTask(
-                new ParallelTask(
-                        new V2DiffyTask(robot, V2DiffyTask.WhichDiffy.LEFT, V2DiffyTask.DiffyPosition.TRANSFER),
-                        new V2DiffyTask(robot, V2DiffyTask.WhichDiffy.RIGHT, V2DiffyTask.DiffyPosition.TRANSFER)
-                ),
+                new BucketTask(robot, BucketTask.Position.TRANSFER),
                 new RuntimeDrivingTask(
                         robot,
                         builder -> {

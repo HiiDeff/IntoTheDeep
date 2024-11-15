@@ -6,46 +6,40 @@ import org.firstinspires.ftc.teamcode.drive.V2RobotBase;
 public class IntakeWithExtensionTask extends TimedTask {
 
     private V2RobotBase robot;
-    private double length;
+    private final double distInInches;
     private boolean started = false;
-    protected ElapsedTime timer;
+    private ElapsedTime timer;
 
-    public IntakeWithExtensionTask(V2RobotBase robot, double extensionLength, int finishTimeMillis) {
+    public IntakeWithExtensionTask(V2RobotBase robot, double distInInches, int finishTimeMillis) {
         this.robot = robot;
-        length = extensionLength;
+        this.distInInches = distInInches;
         setFinishTimeMillis((finishTimeMillis));
-    }
-
-    @Override
-    public void cancel() {
-        robot.stopIntake();
     }
 
     @Override
     protected boolean performInternal() {
         if(!started) {
-            started = true;
             robot.runIntakeIn();
-            robot.setHorizontalSlideDist(length, 1.0);
-        }
-        else{
-            if (robot.intakeSampleState.IsSampleIn())
-            {
-                if (timer == null)
-                {
+            robot.setHorizontalSlideDist(distInInches, 1.0);
+            started = true;
+        } else{
+            if (robot.intakeSampleState.IsSampleIn()) {
+                if (timer == null) {
                     timer = new ElapsedTime();
-                }
-                else
-                {
-                    if (timer.milliseconds() > 100)
-                    {
+                } else {
+                    if (timer.milliseconds() > 100) {
                         robot.setHorizontalSlidesPower(0.2);
                         return true;
                     }
                 }
             }
         }
-
         return false;
+    }
+
+    @Override
+    public void cancel() {
+
+        robot.stopIntake();
     }
 }
