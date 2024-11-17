@@ -12,6 +12,7 @@ import com.qualcomm.robotcore.eventloop.opmode.OpModeRegistrar;
 
 import org.firstinspires.ftc.robotcore.internal.opmode.OpModeMeta;
 import org.firstinspires.ftc.teamcode.drive.RobotFactory;
+import org.firstinspires.ftc.teamcode.drive_rr.TestRobotPinpoint;
 import org.firstinspires.ftc.teamcode.roadrunner.*;
 
 import java.util.ArrayList;
@@ -51,10 +52,10 @@ public final class TuningOpModes {
 
                 return new DriveView(
                         DriveType.MECANUM,
-                        MecanumDrive.PARAMS.inPerTick,
-                        MecanumDrive.PARAMS.maxWheelVel,
-                        MecanumDrive.PARAMS.minProfileAccel,
-                        MecanumDrive.PARAMS.maxProfileAccel,
+                        TestRobotPinpoint.TRUE_PARAMS.inPerTick,
+                        TestRobotPinpoint.TRUE_PARAMS.maxWheelVel,
+                        TestRobotPinpoint.TRUE_PARAMS.minProfileAccel,
+                        TestRobotPinpoint.TRUE_PARAMS.maxProfileAccel,
                         hardwareMap.getAll(LynxModule.class),
                         Arrays.asList(
                                 pd.leftFront,
@@ -70,9 +71,9 @@ public final class TuningOpModes {
                         perpEncs,
                         pd.lazyImu,
                         pd.voltageSensor,
-                        () -> new MotorFeedforward(MecanumDrive.PARAMS.kS,
-                                MecanumDrive.PARAMS.kV / MecanumDrive.PARAMS.inPerTick,
-                                MecanumDrive.PARAMS.kA / MecanumDrive.PARAMS.inPerTick)
+                        () -> new MotorFeedforward(TestRobotPinpoint.TRUE_PARAMS.kS,
+                                TestRobotPinpoint.TRUE_PARAMS.kV / TestRobotPinpoint.TRUE_PARAMS.inPerTick,
+                                TestRobotPinpoint.TRUE_PARAMS.kA / TestRobotPinpoint.TRUE_PARAMS.inPerTick)
                 );
             };
         } else if (DRIVE_CLASS.equals(MecanumDrive.class)) {

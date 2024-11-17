@@ -17,27 +17,18 @@ public class ServoTest extends LinearOpMode {
     private V2Robot robot;
     private GamePad gp1;
 
-//    Servo leftDiffy;
-//    Servo rightDiffy;
     Servo claw;
     public static double pos = 0.61;
     //public static double leftPos = 0.58, rightPos = 0.41;
 
     @Override
     public void runOpMode() throws InterruptedException {
-        //robot = new LM1Robot(hardwareMap);
 
         claw = hardwareMap.get(Servo.class, "claw");
-
-//
-//        leftDiffy = hardwareMap.get(Servo.class, "diffyLeft");
-//        rightDiffy = hardwareMap.get(Servo.class, "diffyRight");
 
         waitForStart();
 
         while (opModeIsActive()) {
-//            leftDiffy.setPosition(leftPos);
-//            rightDiffy.setPosition(rightPos);
             claw.setPosition(pos);
         }
     }

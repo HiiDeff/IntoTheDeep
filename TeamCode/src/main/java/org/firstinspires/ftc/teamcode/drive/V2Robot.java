@@ -1,6 +1,8 @@
 package org.firstinspires.ftc.teamcode.drive;
 
 import com.acmerobotics.dashboard.config.Config;
+import com.acmerobotics.roadrunner.ftc.GoBildaPinpointDriver;
+import com.acmerobotics.roadrunner.ftc.GoBildaPinpointDriverRR;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
@@ -12,22 +14,21 @@ import org.firstinspires.ftc.teamcode.task.IntakeArmTask;
 @Config
 public class V2Robot extends V2RobotBase {
 
-
     // Bucket Servo Positions
-    public static double CARRY_POS = 0.595,
-            CHAMBER_DELIVER_POS = 0.575,
-            DELIVER_POS = 0.56,
+    public static double CARRY_POS = 0.7,
+            CHAMBER_DELIVER_POS = 0.84,
+            DELIVER_POS = 0.9,
             TRANSFER_POS = 0.62,
-            FLAT_POS = 0.58;
+            FLAT_POS = 0.81;
 
     // Intake Servo Positions
-    public static double INTAKE_ARM_DOWN = 0.91,
-            INTAKE_ARM_TRANSFER = 0.13,
-            INTAKE_ARM_CLEAR = 0.55;
+    public static double INTAKE_ARM_DOWN = 0.78,
+            INTAKE_ARM_TRANSFER = 0.08,
+            INTAKE_ARM_CLEAR = 0.42;
 
     // Claw Servo Positions
-    public static double CLAW_OPEN_POS = 0.77,
-            CLAW_CLOSE_POS = 0.61;
+    public static double CLAW_OPEN_POS = 1.0,
+            CLAW_CLOSE_POS = 0.86;
 
 
     public V2Robot(HardwareMap hardwareMap) {
@@ -39,25 +40,30 @@ public class V2Robot extends V2RobotBase {
     private void setDriveParams() {
 
         PinpointDrive.Params pinpointParams = PinpointDrive.PARAMS;
-        pinpointParams.xOffset = -3.3071;
-        pinpointParams.yOffset = -6.6142;
+        pinpointParams.xOffset = -1.1875;
+        pinpointParams.yOffset = -2.6250;
+
+        pinpointParams.encoderResolution = GoBildaPinpointDriverRR.goBILDA_4_BAR_POD;
+
+        pinpointParams.xDirection = GoBildaPinpointDriver.EncoderDirection.REVERSED;
+        pinpointParams.yDirection = GoBildaPinpointDriver.EncoderDirection.REVERSED;
 
         MecanumDrive.Params p = MecanumDrive.PARAMS;
         p.logoFacingDirection = RevHubOrientationOnRobot.LogoFacingDirection.RIGHT;
         p.usbFacingDirection = RevHubOrientationOnRobot.UsbFacingDirection.FORWARD;
 
         // drive model parameters
-        p.inPerTick = 0.00198392652123995407577497129736;
-        p.lateralInPerTick = 0.0013201097409470458; // p.inPerTick;
-        p.trackWidthTicks = 6999.207445758258;
+        p.inPerTick = 1.0;
+        p.lateralInPerTick = 0.856566; // p.inPerTick;
+        p.trackWidthTicks = 13.798627694384;
 
         // feedforward parameters (in tick units)
-        p.kS = 1.201743834589251;
-        p.kV = 0.0002683471418159556;
-        p.kA = 0.000045;
+        p.kS = 1.2252550810847085;
+        p.kV = 0.13684870806505475;
+        p.kA = 0.03;
 
         // path profile parameters (in inches)
-        p.maxWheelVel = 50;
+        p.maxWheelVel = 60;
         p.minProfileAccel = -30;
         p.maxProfileAccel = 50;
 
@@ -67,16 +73,13 @@ public class V2Robot extends V2RobotBase {
 
         // path controller gains
         p.axialGain = 5.0;
-        p.lateralGain = 5.0;
+        p.lateralGain = 6.0;
         p.headingGain = 8.0; // shared with turn
 
         p.axialVelGain = 0.0;
         p.lateralVelGain = 0.0;
         p.headingVelGain = 0.0; // shared with turn
 
-//        TwoDeadWheelLocalizer.Params localizerParams = TwoDeadWheelLocalizer.PARAMS;
-//        localizerParams.perpXTicks = -1166.809201791706;
-//        localizerParams.parYTicks = 556.7862908481188;
     }
 
     @Override

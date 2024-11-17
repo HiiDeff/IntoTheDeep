@@ -30,14 +30,14 @@ public class TestRobotPinpoint extends PinpointDrive {
         TRUE_PARAMS.usbFacingDirection = RevHubOrientationOnRobot.UsbFacingDirection.FORWARD;
 
         // drive model parameters
-        TRUE_PARAMS.inPerTick = 0.00198392652123995407577497129736;
-        TRUE_PARAMS.lateralInPerTick = 0.0013201097409470458; //0.0013275715492669714; // 0.0016824700252845181;
-        TRUE_PARAMS.trackWidthTicks = 6999.207445758258;
+        TRUE_PARAMS.inPerTick = 1.0;
+        TRUE_PARAMS.lateralInPerTick = 0.856566; // calculated myself, trust this value. Heavy robot prevents lateral ramp from working well
+        TRUE_PARAMS.trackWidthTicks = 13.798627694384;
 
         // feedforward parameters (in tick units)
-        TRUE_PARAMS.kS = 1.201743834589251;
-        TRUE_PARAMS.kV = 0.0002683471418159556;
-        TRUE_PARAMS.kA = 0.000045;
+        TRUE_PARAMS.kS = 1.2252550810847085;
+        TRUE_PARAMS.kV = 0.13684870806505475;
+        TRUE_PARAMS.kA = 0.03;
 
         // path profile parameters (in inches)
         TRUE_PARAMS.maxWheelVel = 50;
@@ -50,7 +50,7 @@ public class TestRobotPinpoint extends PinpointDrive {
 
         // path controller gains
         TRUE_PARAMS.axialGain = 5.0;
-        TRUE_PARAMS.lateralGain = 8.0; //10
+        TRUE_PARAMS.lateralGain = 6.0; //10
         TRUE_PARAMS.headingGain = 8.0; // shared with turn //4
 
         TRUE_PARAMS.axialVelGain = 0.0;
@@ -59,15 +59,13 @@ public class TestRobotPinpoint extends PinpointDrive {
 
         MecanumDrive.PARAMS = TRUE_PARAMS;
 
-
-
-        PINPOINT_PARAMS.xOffset = -3.3071;
-        PINPOINT_PARAMS.yOffset = -6.6142;
+        PINPOINT_PARAMS.xOffset = -1.1875; // 1.195773221045794 according to angular ramp
+        PINPOINT_PARAMS.yOffset = -2.6250; // -2.547398689420036 according to angular ramp, but graphs were weird
 
         PINPOINT_PARAMS.encoderResolution = GoBildaPinpointDriverRR.goBILDA_4_BAR_POD;
 
-        PINPOINT_PARAMS.xDirection = GoBildaPinpointDriver.EncoderDirection.FORWARD;
-        PINPOINT_PARAMS.yDirection = GoBildaPinpointDriver.EncoderDirection.FORWARD;
+        PINPOINT_PARAMS.xDirection = GoBildaPinpointDriver.EncoderDirection.REVERSED;
+        PINPOINT_PARAMS.yDirection = GoBildaPinpointDriver.EncoderDirection.REVERSED;
 
         PinpointDrive.PARAMS = PINPOINT_PARAMS;
     }

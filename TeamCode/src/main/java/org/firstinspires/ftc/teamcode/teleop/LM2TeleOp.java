@@ -27,10 +27,10 @@ import org.firstinspires.ftc.teamcode.util.GamePad;
 
 public class LM2TeleOp extends LinearOpMode {
 
-    public static double VERTICAL_STAND_POWER = 0.001;
+    public static double VERTICAL_STAND_POWER = 0.01;
     public static double VERTICAL_SLIDE_MAX_POWER = 1.0;
     public static double MIN_DRIVE_POWER = 0.01;
-    public static double DELIVERY_CHAMBER_HEIGHT = 18.2745;
+    public static double DELIVERY_CHAMBER_HEIGHT = 17.2;
 
     private V2RobotBase robot;
     private GamePad gp1, gp2;
@@ -85,6 +85,7 @@ public class LM2TeleOp extends LinearOpMode {
         telemetry.addData("average cycle time (seconds)", cycleAvg);
         telemetry.addData("pose", robot.pose);
         telemetry.addData("vertical slide position", robot.getVerticalSlidesHeight());
+        telemetry.addData("horizontal slide position", robot.getHorizontalSlideDist());
         telemetry.update();
     }
 
@@ -119,7 +120,8 @@ public class LM2TeleOp extends LinearOpMode {
                 robot.setHorizontalSlidesPower(-0.8);
             }
             else if(resetTask==null){
-                robot.setHorizontalSlideDist(robot.getHorizontalSlideDist(), 0.2);
+                robot.setHorizontalSlidesPower(0);
+//                robot.brakeHorizontalSlides(0.1);
             }
         }
     }

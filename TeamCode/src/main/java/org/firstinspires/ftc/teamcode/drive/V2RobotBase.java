@@ -82,6 +82,7 @@ public abstract class V2RobotBase extends PinpointDrive {
         verticalSlides.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         horizontalSlides = hardwareMap.get(DcMotorEx.class, "horizontalSlides");
+        horizontalSlides.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         horizontalSlides.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         horizontalSlides.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
@@ -115,6 +116,7 @@ public abstract class V2RobotBase extends PinpointDrive {
         setIntakeArmPos(IntakeArmTask.Position.TRANSFER);
         setBucketServoPosition(BucketTask.Position.FLAT);
         RungStickTask.setPosition(this, RungStickTask.Position.DOWN);
+        setClawPosition(ClawTask.ClawPosition.CLOSE);
     }
 
     // Updates
@@ -169,6 +171,14 @@ public abstract class V2RobotBase extends PinpointDrive {
         horizontalSlides.setPower(power);
     }
 
+    public void brakeHorizontalSlides(double brakePower) {
+        horizontalSlides.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        horizontalSlides.setTargetPosition(horizontalSlides.getCurrentPosition());
+        horizontalSlides.setTargetPositionTolerance(16);
+        horizontalSlides.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        horizontalSlides.setPower(brakePower);
+    }
+
     public void setHorizontalSlideDist(double posInches, double power) {
         horizontalSlides.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         horizontalSlides.setTargetPosition((int) (
@@ -179,7 +189,7 @@ public abstract class V2RobotBase extends PinpointDrive {
     }
 
     public double getHorizontalSlideDist() {
-        return (double) horizontalSlidesPos / HORIZONTAL_TICKS_PER_INCH;
+        return ((double) horizontalSlides.getCurrentPosition()) / HORIZONTAL_TICKS_PER_INCH;
     }
 
 

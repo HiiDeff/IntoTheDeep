@@ -11,7 +11,7 @@ import org.firstinspires.ftc.teamcode.util.Utils;
 public class RungStickTask extends TimedTask {
 
     public static double UP_POSITION = 0,
-            DOWN_POSITION = 0.8;
+            DOWN_POSITION = 0.535;
 
 
     private static final int RPM = 90;
