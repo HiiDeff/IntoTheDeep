@@ -108,7 +108,6 @@ public abstract class V2RobotBase extends PinpointDrive {
 
     public void teleOpInit() {
         setIntakeArmPos(IntakeArmTask.Position.DOWN);
-        setHorizontalSlideDist(HORIZONTAL_SLIDE_TRANSFER_POS, 1.0);
         setBucketServoPosition(BucketTask.Position.TRANSFER);
         RungStickTask.setPosition(this, RungStickTask.Position.DOWN);
     }
@@ -128,6 +127,8 @@ public abstract class V2RobotBase extends PinpointDrive {
 
     public void updateEncoders() {
         verticalSlidesPos = verticalSlides.getCurrentPosition();
+    }
+    public void updateHorizontalEncoder() {
         horizontalSlidesPos = horizontalSlides.getCurrentPosition();
     }
 
@@ -173,8 +174,7 @@ public abstract class V2RobotBase extends PinpointDrive {
 
     public void brakeHorizontalSlides(double brakePower) {
         horizontalSlides.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        horizontalSlides.setTargetPosition(horizontalSlides.getCurrentPosition());
-        horizontalSlides.setTargetPositionTolerance(16);
+        horizontalSlides.setTargetPosition(getLastHorizontalSlideDist());
         horizontalSlides.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         horizontalSlides.setPower(brakePower);
     }
@@ -186,6 +186,10 @@ public abstract class V2RobotBase extends PinpointDrive {
                         * HORIZONTAL_TICKS_PER_INCH)));
         horizontalSlides.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         horizontalSlides.setPower(power);
+    }
+
+    public int getLastHorizontalSlideDist() {
+        return horizontalSlidesPos;
     }
 
     public double getHorizontalSlideDist() {

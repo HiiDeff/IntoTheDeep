@@ -7,8 +7,12 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import org.firstinspires.ftc.teamcode.drive.V2Robot;
 import org.firstinspires.ftc.teamcode.drive.V2RobotBase;
 
+
+
 @Autonomous(name = "V2 Robot - Clip Auto")
 public class ClipAuto extends ClipAutoPath {
+
+    public static double preloadSubmersibleYVal = 0.0, cycleSubmersibleYVal = -2.0;
 
 
     @Override
@@ -18,7 +22,7 @@ public class ClipAuto extends ClipAutoPath {
 
     @Override
     protected Pose2d getPreloadSubmersibleDeliverPos() {
-        return new Pose2d(-30.99, -3.65, 0);
+        return new Pose2d(-32.50, preloadSubmersibleYVal, 0);
     }
 
     @Override
@@ -28,7 +32,7 @@ public class ClipAuto extends ClipAutoPath {
 
     @Override
     protected Pose2d getFirstSampleOuttakePos() {
-        return new Pose2d(-27.65, 19.79, 0.87266);
+        return new Pose2d(-27.65, 19.79, 0.62266);
     }
 
     @Override
@@ -58,7 +62,7 @@ public class ClipAuto extends ClipAutoPath {
 
     @Override
     protected Pose2d getSubmersibleDeliverPos(int cycleNumber) {
-        return new Pose2d(-31.31, -2-cycleNumber*2, -0.001);
+        return new Pose2d(-31.81, cycleSubmersibleYVal-cycleNumber*2.5, -0.03);
     }
 
     @Override

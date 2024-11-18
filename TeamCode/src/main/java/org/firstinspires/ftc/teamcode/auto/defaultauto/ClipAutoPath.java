@@ -29,7 +29,7 @@ import org.firstinspires.ftc.teamcode.task.VerticalSlidesTask;
 public abstract class ClipAutoPath extends NewAutoBase {
 
     public static int verticalSlidesDelay = 500;
-    public static double DELIVERY_CHAMBER_HEIGHT = 17.2; //18.2745;
+    public static double DELIVERY_CHAMBER_HEIGHT = 20.5; //18.2745;
 
     @Override
     protected Task createStartTask() {
@@ -59,9 +59,12 @@ public abstract class ClipAutoPath extends NewAutoBase {
                 new ParallelTask(
                         new VerticalSlidesTask(robot, 0, 1.0, 1000),
                         new SeriesTask(
-                                new SleepTask(200),
-                                new ClawTask(robot, ClawTask.ClawPosition.OPEN),
+                                new SleepTask(300),
                                 new BucketTask(robot, BucketTask.Position.FLAT)
+                        ),
+                        new SeriesTask(
+                                new SleepTask(750),
+                                new ClawTask(robot, ClawTask.ClawPosition.OPEN)
                         ),
                         new RuntimeDrivingTask(
                                 robot,
@@ -92,10 +95,10 @@ public abstract class ClipAutoPath extends NewAutoBase {
                             }
                         ),
                         new SeriesTask(
-                                new SleepTask(750),
+                                new SleepTask(700),
                                 new ParallelTask(
-                                        new IntakeReverseTask(robot, 400),
-                                        new HorizontalSlidesTask(robot, 10.0, 1.0, 400)
+                                        new IntakeReverseTask(robot, 200),
+                                        new HorizontalSlidesTask(robot, 15.0, 1.0, 400)
                                 )
                         )
                 )
@@ -134,7 +137,7 @@ public abstract class ClipAutoPath extends NewAutoBase {
                         new SeriesTask(
                                 new SleepTask(500),
                                 new ParallelTask(
-                                        new IntakeReverseTask(robot, 400),
+                                        new IntakeReverseTask(robot, 200),
                                         new HorizontalSlidesTask(robot, 10.0, 1.0, 400)
                                 )
                         )
@@ -155,7 +158,7 @@ public abstract class ClipAutoPath extends NewAutoBase {
                         ),
                         new SeriesTask(
                                 new SleepTask(400),
-                                new HorizontalSlidesTask(robot, 19, 1.0, 400)
+                                new HorizontalSlidesTask(robot, 19, 1.0, 500)
                         )
                 )
         );
@@ -173,8 +176,8 @@ public abstract class ClipAutoPath extends NewAutoBase {
                         ),
                         new HorizontalSlidesTask(robot, 10.0, 1.0, 400),
                         new SeriesTask(
-                                new SleepTask(500),
-                                new IntakeReverseTask(robot, 400)
+                                new IntakeTask(robot, 600),
+                                new IntakeReverseTask(robot, 200)
                         )
                 )
         );
@@ -209,7 +212,10 @@ public abstract class ClipAutoPath extends NewAutoBase {
                 new SeriesTask(
                         new ClawTask(robot, ClawTask.ClawPosition.CLOSE),
                         new ParallelTask(
-                                new VerticalSlidesTask(robot, DELIVERY_CHAMBER_HEIGHT, 1.0, 1000),
+                                new SeriesTask(
+                                        new SleepTask(50),
+                                        new VerticalSlidesTask(robot, DELIVERY_CHAMBER_HEIGHT, 1.0, 1000)
+                                ),
                                 new SeriesTask(
                                     new SleepTask(500),
                                     new BucketTask(robot, BucketTask.Position.CHAMBER_DELIVER)
@@ -236,7 +242,7 @@ public abstract class ClipAutoPath extends NewAutoBase {
                         new HorizontalSlidesTask(robot, 10.0, 1.0, 700),
                         new VerticalSlidesTask(robot, 0, 1.0, 1000),
                         new SeriesTask(
-                                new SleepTask(200),
+                                new SleepTask(500),
                                 new ClawTask(robot, ClawTask.ClawPosition.OPEN),
                                 new BucketTask(robot, BucketTask.Position.FLAT)
                         ),
