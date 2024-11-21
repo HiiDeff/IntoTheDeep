@@ -96,8 +96,10 @@ public abstract class ClipAutoPath extends NewAutoBase {
                             }
                         ),
                         new SeriesTask(
-                                new IntakeTask(robot, 500, 1.0),
-                                new SleepTask(400),
+                                new ParallelTask(
+                                        new UnboundedIntakeTask(robot, 1.0),
+                                        new SleepTask(450)
+                                ),
                                 new ParallelTask(
                                         new IntakeReverseTask(robot, 1000, -1.0),
                                         new HorizontalSlidesTask(robot, 10.0, 1.0, 300)
@@ -137,8 +139,10 @@ public abstract class ClipAutoPath extends NewAutoBase {
                                 }
                         ),
                         new SeriesTask(
-                                new IntakeTask(robot, 500, 1.0),
-                                new SleepTask(400),
+                                new ParallelTask(
+                                        new UnboundedIntakeTask(robot, 1.0),
+                                        new SleepTask(450)
+                                ),
                                 new ParallelTask(
                                         new IntakeReverseTask(robot, 1000, -1.0),
                                         new HorizontalSlidesTask(robot, 10.0, 1.0, 300)
@@ -179,8 +183,10 @@ public abstract class ClipAutoPath extends NewAutoBase {
                         ),
                         new HorizontalSlidesTask(robot, 10.0, 1.0, 400),
                         new SeriesTask(
-                                new IntakeTask(robot, 600, 1.0),
-                                new SleepTask(400),
+                                new ParallelTask(
+                                        new UnboundedIntakeTask(robot, 1.0),
+                                        new SleepTask(500)
+                                ),
                                 new IntakeReverseTask(robot, 1000, -1.0)
                         )
                 )

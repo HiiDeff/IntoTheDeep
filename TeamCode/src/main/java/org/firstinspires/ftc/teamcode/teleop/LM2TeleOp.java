@@ -21,6 +21,7 @@ import org.firstinspires.ftc.teamcode.task.ParallelTask;
 import org.firstinspires.ftc.teamcode.task.SeriesTask;
 import org.firstinspires.ftc.teamcode.task.SleepTask;
 import org.firstinspires.ftc.teamcode.task.Task;
+import org.firstinspires.ftc.teamcode.task.TimedHorizontalSlidesTask;
 import org.firstinspires.ftc.teamcode.task.UnboundedIntakeTask;
 import org.firstinspires.ftc.teamcode.task.VerticalSlidesTask;
 import org.firstinspires.ftc.teamcode.util.GamePad;
@@ -119,41 +120,40 @@ public class LM2TeleOp extends LinearOpMode {
                     new BucketTask(robot, BucketTask.Position.TRANSFER),
                     new ParallelTask(
                             new VerticalSlidesTask(robot, 0, 1.0, 2000),
-                            new HorizontalSlidesTask(robot, V2RobotBase.HORIZONTAL_SLIDE_TRANSFER_POS, 1.0,1500),
+                            new TimedHorizontalSlidesTask(robot, V2RobotBase.HORIZONTAL_SLIDE_TRANSFER_POS, 1.0,1500),
                             new IntakeArmTask(robot, IntakeArmTask.Position.TRANSFER)
-                    ),
-                    new SleepTask(1000)
+                    )
             );
         }
 
-        // Deliver Raise Preset
-        else if(deliverRaiseTask == null && gp2.onceA()) {
-            deliverRaiseTask = new ParallelTask(
-                    new VerticalSlidesTask(robot, 40.0, 1.0, 3000),
-                    new BucketTask(robot, BucketTask.Position.CARRY)
-            );
-        }
-
-        // Deliver Preset
-        else if(deliverTask == null && (gp2.onceB())) {
-            deliverTask = new VerticalSlidesTask(robot, 0, 1.0, 1500);
-
-//                    new SeriesTask(
-//                    new BucketTask(robot, BucketTask.Position.DELIVER),
-//                    new SleepTask(1000),
-//                    new ParallelTask(
-//                            new BucketTask(robot, BucketTask.Position.TRANSFER),
-//                            new SeriesTask(
-//                                    new SleepTask(300),
-//                                    new VerticalSlidesTask(robot, 0, 1.0, 1500)
-//                            )
-//                    )
+//        // Deliver Raise Preset
+//        else if(deliverRaiseTask == null && gp2.onceA()) {
+//            deliverRaiseTask = new ParallelTask(
+//                    new VerticalSlidesTask(robot, 40.0, 1.0, 3000),
+//                    new BucketTask(robot, BucketTask.Position.CARRY)
 //            );
-            if(robot.getVerticalSlidesHeight() >= 12) {
-                cycleSum += cycleTimer.seconds(); cycleCnt++; cycleAvg = cycleSum/cycleCnt;
-                cycleTimer.reset();
-            }
-        }
+//        }
+//
+//        // Deliver Preset
+//        else if(deliverTask == null && (gp2.onceB())) {
+//            deliverTask = new VerticalSlidesTask(robot, 0, 1.0, 1500);
+//
+////                    new SeriesTask(
+////                    new BucketTask(robot, BucketTask.Position.DELIVER),
+////                    new SleepTask(1000),
+////                    new ParallelTask(
+////                            new BucketTask(robot, BucketTask.Position.TRANSFER),
+////                            new SeriesTask(
+////                                    new SleepTask(300),
+////                                    new VerticalSlidesTask(robot, 0, 1.0, 1500)
+////                            )
+////                    )
+////            );
+//            if(robot.getVerticalSlidesHeight() >= 12) {
+//                cycleSum += cycleTimer.seconds(); cycleCnt++; cycleAvg = cycleSum/cycleCnt;
+//                cycleTimer.reset();
+//            }
+//        }
     }
 
     private void runHorizontalSlides() {
@@ -210,7 +210,7 @@ public class LM2TeleOp extends LinearOpMode {
     private void runDelivery() {
 
         // Slides
-        if(gp2.dpadUp() || gp2.dpadDown()){
+        if(transferTask == null && (gp2.dpadUp() || gp2.dpadDown())){
             if(deliverRaiseTask != null) {
                 deliverRaiseTask.cancel();
                 deliverRaiseTask = null;
@@ -218,26 +218,32 @@ public class LM2TeleOp extends LinearOpMode {
                 deliverTask.cancel();
                 deliverTask = null;
             }
-            robot.setVerticalSlidePowerWithoutEncoder(gp2.dpadDown()? -0.9 : 1.0);
+            if(gp2.dpadUp()) {
+                robot.setVerticalSlidePowerWithoutEncoder(1.0);
+            } else{
+                robot.setVerticalSlidePowerWithoutEncoder(-0.9);
+            }
         } else if(deliverRaiseTask == null && deliverTask == null) {
             robot.setVerticalSlidePowerWithEncoder(robot.getVerticalSlidesHeight() < 0.5? 0:VERTICAL_STAND_POWER);
         }
 
         // Bucket
-        if(gp1.onceX()) {
+        if(gp1.onceB()) {
             robot.setBucketServoPosition(BucketTask.Position.FLAT);
-        } else if(!gp1.back() && gp1.onceA()) {
+        } else if(gp1.onceX()){
+            robot.setBucketServoPosition(BucketTask.Position.CARRY);
+        }else if(gp1.onceY()) {
             robot.setBucketServoPosition(BucketTask.Position.DELIVER);
             if(robot.getVerticalSlidesHeight() >= 12) {
                 cycleSum += cycleTimer.seconds(); cycleCnt++; cycleAvg = cycleSum/cycleCnt;
                 cycleTimer.reset();
             }
-        } else if(gp1.onceY()) {
+        } else if(!gp1.back() && gp1.onceA()) {
             robot.setBucketServoPosition(BucketTask.Position.TRANSFER);
         }
 
         // Claw
-        if(gp1.onceB()){
+        if(gp1.onceLeftBumper()){
             if(clawOpen) {
                 robot.setClawPosition(ClawTask.ClawPosition.CLOSE);
             } else {
@@ -269,6 +275,10 @@ public class LM2TeleOp extends LinearOpMode {
             robot.runIntakeOut();
         } else{
             robot.stopIntake();
+        }
+
+        if(gp2.onceLeftBumper()) {
+            robot.toggleSwipeStick();
         }
     }
 }

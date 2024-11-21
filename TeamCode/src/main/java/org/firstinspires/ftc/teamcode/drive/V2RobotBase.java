@@ -15,6 +15,7 @@ import org.firstinspires.ftc.teamcode.task.BucketTask;
 import org.firstinspires.ftc.teamcode.task.ClawTask;
 import org.firstinspires.ftc.teamcode.task.IntakeArmTask;
 import org.firstinspires.ftc.teamcode.task.RungStickTask;
+import org.firstinspires.ftc.teamcode.task.SwipeStickTask;
 import org.firstinspires.ftc.teamcode.util.Utils;
 
 @Config
@@ -53,7 +54,7 @@ public abstract class V2RobotBase extends PinpointDrive {
     public final Servo bucketServo;
     public final Servo claw;
     public final Servo intakeArm;
-    public final Servo rungStick;
+    public final Servo rungStick, swipeStick;
 
     // Sensors
     public final RevColorSensorV3 leftIntakeColorSensor, rightIntakeColorSensor;
@@ -66,6 +67,7 @@ public abstract class V2RobotBase extends PinpointDrive {
     private int verticalSlidesPos = 0;
     private int horizontalSlidesPos = 0;
     private RungStickTask.Position rungStickPos = RungStickTask.Position.DOWN;
+    private SwipeStickTask.Position swipeStickPos = SwipeStickTask.Position.IN;
 
 
     public V2RobotBase(HardwareMap hardwareMap) {
@@ -94,6 +96,7 @@ public abstract class V2RobotBase extends PinpointDrive {
         claw = hardwareMap.get(Servo.class, "claw");
         intakeArm = hardwareMap.get(Servo.class, "intakeArm");
         rungStick = hardwareMap.get(Servo.class, "rungStick");
+        swipeStick = hardwareMap.get(Servo.class, "swipeStick");
 
         // Sensors:
         leftIntakeColorSensor = hardwareMap.get(RevColorSensorV3.class, "intakeColorLeft");
@@ -110,12 +113,15 @@ public abstract class V2RobotBase extends PinpointDrive {
         setIntakeArmPos(IntakeArmTask.Position.DOWN);
         setBucketServoPosition(BucketTask.Position.TRANSFER);
         RungStickTask.setPosition(this, RungStickTask.Position.DOWN);
+        setClawPosition(ClawTask.ClawPosition.CLOSE);
+        SwipeStickTask.setPosition(this, SwipeStickTask.Position.IN);
     }
     public void autoInit() {
         setIntakeArmPos(IntakeArmTask.Position.TRANSFER);
         setBucketServoPosition(BucketTask.Position.FLAT);
         RungStickTask.setPosition(this, RungStickTask.Position.DOWN);
         setClawPosition(ClawTask.ClawPosition.CLOSE);
+        SwipeStickTask.setPosition(this, SwipeStickTask.Position.IN);
     }
 
     // Updates
@@ -250,5 +256,17 @@ public abstract class V2RobotBase extends PinpointDrive {
             rungStickPos = RungStickTask.Position.UP;
         }
         RungStickTask.setPosition(this, rungStickPos);
+    }
+
+    // Utils for Swipe STick
+
+    public void toggleSwipeStick(){
+        if (swipeStickPos == SwipeStickTask.Position.OUT) {
+            swipeStickPos = SwipeStickTask.Position.IN;
+        }
+        else{
+            swipeStickPos = SwipeStickTask.Position.OUT;
+        }
+        SwipeStickTask.setPosition(this, swipeStickPos);
     }
 }
