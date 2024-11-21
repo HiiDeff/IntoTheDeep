@@ -216,6 +216,7 @@ public abstract class V2RobotBase extends PinpointDrive {
     public void runIntakeIn() {
         intakeRoller.setPower(INTAKE_POWER);
     }
+    public void runIntakeWithPower(double power) { intakeRoller.setPower(power);}
     public void runIntakeOut() {
         intakeRoller.setPower(OUTTAKE_POWER);
     }

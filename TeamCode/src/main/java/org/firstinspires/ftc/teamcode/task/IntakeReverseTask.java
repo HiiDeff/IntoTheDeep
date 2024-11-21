@@ -7,9 +7,13 @@ public class IntakeReverseTask extends TimedTask {
 
     private V2RobotBase robot;
     private boolean started = false;
+    private double intakeSpeed;
+    private ElapsedTime elapsedTime;
 
-    public IntakeReverseTask(V2RobotBase robot, int finishTimeMillis) {
+
+    public IntakeReverseTask(V2RobotBase robot, int finishTimeMillis, double intakeSpeed) {
         this.robot = robot;
+        this.intakeSpeed = intakeSpeed;
         setFinishTimeMillis((finishTimeMillis));
     }
 
@@ -17,7 +21,16 @@ public class IntakeReverseTask extends TimedTask {
     protected boolean performInternal() {
         if(!started) {
             started = true;
-            robot.runIntakeOut();
+            robot.runIntakeWithPower(intakeSpeed);
+        } else {
+            if(!robot.intakeSampleState.IsSampleIn()) {
+                if(elapsedTime == null) {
+                    elapsedTime = new ElapsedTime();
+                } else if(elapsedTime.milliseconds() > 50) {
+                    cancel();
+                    return true;
+                }
+            }
         }
         return false;
     }

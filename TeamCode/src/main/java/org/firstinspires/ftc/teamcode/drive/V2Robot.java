@@ -16,15 +16,15 @@ public class V2Robot extends V2RobotBase {
 
     // Bucket Servo Positions
     public static double CARRY_POS = 0.7,
-            CHAMBER_DELIVER_POS = 0.88,
+            CHAMBER_DELIVER_POS = 0.87,
             DELIVER_POS = 0.9,
             TRANSFER_POS = 0.62,
             FLAT_POS = 0.78;
 
     // Intake Servo Positions
-    public static double INTAKE_ARM_DOWN = 0.78,
+    public static double INTAKE_ARM_DOWN = 0.69,
             INTAKE_ARM_TRANSFER = 0.08,
-            INTAKE_ARM_CLEAR = 0.42;
+            INTAKE_ARM_CLEAR = 0.38;
 
     // Claw Servo Positions
     public static double CLAW_OPEN_POS = 1.0,

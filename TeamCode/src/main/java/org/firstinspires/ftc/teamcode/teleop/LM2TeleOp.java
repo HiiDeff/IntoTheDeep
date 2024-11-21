@@ -16,6 +16,7 @@ import org.firstinspires.ftc.teamcode.task.BucketTask;
 import org.firstinspires.ftc.teamcode.task.ClawTask;
 import org.firstinspires.ftc.teamcode.task.HorizontalSlidesTask;
 import org.firstinspires.ftc.teamcode.task.IntakeArmTask;
+import org.firstinspires.ftc.teamcode.task.IntakeTask;
 import org.firstinspires.ftc.teamcode.task.ParallelTask;
 import org.firstinspires.ftc.teamcode.task.SeriesTask;
 import org.firstinspires.ftc.teamcode.task.SleepTask;
@@ -102,8 +103,8 @@ public class LM2TeleOp extends LinearOpMode {
             submersibleTask = new SeriesTask(
                     new IntakeArmTask(robot, IntakeArmTask.Position.CLEAR),
                     new ParallelTask(
-                            new UnboundedIntakeTask(robot),
-                            new HorizontalSlidesTask(robot, 13.0, 1.0, 500)
+                            new UnboundedIntakeTask(robot, 0.5),
+                            new HorizontalSlidesTask(robot, 14.0, 1.0, 500)
                     ),
                     new ParallelTask(
                             new IntakeArmTask(robot, IntakeArmTask.Position.DOWN),

@@ -94,7 +94,7 @@ public abstract class SamplesAutoPath extends AutoBase {
                                 new HorizontalSlidesTask(robot, V2RobotBase.HORIZONTAL_SLIDE_TRANSFER_POS, 1.0, 1200)
                         ),
                         new ParallelTask(
-                                new IntakeReverseTask(robot, 800),
+                                new IntakeReverseTask(robot, 800, -0.8),
                                 new HorizontalSlidesTask(robot, V2RobotBase.HORIZONTAL_SLIDE_TRANSFER_POS, 1.0, 800)
                         ),
                         new ParallelTask(
@@ -161,7 +161,7 @@ public abstract class SamplesAutoPath extends AutoBase {
                                 new HorizontalSlidesTask(robot, V2RobotBase.HORIZONTAL_SLIDE_TRANSFER_POS, 1.0, 1200)
                         ),
                         new ParallelTask(
-                            new IntakeReverseTask(robot, 800),
+                            new IntakeReverseTask(robot, 800, -0.8),
                                 new HorizontalSlidesTask(robot, V2RobotBase.HORIZONTAL_SLIDE_TRANSFER_POS, 1.0, 800)
                         ),
                         new ParallelTask(
@@ -227,7 +227,7 @@ public abstract class SamplesAutoPath extends AutoBase {
                                 new HorizontalSlidesTask(robot, V2RobotBase.HORIZONTAL_SLIDE_TRANSFER_POS, 1.0, 1200)
                         ),
                         new ParallelTask(
-                                new IntakeReverseTask(robot, 800),
+                                new IntakeReverseTask(robot, 800, -0.8),
                                 new HorizontalSlidesTask(robot, V2RobotBase.HORIZONTAL_SLIDE_TRANSFER_POS, 1.0, 800)
                         ),
                         new ParallelTask(

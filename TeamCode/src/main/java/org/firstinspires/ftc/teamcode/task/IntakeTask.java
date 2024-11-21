@@ -7,9 +7,12 @@ public class IntakeTask extends TimedTask {
 
     private V2RobotBase robot;
     private boolean started = false;
+    private double intakeSpeed;
+    private ElapsedTime elapsedTime;
 
-    public IntakeTask(V2RobotBase robot, int finishTimeMillis) {
+    public IntakeTask(V2RobotBase robot, int finishTimeMillis, double intakeSpeed) {
         this.robot = robot;
+        this.intakeSpeed = intakeSpeed;
         setFinishTimeMillis((finishTimeMillis));
     }
 
@@ -17,7 +20,16 @@ public class IntakeTask extends TimedTask {
     protected boolean performInternal() {
         if(!started) {
             started = true;
-            robot.runIntakeIn();
+            robot.runIntakeWithPower(intakeSpeed);
+        } else{
+            if(robot.intakeSampleState.IsSampleIn()) {
+                if(elapsedTime == null){
+                    elapsedTime = new ElapsedTime();
+                } else if(elapsedTime.milliseconds() > 50) {
+                    cancel();
+                    return true;
+                }
+            }
         }
         return false;
     }

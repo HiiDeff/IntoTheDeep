@@ -18,13 +18,13 @@ public class ServoTest extends LinearOpMode {
     private GamePad gp1;
 
     Servo claw;
-    public static double pos = 0.61;
+    public static double pos = 0.78;
     //public static double leftPos = 0.58, rightPos = 0.41;
 
     @Override
     public void runOpMode() throws InterruptedException {
 
-        claw = hardwareMap.get(Servo.class, "claw");
+        claw = hardwareMap.get(Servo.class, "intakeArm");
 
         waitForStart();
 
