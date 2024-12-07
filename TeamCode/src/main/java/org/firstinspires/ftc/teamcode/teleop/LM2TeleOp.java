@@ -26,7 +26,7 @@ import org.firstinspires.ftc.teamcode.task.UnboundedIntakeTask;
 import org.firstinspires.ftc.teamcode.task.VerticalSlidesTask;
 import org.firstinspires.ftc.teamcode.util.GamePad;
 
-@TeleOp(name = "League Meet 2 TeleOp")
+@TeleOp(name = "LM2 TeleOp")
 @Config
 
 public class LM2TeleOp extends LinearOpMode {
@@ -223,7 +223,7 @@ public class LM2TeleOp extends LinearOpMode {
             } else{
                 robot.setVerticalSlidePowerWithoutEncoder(-0.9);
             }
-        } else if(deliverRaiseTask == null && deliverTask == null) {
+        } else if(deliverRaiseTask == null && deliverTask == null && transferTask == null) {
             robot.setVerticalSlidePowerWithEncoder(robot.getVerticalSlidesHeight() < 0.5? 0:VERTICAL_STAND_POWER);
         }
 

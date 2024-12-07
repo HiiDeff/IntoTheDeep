@@ -8,7 +8,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import org.firstinspires.ftc.teamcode.drive.V2Robot;
 import org.firstinspires.ftc.teamcode.drive.V2RobotBase;
 @Config
-@Autonomous(name = "V2 Robot - Sample Auto Vertical")
+@Autonomous(name = "V2 Robot - SAMPLE Auto Vertical")
 public class SamplesAutoVertical extends SamplesAutoPath {
 
     public static double Sample1IntakeAlignPosX = 22.0738;

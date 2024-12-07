@@ -18,7 +18,7 @@ public class V2Robot extends V2RobotBase {
     public static double CARRY_POS = 0.7,
             CHAMBER_DELIVER_POS = 0.87,
             DELIVER_POS = 0.9,
-            TRANSFER_POS = 0.62,
+            TRANSFER_POS = 0.62, // TODO : make this flatter
             FLAT_POS = 0.78;
 
     // Intake Servo Positions

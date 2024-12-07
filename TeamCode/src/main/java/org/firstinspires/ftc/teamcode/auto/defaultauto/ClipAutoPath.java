@@ -29,7 +29,7 @@ import org.firstinspires.ftc.teamcode.task.VerticalSlidesTask;
 public abstract class ClipAutoPath extends NewAutoBase {
 
     public static int verticalSlidesDelay = 500;
-    public static double DELIVERY_CHAMBER_HEIGHT = 21;
+    public static double PRELOAD_CHAMBER_HEIGHT = 20, DELIVERY_CHAMBER_HEIGHT = 21;
     public static int PRELOAD_OPEN_DELAY_MS = 1250; //18.2745;
 
     @Override
@@ -41,10 +41,10 @@ public abstract class ClipAutoPath extends NewAutoBase {
                             robot,
                             builder -> {
                                 Pose2d pos = getPreloadSubmersibleDeliverPos();
-                                return builder.strafeToLinearHeading(pos.position, pos.heading, new TranslationalVelConstraint(30)).build();
+                                return builder.strafeToLinearHeading(pos.position, pos.heading, new TranslationalVelConstraint(40)).build();
                             }
                         ),
-                        new VerticalSlidesTask(robot, DELIVERY_CHAMBER_HEIGHT, 1.0, 1000),
+                        new VerticalSlidesTask(robot, PRELOAD_CHAMBER_HEIGHT, 1.0, 1000),
                         new SeriesTask(
                                 new SleepTask(500),
                                 new BucketTask(robot, BucketTask.Position.CHAMBER_DELIVER)
@@ -60,24 +60,27 @@ public abstract class ClipAutoPath extends NewAutoBase {
                 new ParallelTask(
                         new VerticalSlidesTask(robot, 0, 1.0, 1000),
                         new SeriesTask(
-                                new SleepTask(300),
+                                new SleepTask(1000),
                                 new BucketTask(robot, BucketTask.Position.FLAT)
                         ),
                         new SeriesTask(
                                 new SleepTask(PRELOAD_OPEN_DELAY_MS),
                                 new ClawTask(robot, ClawTask.ClawPosition.OPEN)
                         ),
-                        new RuntimeDrivingTask(
-                                robot,
-                                builder -> {
-                                    Pose2d pos1 = getFirstSampleIntakePos();
-                                    return builder
-                                            .strafeToLinearHeading(pos1.position, pos1.heading, new TranslationalVelConstraint(60))
-                                            .build();
-                                }
+                        new SeriesTask(
+                                new SleepTask(100),
+                                new RuntimeDrivingTask(
+                                        robot,
+                                        builder -> {
+                                            Pose2d pos1 = getFirstSampleIntakePos();
+                                            return builder
+                                                    .strafeToLinearHeading(pos1.position, pos1.heading, new TranslationalVelConstraint(60))
+                                                    .build();
+                                        }
+                                )
                         ),
                         new SeriesTask(
-                                new SleepTask(800),
+                                new SleepTask(1100),
                                 new HorizontalSlidesTask(robot, 19.0, 1.0, 400)
                         ),
                         new UnboundedIntakeTask(robot, 1.0)
@@ -91,14 +94,14 @@ public abstract class ClipAutoPath extends NewAutoBase {
                             builder -> {
                                 Pose2d pos1 = getFirstSampleOuttakePos();
                                 return builder
-                                        .turnTo(pos1.heading, new TurnConstraints(2*Math.PI, -Math.PI*2, Math.PI*2))
+                                        .turnTo(pos1.heading, new TurnConstraints(4*Math.PI, -Math.PI*4, Math.PI*4))
                                         .build();
                             }
                         ),
                         new SeriesTask(
                                 new ParallelTask(
-                                        new UnboundedIntakeTask(robot, 1.0),
-                                        new SleepTask(450)
+                                        new UnboundedIntakeTask(robot, 0.5),
+                                        new SleepTask(600)
                                 ),
                                 new ParallelTask(
                                         new IntakeReverseTask(robot, 1000, -1.0),
@@ -134,13 +137,13 @@ public abstract class ClipAutoPath extends NewAutoBase {
                                 builder -> {
                                     Pose2d pos1 = getSecondSampleOuttakePos();
                                     return builder
-                                            .turnTo(pos1.heading, new TurnConstraints(2*Math.PI, -Math.PI*2, Math.PI*2))
+                                            .turnTo(pos1.heading, new TurnConstraints(4*Math.PI, -Math.PI*4, Math.PI*4))
                                             .build();
                                 }
                         ),
                         new SeriesTask(
                                 new ParallelTask(
-                                        new UnboundedIntakeTask(robot, 1.0),
+                                        new UnboundedIntakeTask(robot, 0.5),
                                         new SleepTask(450)
                                 ),
                                 new ParallelTask(
@@ -164,8 +167,8 @@ public abstract class ClipAutoPath extends NewAutoBase {
                                 }
                         ),
                         new SeriesTask(
-                                new SleepTask(400),
-                                new HorizontalSlidesTask(robot, 19, 1.0, 400)
+                                new SleepTask(600),
+                                new HorizontalSlidesTask(robot, 19, 1.0, 600)
                         )
                 )
         );
@@ -177,17 +180,17 @@ public abstract class ClipAutoPath extends NewAutoBase {
                                 builder -> {
                                     Pose2d pos1 = getThirdSampleOuttakePos();
                                     return builder
-                                            .turnTo(pos1.heading, new TurnConstraints(2*Math.PI, -Math.PI*2, Math.PI*2))
+                                            .turnTo(pos1.heading, new TurnConstraints(4*Math.PI, -Math.PI*4, Math.PI*4))
                                             .build();
                                 }
                         ),
                         new HorizontalSlidesTask(robot, 10.0, 1.0, 400),
                         new SeriesTask(
                                 new ParallelTask(
-                                        new UnboundedIntakeTask(robot, 1.0),
-                                        new SleepTask(500)
+                                        new UnboundedIntakeTask(robot, 0.5),
+                                        new SleepTask(600)
                                 ),
-                                new IntakeReverseTask(robot, 1000, -1.0)
+                                new IntakeReverseTask(robot, 3000, -1.0)
                         )
                 )
         );
@@ -203,19 +206,22 @@ public abstract class ClipAutoPath extends NewAutoBase {
                         new HorizontalSlidesTask(robot, 0, 1.0, 700),
                         new VerticalSlidesTask(robot, 0, 1.0, 1000),
                         new SeriesTask(
-                                new SleepTask(300),
+                                new SleepTask(600),
                                 new BucketTask(robot, BucketTask.Position.FLAT)
                         ),
                         new SeriesTask(
-                                new SleepTask(500),
+                                new SleepTask(750),
                                 new ClawTask(robot, ClawTask.ClawPosition.OPEN)
                         ),
-                        new RuntimeDrivingTask(
-                                robot,
-                                builder -> {
-                                    Pose2d pos = getSpecimenIntakePos();
-                                    return builder.strafeToLinearHeading(pos.position, pos.heading, new TranslationalVelConstraint(40)).build();
-                                }
+                        new SeriesTask(
+                                new SleepTask(100),
+                                new RuntimeDrivingTask(
+                                        robot,
+                                        builder -> {
+                                            Pose2d pos = getSpecimenIntakePos();
+                                            return builder.strafeToLinearHeading(pos.position, pos.heading, new TranslationalVelConstraint(40)).build(); //TODO: test vel constraint
+                                        }
+                                )
                         )
                 )
         );
@@ -236,7 +242,7 @@ public abstract class ClipAutoPath extends NewAutoBase {
                                         robot,
                                         builder -> {
                                             Pose2d pos = getSubmersibleDeliverPos(cycleNumber);
-                                            return builder.strafeToLinearHeading(pos.position, pos.heading).build();
+                                            return builder.strafeToLinearHeading(pos.position, pos.heading, new TranslationalVelConstraint(40)).build();
                                         }
                                 )
                         )
@@ -251,22 +257,28 @@ public abstract class ClipAutoPath extends NewAutoBase {
         SeriesTask task = new SeriesTask();
         task.add(
                 new ParallelTask(
-                        new HorizontalSlidesTask(robot, 10.0, 1.0, 700),
+                        new SeriesTask(
+                                new SleepTask(300),
+                                new HorizontalSlidesTask(robot, 19.0, 1.0, 1500)
+                        ),
                         new VerticalSlidesTask(robot, 0, 1.0, 1000),
                         new SeriesTask(
-                                new SleepTask(200),
+                                new SleepTask(600),
                                 new BucketTask(robot, BucketTask.Position.FLAT)
                         ),
                         new SeriesTask(
-                                new SleepTask(500),
+                                new SleepTask(1000),
                                 new ClawTask(robot, ClawTask.ClawPosition.OPEN)
                         ),
-                        new RuntimeDrivingTask(
-                                robot,
-                                builder -> {
-                                    Pose2d pos = getParkPos();
-                                    return builder.strafeToLinearHeading(pos.position, pos.heading, new TranslationalVelConstraint(60)).build();
-                                }
+                        new SeriesTask(
+                                new SleepTask(100),
+                                new RuntimeDrivingTask(
+                                        robot,
+                                        builder -> {
+                                            Pose2d pos = getParkPos(); // TODO: MAKE THIS A SPLINE
+                                            return builder.strafeToLinearHeading(pos.position, pos.heading, new TranslationalVelConstraint(60)).build();
+                                        }
+                                )
                         )
                 )
         );

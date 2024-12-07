@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.auto.defaultauto;
 
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.Pose2d;
+import com.acmerobotics.roadrunner.Rotation2d;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
@@ -10,11 +11,11 @@ import org.firstinspires.ftc.teamcode.drive.V2RobotBase;
 
 @Config
 
-@Autonomous(name = "V2 Robot - Clip Auto")
+@Autonomous(name = "V2 Robot - CLIP Auto")
 public class ClipAuto extends ClipAutoPath {
 
-    public static double SUBMERSIBLE_DELIVER_DIST = -31.6, DELIVER_OFFSET = -0.2;
-    public static double preloadSubmersibleYVal = 0.0, cycleSubmersibleYVal = -2.0;
+    public static double SUBMERSIBLE_DELIVER_DIST = -31.6, DELIVER_OFFSET = -0.4;
+    public static double preloadSubmersibleYVal = 0.0, cycleSubmersibleYVal = -3.0;
 
 
     @Override
@@ -49,7 +50,7 @@ public class ClipAuto extends ClipAutoPath {
 
     @Override
     protected Pose2d getThirdSampleIntakePos() {
-        return new Pose2d(-19.10, 37.96, 2.30255);
+        return new Pose2d(-21.69, 42.96, new Rotation2d(-0.7593, 0.6508).toDouble());
     }
 
     @Override
@@ -59,16 +60,16 @@ public class ClipAuto extends ClipAutoPath {
 
     @Override
     protected Pose2d getSpecimenIntakePos() {
-        return new Pose2d(1.0, 30.56, -Math.PI+0.03);
+        return new Pose2d(2.0, 30.56, -Math.PI+0.05);
     }
 
     @Override
     protected Pose2d getSubmersibleDeliverPos(int cycleNumber) {
-        return new Pose2d(SUBMERSIBLE_DELIVER_DIST+cycleNumber*DELIVER_OFFSET, cycleSubmersibleYVal-cycleNumber*2.5, -0.005);
+        return new Pose2d(SUBMERSIBLE_DELIVER_DIST+cycleNumber*DELIVER_OFFSET, cycleSubmersibleYVal-cycleNumber*2.5, -0.05);
     }
 
     @Override
     protected Pose2d getParkPos() {
-        return new Pose2d(-8.97, 37.65, Math.PI/3);
+        return new Pose2d(-17.48, 16.55, 0.8561);
     }
 }

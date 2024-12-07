@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.test;
 
 import com.acmerobotics.dashboard.config.Config;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
@@ -9,6 +10,7 @@ import org.firstinspires.ftc.teamcode.drive.V2Robot;
 import org.firstinspires.ftc.teamcode.util.GamePad;
 
 @TeleOp(name = "Motor Tester", group = "Test")
+@Disabled
 @Config
 
 public class MotorTest extends LinearOpMode {
@@ -32,17 +34,19 @@ public class MotorTest extends LinearOpMode {
         horizontalSlides = hardwareMap.get(DcMotorEx.class, "horizontalSlides");
         horizontalSlides.setDirection(DcMotorEx.Direction.REVERSE);
         horizontalSlides.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
-        horizontalSlides.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
+        horizontalSlides.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
 
         verticalSlides = hardwareMap.get(DcMotorEx.class, "verticalSlides");
         verticalSlides.setDirection(DcMotorEx.Direction.REVERSE);
         verticalSlides.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
-        verticalSlides.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
+        verticalSlides.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
 
 
         waitForStart();
 
         while (opModeIsActive()) {
+
+            verticalSlides.setPower(POWER);
 
             telemetry.addData("h pos", horizontalSlides.getCurrentPosition());
             telemetry.addData("v pos", verticalSlides.getCurrentPosition());
