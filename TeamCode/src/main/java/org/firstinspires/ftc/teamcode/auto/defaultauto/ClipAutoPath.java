@@ -80,7 +80,7 @@ public abstract class ClipAutoPath extends NewAutoBase {
                                 )
                         ),
                         new SeriesTask(
-                                new SleepTask(1100),
+                                new SleepTask(1100), //TODO: save time here
                                 new HorizontalSlidesTask(robot, 19.0, 1.0, 400)
                         ),
                         new UnboundedIntakeTask(robot, 1.0)
