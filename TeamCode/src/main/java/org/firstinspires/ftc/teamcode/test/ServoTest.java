@@ -10,7 +10,7 @@ import org.firstinspires.ftc.teamcode.drive.V2Robot;
 import org.firstinspires.ftc.teamcode.util.GamePad;
 
 @TeleOp(name = "Servo Tester", group = "Test")
-@Disabled
+//@Disabled
 @Config
 
 public class ServoTest extends LinearOpMode {
@@ -26,7 +26,7 @@ public class ServoTest extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
 
-        claw = hardwareMap.get(Servo.class, "intakeArm");
+        claw = hardwareMap.get(Servo.class, "claw");
 
         waitForStart();
 

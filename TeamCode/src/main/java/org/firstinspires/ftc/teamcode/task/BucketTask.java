@@ -32,7 +32,7 @@ public class BucketTask extends TimedTask {
             double targetPos = robot.getBucketServoPosition(position);
             setFinishTimeMillis(Utils.getEstimatedServoTime(RPM, MAX_ROTATION_DEGREE,
                     targetPos - currPos));
-            robot.bucketServo.setPosition(targetPos);
+            robot.bucketProfiler.setTargetPosition(targetPos);
             started = true;
         }
         return false;

@@ -17,6 +17,8 @@ import org.firstinspires.ftc.teamcode.task.IntakeArmTask;
 import org.firstinspires.ftc.teamcode.task.RungStickTask;
 import org.firstinspires.ftc.teamcode.task.SwipeStickTask;
 import org.firstinspires.ftc.teamcode.util.Utils;
+import org.firstinspires.ftc.teamcode.util.profile.ProfileConstraints;
+import org.firstinspires.ftc.teamcode.util.profile.ServoProfiler;
 
 @Config
 public abstract class V2RobotBase extends PinpointDrive {
@@ -51,10 +53,14 @@ public abstract class V2RobotBase extends PinpointDrive {
 
 
     // Servos
-    public final Servo bucketServo;
     public final Servo claw;
     public final Servo intakeArm;
     public final Servo rungStick, swipeStick;
+    public final Servo bucketServo;
+    public final ServoProfiler bucketProfiler;
+
+    // Profile Constraints
+    public static ProfileConstraints BUCKET_CONSTRAINTS = new ProfileConstraints(10, 5, 5);
 
     // Sensors
     public final RevColorSensorV3 leftIntakeColorSensor, rightIntakeColorSensor;
@@ -98,6 +104,8 @@ public abstract class V2RobotBase extends PinpointDrive {
         rungStick = hardwareMap.get(Servo.class, "rungStick");
         swipeStick = hardwareMap.get(Servo.class, "swipeStick");
 
+        bucketProfiler = new ServoProfiler(bucketServo, BUCKET_CONSTRAINTS);
+
         // Sensors:
         leftIntakeColorSensor = hardwareMap.get(RevColorSensorV3.class, "intakeColorLeft");
         rightIntakeColorSensor = hardwareMap.get(RevColorSensorV3.class, "intakeColorRight");
@@ -111,14 +119,14 @@ public abstract class V2RobotBase extends PinpointDrive {
 
     public void teleOpInit() {
         setIntakeArmPos(IntakeArmTask.Position.DOWN);
-        setBucketServoPosition(BucketTask.Position.TRANSFER);
+        bucketServo.setPosition(getBucketServoPosition(BucketTask.Position.TRANSFER));
         RungStickTask.setPosition(this, RungStickTask.Position.DOWN);
         setClawPosition(ClawTask.ClawPosition.CLOSE);
         SwipeStickTask.setPosition(this, SwipeStickTask.Position.IN);
     }
     public void autoInit() {
         setIntakeArmPos(IntakeArmTask.Position.TRANSFER);
-        setBucketServoPosition(BucketTask.Position.FLAT);
+        bucketServo.setPosition(getBucketServoPosition(BucketTask.Position.FLAT));
         RungStickTask.setPosition(this, RungStickTask.Position.DOWN);
         setClawPosition(ClawTask.ClawPosition.CLOSE);
         SwipeStickTask.setPosition(this, SwipeStickTask.Position.IN);
@@ -127,6 +135,7 @@ public abstract class V2RobotBase extends PinpointDrive {
     // Updates
     public void updateEverything() {
         updateEncoders();
+        updateProfilers();
         updatePoseEstimate();
         intakeSampleState.update();
     }
@@ -137,6 +146,10 @@ public abstract class V2RobotBase extends PinpointDrive {
     public void updateHorizontalEncoder() {
         horizontalSlidesPos = horizontalSlides.getCurrentPosition();
     }
+    public void updateProfilers() {
+        bucketProfiler.updatePosition();
+    }
+
 
     // Utils
 
@@ -207,7 +220,10 @@ public abstract class V2RobotBase extends PinpointDrive {
     public abstract double getBucketServoPosition(BucketTask.Position position);
 
     public void setBucketServoPosition(BucketTask.Position position) {
-        bucketServo.setPosition(getBucketServoPosition(position));
+        bucketProfiler.setTargetPosition(getBucketServoPosition(position));
+    }
+    public void setBucketServoPositionDir(BucketTask.Position position) {
+
     }
 
 

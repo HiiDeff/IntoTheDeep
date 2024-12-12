@@ -19,7 +19,7 @@ public class V2Robot extends V2RobotBase {
             CHAMBER_DELIVER_POS = 0.87,
             DELIVER_POS = 0.9,
             TRANSFER_POS = 0.62, // TODO : make this flatter
-            FLAT_POS = 0.78;
+            FLAT_POS = 0.79;
 
     // Intake Servo Positions
     public static double INTAKE_ARM_DOWN = 0.69,
@@ -27,8 +27,8 @@ public class V2Robot extends V2RobotBase {
             INTAKE_ARM_CLEAR = 0.38;
 
     // Claw Servo Positions
-    public static double CLAW_OPEN_POS = 1.0,
-            CLAW_CLOSE_POS = 0.86;
+    public static double CLAW_OPEN_POS = 0.5,
+            CLAW_CLOSE_POS = 0.3;
 
 
     public V2Robot(HardwareMap hardwareMap) {
