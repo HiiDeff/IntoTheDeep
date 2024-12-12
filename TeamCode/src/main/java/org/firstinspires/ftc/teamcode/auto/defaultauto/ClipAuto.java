@@ -15,7 +15,7 @@ import org.firstinspires.ftc.teamcode.drive.V2RobotBase;
 public class ClipAuto extends ClipAutoPath {
 
     public static double SUBMERSIBLE_DELIVER_DIST = -31.6, DELIVER_OFFSET = -0.4;
-    public static double preloadSubmersibleYVal = 0.0, cycleSubmersibleYVal = -3.0;
+    public static double preloadSubmersibleYVal = 3.0, cycleSubmersibleYVal = 0.0;
 
 
     @Override
@@ -25,7 +25,7 @@ public class ClipAuto extends ClipAutoPath {
 
     @Override
     protected Pose2d getPreloadSubmersibleDeliverPos() {
-        return new Pose2d(-32.50, preloadSubmersibleYVal, 0);
+        return new Pose2d(-32.50, preloadSubmersibleYVal, 0.0);
     }
 
     @Override
@@ -60,7 +60,7 @@ public class ClipAuto extends ClipAutoPath {
 
     @Override
     protected Pose2d getSpecimenIntakePos() {
-        return new Pose2d(2.0, 30.56, -Math.PI+0.05);
+        return new Pose2d(1.0, 30.56, -Math.PI+0.05);
     }
 
     @Override

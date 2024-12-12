@@ -7,9 +7,11 @@ import com.acmerobotics.roadrunner.TurnConstraints;
 
 import org.firstinspires.ftc.teamcode.auto.AutoBase;
 import org.firstinspires.ftc.teamcode.auto.NewAutoBase;
+import org.firstinspires.ftc.teamcode.auto.conditions.SampleStateCondition;
 import org.firstinspires.ftc.teamcode.drive.V2RobotBase;
 import org.firstinspires.ftc.teamcode.task.BucketTask;
 import org.firstinspires.ftc.teamcode.task.ClawTask;
+import org.firstinspires.ftc.teamcode.task.ConditionalTask;
 import org.firstinspires.ftc.teamcode.task.HorizontalSlidesTask;
 import org.firstinspires.ftc.teamcode.task.IntakeArmTask;
 import org.firstinspires.ftc.teamcode.task.IntakeReverseTask;
@@ -29,7 +31,7 @@ import org.firstinspires.ftc.teamcode.task.VerticalSlidesTask;
 public abstract class ClipAutoPath extends NewAutoBase {
 
     public static int verticalSlidesDelay = 500;
-    public static double PRELOAD_CHAMBER_HEIGHT = 20, DELIVERY_CHAMBER_HEIGHT = 21;
+    public static double PRELOAD_CHAMBER_HEIGHT = 20, DELIVERY_CHAMBER_HEIGHT = 20;
     public static int PRELOAD_OPEN_DELAY_MS = 1250; //18.2745;
 
     @Override
@@ -80,7 +82,7 @@ public abstract class ClipAutoPath extends NewAutoBase {
                                 )
                         ),
                         new SeriesTask(
-                                new SleepTask(1100), //TODO: save time here
+                                new SleepTask(1000), //TODO: save time here
                                 new HorizontalSlidesTask(robot, 19.0, 1.0, 400)
                         ),
                         new UnboundedIntakeTask(robot, 1.0)
@@ -104,10 +106,20 @@ public abstract class ClipAutoPath extends NewAutoBase {
                                         new SleepTask(600)
                                 ),
                                 new ParallelTask(
-                                        new IntakeReverseTask(robot, 1000, -1.0),
+                                        new IntakeReverseTask(robot, 300, -1.0),
                                         new HorizontalSlidesTask(robot, 10.0, 1.0, 300)
                                 )
                         )
+                )
+        );
+        task.add(
+                new SeriesTask(
+                        new ConditionalTask(new SampleStateCondition(robot)),
+                        new ParallelTask(
+                                new UnboundedIntakeTask(robot, 1.0),
+                                new SleepTask(100)
+                        ),
+                        new IntakeReverseTask(robot,1000,-1.0)
                 )
         );
 //        new SleepTask(1000);
@@ -124,7 +136,7 @@ public abstract class ClipAutoPath extends NewAutoBase {
                                 }
                         ),
                         new SeriesTask(
-                                new SleepTask(700),
+                                new SleepTask(600),
                                 new HorizontalSlidesTask(robot, 19, 1.0, 300)
                         )
                 )
@@ -147,10 +159,20 @@ public abstract class ClipAutoPath extends NewAutoBase {
                                         new SleepTask(450)
                                 ),
                                 new ParallelTask(
-                                        new IntakeReverseTask(robot, 1000, -1.0),
+                                        new IntakeReverseTask(robot, 300, -1.0),
                                         new HorizontalSlidesTask(robot, 10.0, 1.0, 300)
                                 )
                         )
+                )
+        );
+        task.add(
+                new SeriesTask(
+                        new ConditionalTask(new SampleStateCondition(robot)),
+                        new ParallelTask(
+                                new UnboundedIntakeTask(robot, 1.0),
+                                new SleepTask(100)
+                        ),
+                        new IntakeReverseTask(robot,1000,-1.0)
                 )
         );
 //        new SleepTask(1000);
@@ -190,8 +212,18 @@ public abstract class ClipAutoPath extends NewAutoBase {
                                         new UnboundedIntakeTask(robot, 0.5),
                                         new SleepTask(600)
                                 ),
-                                new IntakeReverseTask(robot, 3000, -1.0)
+                                new IntakeReverseTask(robot, 300, -1.0)
                         )
+                )
+        );
+        task.add(
+                new SeriesTask(
+                        new ConditionalTask(new SampleStateCondition(robot)),
+                        new ParallelTask(
+                                new UnboundedIntakeTask(robot, 1.0),
+                                new SleepTask(100)
+                        ),
+                        new IntakeReverseTask(robot,1000,-1.0)
                 )
         );
 //        new SleepTask(1000);
@@ -206,7 +238,7 @@ public abstract class ClipAutoPath extends NewAutoBase {
                         new HorizontalSlidesTask(robot, 0, 1.0, 700),
                         new VerticalSlidesTask(robot, 0, 1.0, 1000),
                         new SeriesTask(
-                                new SleepTask(600),
+                                new SleepTask(1000),
                                 new BucketTask(robot, BucketTask.Position.FLAT)
                         ),
                         new SeriesTask(
@@ -258,12 +290,12 @@ public abstract class ClipAutoPath extends NewAutoBase {
         task.add(
                 new ParallelTask(
                         new SeriesTask(
-                                new SleepTask(300),
+                                new SleepTask(500),
                                 new HorizontalSlidesTask(robot, 19.0, 1.0, 1500)
                         ),
                         new VerticalSlidesTask(robot, 0, 1.0, 1000),
                         new SeriesTask(
-                                new SleepTask(600),
+                                new SleepTask(1000),
                                 new BucketTask(robot, BucketTask.Position.FLAT)
                         ),
                         new SeriesTask(
