@@ -1,6 +1,8 @@
 package org.firstinspires.ftc.teamcode.teleop;
 
+import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
+import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.acmerobotics.roadrunner.PoseVelocity2d;
 import com.acmerobotics.roadrunner.Vector2d;
 import com.qualcomm.hardware.rev.RevBlinkinLedDriver;
@@ -31,7 +33,9 @@ import org.firstinspires.ftc.teamcode.util.GamePad;
 
 public class LM2TeleOp extends LinearOpMode {
 
-    public static double VERTICAL_STAND_POWER = 0.01;
+    public MultipleTelemetry multipleTelemetry;
+
+    public static double VERTICAL_STAND_POWER = 0.4;
     public static double VERTICAL_SLIDE_MAX_POWER = 1.0;
     public static double MIN_DRIVE_POWER = 0.01;
     public static double DELIVERY_CHAMBER_HEIGHT = 20.5;
@@ -44,7 +48,7 @@ public class LM2TeleOp extends LinearOpMode {
 
     private Task submersibleTask,
             transferTask,
-            deliverRaiseTask,
+            deliverChamberTask,
             deliverTask;
     ;
 
@@ -54,6 +58,7 @@ public class LM2TeleOp extends LinearOpMode {
         gp1 = new GamePad(gamepad1);
         gp2 = new GamePad(gamepad2);
 
+        multipleTelemetry = new MultipleTelemetry(this.telemetry, FtcDashboard.getInstance().getTelemetry());
         robot.teleOpInit();
         waitForStart();
 
@@ -75,8 +80,8 @@ public class LM2TeleOp extends LinearOpMode {
             submersibleTask = null;
         }if (transferTask != null && transferTask.perform()) {
             transferTask = null;
-        }if (deliverRaiseTask != null && deliverRaiseTask.perform()) {
-            deliverRaiseTask = null;
+        }if (deliverChamberTask != null && deliverChamberTask.perform()) {
+            deliverChamberTask = null;
         }if (deliverTask != null && deliverTask.perform()) {
             deliverTask = null;
         }
@@ -94,13 +99,21 @@ public class LM2TeleOp extends LinearOpMode {
         telemetry.addData("pose", robot.pose);
         telemetry.addData("vertical slide position", robot.getVerticalSlidesHeight());
         telemetry.addData("horizontal slide position", robot.getHorizontalSlideDist());
+
+        multipleTelemetry.addData("current bucket servo position", robot.bucketProfiler.getCurPos());
+        multipleTelemetry.addData("target bucket servo position", robot.bucketProfiler.getTargetPos());
         telemetry.update();
+        multipleTelemetry.update();
     }
 
     private void checkPreloads() {
 
+        if(submersibleTask!=null || transferTask != null || deliverChamberTask != null) {
+            return;
+        }
+
         // Submersible Intake Preset
-        if(submersibleTask == null && gp2.onceY()){
+        if(gp2.onceY()){
             submersibleTask = new SeriesTask(
                     new IntakeArmTask(robot, IntakeArmTask.Position.CLEAR),
                     new ParallelTask(
@@ -115,24 +128,30 @@ public class LM2TeleOp extends LinearOpMode {
         }
 
         // Transfer Preset
-        else if(transferTask == null && gp2.onceX()) {
+        else if(gp2.onceX()) {
             transferTask = new SeriesTask(
-                    new BucketTask(robot, BucketTask.Position.TRANSFER),
+                    new ParallelTask(
+                            new BucketTask(robot, BucketTask.Position.TRANSFER),
+                            new ClawTask(robot, ClawTask.ClawPosition.CLOSE)
+                    ),
                     new ParallelTask(
                             new VerticalSlidesTask(robot, 0, 1.0, 2000),
-                            new TimedHorizontalSlidesTask(robot, V2RobotBase.HORIZONTAL_SLIDE_TRANSFER_POS, 1.0,1500),
+                            new TimedHorizontalSlidesTask(robot, V2RobotBase.HORIZONTAL_SLIDE_TRANSFER_POS, 1.0,500),
                             new IntakeArmTask(robot, IntakeArmTask.Position.TRANSFER)
+                    )
+            ); clawOpen = false;
+        }
+
+        // Deliver Raise Preset
+        else if(!gp2.start() && gp2.onceB()) {
+            deliverChamberTask = new SeriesTask(
+                    new ClawTask(robot, ClawTask.ClawPosition.CLOSE),
+                    new ParallelTask(
+                            new VerticalSlidesTask(robot, DELIVERY_CHAMBER_HEIGHT, 1.0, 2000),
+                            new BucketTask(robot, BucketTask.Position.CHAMBER_DELIVER)
                     )
             );
         }
-
-//        // Deliver Raise Preset
-//        else if(deliverRaiseTask == null && gp2.onceA()) {
-//            deliverRaiseTask = new ParallelTask(
-//                    new VerticalSlidesTask(robot, 40.0, 1.0, 3000),
-//                    new BucketTask(robot, BucketTask.Position.CARRY)
-//            );
-//        }
 //
 //        // Deliver Preset
 //        else if(deliverTask == null && (gp2.onceB())) {
@@ -177,7 +196,7 @@ public class LM2TeleOp extends LinearOpMode {
             else {
 //                robot.setHorizontalSlidesPower(0);
                 if(horizontalPositionUpdated) {
-                    robot.brakeHorizontalSlides(0.1); // TODO: CHECK THIS
+                    robot.brakeHorizontalSlides(0.5); // TODO: CHECK THIS
                     horizontalPositionUpdated = false;
                 }
             }
@@ -211,9 +230,9 @@ public class LM2TeleOp extends LinearOpMode {
 
         // Slides
         if(transferTask == null && (gp2.dpadUp() || gp2.dpadDown())){
-            if(deliverRaiseTask != null) {
-                deliverRaiseTask.cancel();
-                deliverRaiseTask = null;
+            if(deliverChamberTask != null) {
+                deliverChamberTask.cancel();
+                deliverChamberTask = null;
             } else if(deliverTask != null){
                 deliverTask.cancel();
                 deliverTask = null;
@@ -221,34 +240,37 @@ public class LM2TeleOp extends LinearOpMode {
             if(gp2.dpadUp()) {
                 robot.setVerticalSlidePowerWithoutEncoder(1.0);
             } else{
-                robot.setVerticalSlidePowerWithoutEncoder(-0.9);
+                robot.setVerticalSlidePowerWithoutEncoder(-0.3);
             }
-        } else if(deliverRaiseTask == null && deliverTask == null && transferTask == null) {
-            robot.setVerticalSlidePowerWithEncoder(robot.getVerticalSlidesHeight() < 0.5? 0:VERTICAL_STAND_POWER);
+        } else if(deliverChamberTask == null && deliverTask == null && transferTask == null) {
+            robot.setVerticalSlidePowerWithoutEncoder(robot.getVerticalSlidesHeight() < 0.5? 0:VERTICAL_STAND_POWER);
         }
 
         // Bucket
         if(gp1.onceB()) {
             robot.setBucketServoPosition(BucketTask.Position.FLAT);
+            robot.setClawPosition(ClawTask.ClawPosition.OPEN); clawOpen = true;
         } else if(gp1.onceX()){
             robot.setBucketServoPosition(BucketTask.Position.CARRY);
+            robot.setClawPosition(ClawTask.ClawPosition.CLOSE); clawOpen = false;
         }else if(gp1.onceY()) {
             robot.setBucketServoPosition(BucketTask.Position.DELIVER);
+            robot.setClawPosition(ClawTask.ClawPosition.CLOSE); clawOpen = false;
             if(robot.getVerticalSlidesHeight() >= 12) {
                 cycleSum += cycleTimer.seconds(); cycleCnt++; cycleAvg = cycleSum/cycleCnt;
                 cycleTimer.reset();
             }
-        } else if(!gp1.back() && gp1.onceA()) {
+        } else if(!gp1.back() && !gp1.start() && gp1.onceA()) {
             robot.setBucketServoPosition(BucketTask.Position.TRANSFER);
+            robot.setClawPosition(ClawTask.ClawPosition.CLOSE); clawOpen = false;
         }
 
         // Claw
-        if(gp1.onceLeftBumper()){
+        if(gp2.onceA()){
             if(clawOpen) {
                 robot.setClawPosition(ClawTask.ClawPosition.CLOSE);
             } else {
                 robot.setClawPosition(ClawTask.ClawPosition.OPEN);
-                robot.setBucketServoPosition(BucketTask.Position.FLAT);
             }
             clawOpen = !clawOpen;
         }
