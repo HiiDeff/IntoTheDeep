@@ -11,10 +11,6 @@ public class AutoStates {
     private boolean isRed;
     private int deliveryZone;
     private Pose2d pixelPos;
-    private int numberOfPixels;
-
-    private int twoPixelCount;
-    private int lessPixelCount;
 
     public Pose2d getPrevEndPos() {
         return prevEndPos;
@@ -32,13 +28,6 @@ public class AutoStates {
         this.cycleNumber = cycleNumber;
     }
 
-    public int getInitSign() {
-        return initSign;
-    }
-
-    public void setInitSign(int initSign) {
-        this.initSign = initSign;
-    }
 
     public boolean isRed() {
         return isRed;
@@ -70,30 +59,5 @@ public class AutoStates {
 
     public void setPixelPos(Pose2d pixelPos) {
         this.pixelPos = pixelPos;
-    }
-
-    public void setNumberOfPixels(int num) {
-        numberOfPixels = num;
-    }
-
-    public int getNumberOfPixels() {
-        return numberOfPixels;
-    }
-
-
-    public void incrementTwoPixelCount() {
-        twoPixelCount += 1;
-    }
-
-    public void incrementLessPixelCount() {
-        lessPixelCount += 1;
-    }
-
-    public int getTwoPixelCount() {
-        return twoPixelCount;
-    }
-
-    public int getLessPixelCount() {
-        return lessPixelCount;
     }
 }

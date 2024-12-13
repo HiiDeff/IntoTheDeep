@@ -126,6 +126,14 @@ public abstract class V2RobotBase extends PinpointDrive {
     }
     public void autoInit() {
         setIntakeArmPos(IntakeArmTask.Position.TRANSFER);
+        bucketServo.setPosition(getBucketServoPosition(BucketTask.Position.CARRY));
+        RungStickTask.setPosition(this, RungStickTask.Position.DOWN);
+        setClawPosition(ClawTask.ClawPosition.OPEN);
+        SwipeStickTask.setPosition(this, SwipeStickTask.Position.IN);
+    }
+
+    public void autoClipInit() {
+        setIntakeArmPos(IntakeArmTask.Position.TRANSFER);
         bucketServo.setPosition(getBucketServoPosition(BucketTask.Position.FLAT));
         RungStickTask.setPosition(this, RungStickTask.Position.DOWN);
         setClawPosition(ClawTask.ClawPosition.CLOSE);

@@ -289,12 +289,12 @@ public abstract class ClipAutoPath extends NewAutoBase {
         SeriesTask task = new SeriesTask();
         task.add(
                 new ParallelTask(
-                        new SeriesTask(
+                        /*new SeriesTask(
                                 new SleepTask(500),
                                 new HorizontalSlidesTask(robot, 19.0, 1.0, 1500)
-                        ),
-                        new VerticalSlidesTask(robot, 0, 1.0, 1000),
-                        new SeriesTask(
+                        ),*/
+                        new VerticalSlidesTask(robot, 0, 1.0, 1000)//,
+                        /*new SeriesTask(
                                 new SleepTask(1000),
                                 new BucketTask(robot, BucketTask.Position.FLAT)
                         ),
@@ -311,7 +311,7 @@ public abstract class ClipAutoPath extends NewAutoBase {
                                             return builder.strafeToLinearHeading(pos.position, pos.heading, new TranslationalVelConstraint(60)).build();
                                         }
                                 )
-                        )
+                        )*/
                 )
         );
         return task;
