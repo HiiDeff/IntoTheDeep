@@ -60,7 +60,7 @@ public abstract class V2RobotBase extends PinpointDrive {
     public final ServoProfiler bucketProfiler;
 
     // Profile Constraints
-    public static ProfileConstraints BUCKET_CONSTRAINTS = new ProfileConstraints(10, 5, 5);
+    public static ProfileConstraints BUCKET_CONSTRAINTS = new ProfileConstraints(10, 8, 5);
 
     // Sensors
     public final RevColorSensorV3 leftIntakeColorSensor, rightIntakeColorSensor;

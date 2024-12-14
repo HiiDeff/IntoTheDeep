@@ -49,7 +49,7 @@ public abstract class SamplesAutoPath extends AutoBase {
                         }
                 ),
                 new BucketTask(robot, BucketTask.Position.DELIVER),
-                new SleepTask(500)
+                new SleepTask(650)
         ));
         return task;
     }
@@ -100,8 +100,17 @@ public abstract class SamplesAutoPath extends AutoBase {
                                 new HorizontalSlidesTask(robot, V2RobotBase.HORIZONTAL_SLIDE_TRANSFER_POS, 1.0, 1200)
                         ),
                         new ParallelTask(
-                                new IntakeReverseTask(robot, 800, -0.8),
-                                new HorizontalSlidesTask(robot, V2RobotBase.HORIZONTAL_SLIDE_TRANSFER_POS, 1.0, 800)
+                                new IntakeReverseTask(robot, 300, -0.8),
+                                new HorizontalSlidesTask(robot, V2RobotBase.HORIZONTAL_SLIDE_TRANSFER_POS, 1.0, 300)
+                        ),
+                        new SeriesTask(
+                                new ConditionalTask(new SampleStateCondition(robot)),
+                                new ParallelTask(
+                                        new UnboundedIntakeTask(robot, 1.0),
+                                        new SleepTask(100),
+                                        new HorizontalSlidesTask(robot, V2RobotBase.HORIZONTAL_SLIDE_TRANSFER_POS, 1.0, 300)
+                                ),
+                                new IntakeReverseTask(robot,1000,-1.0)
                         ),
                         new ParallelTask(
                                 new BucketTask(robot, BucketTask.Position.CARRY),
@@ -129,7 +138,7 @@ public abstract class SamplesAutoPath extends AutoBase {
 //                        }
 //                ),
                 new BucketTask(robot, BucketTask.Position.DELIVER),
-                new SleepTask(500)
+                new SleepTask(650)
         ));
         //SECOND SAMPLE
         task.add(new ParallelTask(
@@ -167,8 +176,17 @@ public abstract class SamplesAutoPath extends AutoBase {
                                 new HorizontalSlidesTask(robot, V2RobotBase.HORIZONTAL_SLIDE_TRANSFER_POS, 1.0, 1200)
                         ),
                         new ParallelTask(
-                            new IntakeReverseTask(robot, 800, -0.8),
-                                new HorizontalSlidesTask(robot, V2RobotBase.HORIZONTAL_SLIDE_TRANSFER_POS, 1.0, 800)
+                                new IntakeReverseTask(robot, 300, -0.8),
+                                new HorizontalSlidesTask(robot, V2RobotBase.HORIZONTAL_SLIDE_TRANSFER_POS, 1.0, 300)
+                        ),
+                        new SeriesTask(
+                                new ConditionalTask(new SampleStateCondition(robot)),
+                                new ParallelTask(
+                                        new UnboundedIntakeTask(robot, 1.0),
+                                        new SleepTask(100),
+                                        new HorizontalSlidesTask(robot, V2RobotBase.HORIZONTAL_SLIDE_TRANSFER_POS, 1.0, 300)
+                                ),
+                                new IntakeReverseTask(robot,1000,-1.0)
                         ),
                         new ParallelTask(
                                 new BucketTask(robot, BucketTask.Position.CARRY),
@@ -195,7 +213,7 @@ public abstract class SamplesAutoPath extends AutoBase {
 //                        }
 //                ),
                 new BucketTask(robot, BucketTask.Position.DELIVER),
-                new SleepTask(500)
+                new SleepTask(650)
         ));
         //THIRD SAMPLE
         task.add(new ParallelTask(
@@ -233,8 +251,17 @@ public abstract class SamplesAutoPath extends AutoBase {
                                 new HorizontalSlidesTask(robot, V2RobotBase.HORIZONTAL_SLIDE_TRANSFER_POS, 1.0, 1200)
                         ),
                         new ParallelTask(
-                            new IntakeReverseTask(robot, 800, -0.8),
-                                new HorizontalSlidesTask(robot, V2RobotBase.HORIZONTAL_SLIDE_TRANSFER_POS, 1.0, 800)
+                                new IntakeReverseTask(robot, 300, -0.8),
+                                new HorizontalSlidesTask(robot, V2RobotBase.HORIZONTAL_SLIDE_TRANSFER_POS, 1.0, 300)
+                        ),
+                        new SeriesTask(
+                                new ConditionalTask(new SampleStateCondition(robot)),
+                                new ParallelTask(
+                                        new UnboundedIntakeTask(robot, 1.0),
+                                        new SleepTask(100),
+                                        new HorizontalSlidesTask(robot, V2RobotBase.HORIZONTAL_SLIDE_TRANSFER_POS, 1.0, 300)
+                                ),
+                                new IntakeReverseTask(robot,1000,-1.0)
                         ),
                         new ParallelTask(
                                 new BucketTask(robot, BucketTask.Position.CARRY),
@@ -262,7 +289,7 @@ public abstract class SamplesAutoPath extends AutoBase {
 //                        }
 //                ),
                 new BucketTask(robot, BucketTask.Position.DELIVER),
-                new SleepTask(500)
+                new SleepTask(650)
         ));
         return task;
     }

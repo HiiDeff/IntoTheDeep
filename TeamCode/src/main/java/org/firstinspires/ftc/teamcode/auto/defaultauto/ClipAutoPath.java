@@ -250,7 +250,7 @@ public abstract class ClipAutoPath extends NewAutoBase {
                                 new RuntimeDrivingTask(
                                         robot,
                                         builder -> {
-                                            Pose2d pos = getSpecimenIntakePos();
+                                            Pose2d pos = getSpecimenIntakePos(cycleNumber);
                                             return builder.strafeToLinearHeading(pos.position, pos.heading, new TranslationalVelConstraint(40)).build(); //TODO: test vel constraint
                                         }
                                 )
@@ -326,7 +326,7 @@ public abstract class ClipAutoPath extends NewAutoBase {
     protected abstract Pose2d getThirdSampleIntakePos();
     protected abstract Pose2d getThirdSampleOuttakePos();
 
-    protected abstract Pose2d getSpecimenIntakePos();
+    protected abstract Pose2d getSpecimenIntakePos(int cycleNumber);
     protected abstract Pose2d getSubmersibleDeliverPos(int cycleNumber);
     protected abstract Pose2d getParkPos();
 }

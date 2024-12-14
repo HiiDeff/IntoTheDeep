@@ -59,8 +59,8 @@ public class ClipAuto extends ClipAutoPath {
     }
 
     @Override
-    protected Pose2d getSpecimenIntakePos() {
-        return new Pose2d(1.0, 30.56, -Math.PI+0.05);
+    protected Pose2d getSpecimenIntakePos(int cycleNumber) {
+        return new Pose2d(1.0+0.15*cycleNumber, 30.56, -Math.PI+0.05);
     }
 
     @Override
