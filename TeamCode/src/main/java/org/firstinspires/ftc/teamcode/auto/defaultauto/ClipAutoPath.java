@@ -290,7 +290,7 @@ public abstract class ClipAutoPath extends NewAutoBase {
         task.add(
                 new ParallelTask(
                         new SeriesTask(
-                                new SleepTask(500),
+                                new SleepTask(500), //TODO decrease this
                                 new HorizontalSlidesTask(robot, 19.0, 1.0, 1500)
                         ),
                         new VerticalSlidesTask(robot, 0, 1.0, 1000),
