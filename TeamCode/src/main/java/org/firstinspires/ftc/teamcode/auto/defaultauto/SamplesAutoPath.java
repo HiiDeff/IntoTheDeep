@@ -12,6 +12,7 @@ import org.firstinspires.ftc.teamcode.task.ConditionalTask;
 import org.firstinspires.ftc.teamcode.task.HorizontalSlidesTask;
 import org.firstinspires.ftc.teamcode.task.IntakeArmTask;
 import org.firstinspires.ftc.teamcode.task.IntakeReverseTask;
+import org.firstinspires.ftc.teamcode.task.IntakeTask;
 import org.firstinspires.ftc.teamcode.task.IntakeWithExtensionTask;
 import org.firstinspires.ftc.teamcode.task.ParallelTask;
 import org.firstinspires.ftc.teamcode.task.RungStickTask;
@@ -100,7 +101,14 @@ public abstract class SamplesAutoPath extends AutoBase {
                                 new HorizontalSlidesTask(robot, V2RobotBase.HORIZONTAL_SLIDE_TRANSFER_POS, 1.0, 1200)
                         ),
                         new ParallelTask(
-                                new IntakeReverseTask(robot, 800, -0.8),
+                                new SeriesTask(
+                                        new IntakeReverseTask(robot, 800, -0.8),
+                                        new ParallelTask(
+                                                new UnboundedIntakeTask(robot, 1.0),
+                                                new SleepTask(100)
+                                        ),
+                                        new IntakeReverseTask(robot, 800, -0.8)
+                                ),
                                 new HorizontalSlidesTask(robot, V2RobotBase.HORIZONTAL_SLIDE_TRANSFER_POS, 1.0, 800)
                         ),
                         new ParallelTask(
@@ -167,7 +175,14 @@ public abstract class SamplesAutoPath extends AutoBase {
                                 new HorizontalSlidesTask(robot, V2RobotBase.HORIZONTAL_SLIDE_TRANSFER_POS, 1.0, 1200)
                         ),
                         new ParallelTask(
-                            new IntakeReverseTask(robot, 800, -0.8),
+                                new SeriesTask(
+                                        new IntakeReverseTask(robot, 800, -0.8),
+                                        new ParallelTask(
+                                                new UnboundedIntakeTask(robot, 1.0),
+                                                new SleepTask(100)
+                                        ),
+                                        new IntakeReverseTask(robot, 800, -0.8)
+                                ),
                                 new HorizontalSlidesTask(robot, V2RobotBase.HORIZONTAL_SLIDE_TRANSFER_POS, 1.0, 800)
                         ),
                         new ParallelTask(
@@ -233,7 +248,14 @@ public abstract class SamplesAutoPath extends AutoBase {
                                 new HorizontalSlidesTask(robot, V2RobotBase.HORIZONTAL_SLIDE_TRANSFER_POS, 1.0, 1200)
                         ),
                         new ParallelTask(
-                            new IntakeReverseTask(robot, 800, -0.8),
+                                new SeriesTask(
+                                        new IntakeReverseTask(robot, 800, -0.8),
+                                        new ParallelTask(
+                                                new UnboundedIntakeTask(robot, 1.0),
+                                                new SleepTask(100)
+                                        ),
+                                        new IntakeReverseTask(robot, 800, -0.8)
+                                ),
                                 new HorizontalSlidesTask(robot, V2RobotBase.HORIZONTAL_SLIDE_TRANSFER_POS, 1.0, 800)
                         ),
                         new ParallelTask(
