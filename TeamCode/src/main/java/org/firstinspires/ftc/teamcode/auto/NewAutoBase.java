@@ -83,7 +83,7 @@ public abstract class NewAutoBase extends LinearOpMode {
     }
 
     private void resetRobot() {
-        robot.autoInit();
+        robot.autoClipInit();
         robot.setLightColor(RevBlinkinLedDriver.BlinkinPattern.GREEN);
     }
 
