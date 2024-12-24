@@ -15,7 +15,7 @@ import org.firstinspires.ftc.teamcode.drive.V2RobotBase;
 public class ClipAuto extends ClipAutoPath {
 
     public static double SUBMERSIBLE_DELIVER_DIST = -31.6, DELIVER_OFFSET = -0.4;
-    public static double preloadSubmersibleYVal = 3.0, cycleSubmersibleYVal = 0.0;
+    public static double preloadSubmersibleYVal = 3.0, cycleSubmersibleYVal = -3.0;
 
 
     @Override
@@ -35,7 +35,7 @@ public class ClipAuto extends ClipAutoPath {
 
     @Override
     protected Pose2d getFirstSampleOuttakePos() {
-        return new Pose2d(-27.65, 19.79, 0.62266);
+        return new Pose2d(-20.65, 19.79, 0.62266);
     }
 
     @Override
@@ -45,7 +45,7 @@ public class ClipAuto extends ClipAutoPath {
 
     @Override
     protected Pose2d getSecondSampleOuttakePos() {
-        return new Pose2d(-25.42, 29.29, Math.PI/4);
+        return new Pose2d(-25.42, 29.29, Math.PI/4-0.1);
     }
 
     @Override
@@ -55,17 +55,17 @@ public class ClipAuto extends ClipAutoPath {
 
     @Override
     protected Pose2d getThirdSampleOuttakePos() {
-        return new Pose2d(-18.60, 38.46, 0.69813);
+        return new Pose2d(-18.60, 38.46, 0.69813-0.1);
     }
 
     @Override
     protected Pose2d getSpecimenIntakePos(int cycleNumber) {
-        return new Pose2d(1.0+0.15*cycleNumber, 30.56, -Math.PI+0.05);
+        return new Pose2d(0.5+0.05*cycleNumber, 30.56, -Math.PI+0.05);
     }
 
     @Override
     protected Pose2d getSubmersibleDeliverPos(int cycleNumber) {
-        return new Pose2d(SUBMERSIBLE_DELIVER_DIST+cycleNumber*DELIVER_OFFSET, cycleSubmersibleYVal-cycleNumber*2.5, -0.05);
+        return new Pose2d(SUBMERSIBLE_DELIVER_DIST+cycleNumber*DELIVER_OFFSET, cycleSubmersibleYVal-cycleNumber*1.5, -0.05);
     }
 
     @Override

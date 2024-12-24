@@ -18,6 +18,7 @@ import org.firstinspires.ftc.teamcode.task.BucketTask;
 import org.firstinspires.ftc.teamcode.task.ClawTask;
 import org.firstinspires.ftc.teamcode.task.HorizontalSlidesTask;
 import org.firstinspires.ftc.teamcode.task.IntakeArmTask;
+import org.firstinspires.ftc.teamcode.task.IntakeReverseTask;
 import org.firstinspires.ftc.teamcode.task.IntakeTask;
 import org.firstinspires.ftc.teamcode.task.ParallelTask;
 import org.firstinspires.ftc.teamcode.task.SeriesTask;
@@ -136,9 +137,10 @@ public class LM2TeleOp extends LinearOpMode {
                     ),
                     new ParallelTask(
                             new VerticalSlidesTask(robot, 0, 1.0, 2000),
-                            new TimedHorizontalSlidesTask(robot, V2RobotBase.HORIZONTAL_SLIDE_TRANSFER_POS, 1.0,500),
+                            new TimedHorizontalSlidesTask(robot, V2RobotBase.HORIZONTAL_SLIDE_TRANSFER_POS, 1.0,1000),
                             new IntakeArmTask(robot, IntakeArmTask.Position.TRANSFER)
-                    )
+                    ),
+                    new IntakeReverseTask(robot, 700, -1.0)
             ); clawOpen = false;
         }
 
@@ -196,7 +198,7 @@ public class LM2TeleOp extends LinearOpMode {
             else {
 //                robot.setHorizontalSlidesPower(0);
                 if(horizontalPositionUpdated) {
-                    robot.brakeHorizontalSlides(0.5); // TODO: CHECK THIS
+                    robot.brakeHorizontalSlides(0.05); // TODO: CHECK THIS
                     horizontalPositionUpdated = false;
                 }
             }
@@ -212,7 +214,7 @@ public class LM2TeleOp extends LinearOpMode {
         } else {
             x = -gp1.leftStickY();
             y = -gp1.leftStickX();
-            a = -gp1.rightStickX() * 0.8;
+            a = -gp1.rightStickX() * 0.6;
         }
         double pow = Math.sqrt(x * x + y * y);
 //        double limPow = driveLim.calculate(pow);
