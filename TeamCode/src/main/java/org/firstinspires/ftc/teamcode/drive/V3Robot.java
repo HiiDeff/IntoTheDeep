@@ -34,7 +34,7 @@ public class V3Robot extends RobotBase {
 
     // Intake Servo Positions
     public static double INTAKE_ARM_DOWN = 0.15,
-            INTAKE_ARM_TRANSFER = 0.89,
+            INTAKE_ARM_TRANSFER = 0.83,
             INTAKE_ARM_CLEAR = 0.40;
 
     // Claw Servo Positions
@@ -58,7 +58,7 @@ public class V3Robot extends RobotBase {
     // Horizontal Slides Constants
     public static double HORIZONTAL_EXTEND_MAX_IN = 22.0;
     public static double HORIZONTAL_TICKS_PER_INCH = 31.8181818;
-    public static double HORIZONTAL_SLIDE_TRANSFER_POS = 2.01142857;
+    public static double HORIZONTAL_SLIDE_TRANSFER_POS = 1.9;
 
     public final DcMotorEx verticalSlidesLeft, verticalSlidesRight;
     public final Servo leftHang, rightHang;

@@ -131,7 +131,7 @@ public class V3RobotTeleOp extends LinearOpMode {
                             new VerticalSlidesTask(robot, 0, 1.0, 2000),
                             new SeriesTask(
                                     new ParallelTask(
-                                            new TimedHorizontalSlidesTask(robot, robot.getHorizontalTransferPos(), 1.0,500),
+                                            new HorizontalSlidesTask(robot, robot.getHorizontalTransferPos(), 1.0,500),
                                             new IntakeArmTask(robot, IntakeArmTask.Position.TRANSFER)
                                     ),
                                     new IntakeTask(robot, 700, -0.8)

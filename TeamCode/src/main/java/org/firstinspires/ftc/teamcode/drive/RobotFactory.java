@@ -15,7 +15,7 @@ public class RobotFactory {
         TEST_ROBOT_DEAD_WHEELS,
         TEST_ROBOT_PINPOINT;
     }
-    public static Robot ACTIVE_ROBOT = Robot.TEST_ROBOT_PINPOINT;
+    public static Robot ACTIVE_ROBOT = Robot.V3_ROBOT;
 
     public static MecanumDrive createRobot(HardwareMap hardwareMap) {
         switch (ACTIVE_ROBOT) {
