@@ -15,27 +15,18 @@ import org.firstinspires.ftc.teamcode.task.BucketTask;
 import org.firstinspires.ftc.teamcode.task.ClawTask;
 import org.firstinspires.ftc.teamcode.task.IntakeArmTask;
 import org.firstinspires.ftc.teamcode.task.RungStickTask;
-import org.firstinspires.ftc.teamcode.task.SwipeStickTask;
 import org.firstinspires.ftc.teamcode.util.Utils;
 import org.firstinspires.ftc.teamcode.util.profile.ProfileConstraints;
 import org.firstinspires.ftc.teamcode.util.profile.ServoProfiler;
 
 @Config
-public abstract class V2RobotBase extends PinpointDrive {
-
-
-    // Vertical Slides Constants
-    public static double VERTICAL_EXTEND_MIN_IN = -0.2;
-    public static double VERTICAL_EXTEND_MAX_IN = 40;
-    public static double VERTICAL_EXTEND_LOW_CHAMBER_IN = 10;
-    public static double VERTICAL_EXTEND_HIGH_CHAMBER_IN = 17;
-    public static double VERTICAL_TICKS_PER_INCH = 32.91 * 14 / 10; // 14 / 10 gear ratio
+public abstract class RobotBase extends PinpointDrive {
 
     // Horizontal Slides Constants
     public static double HORIZONTAL_EXTEND_MIN_IN = -0.05;
-    public static double HORIZONTAL_EXTEND_MAX_IN = 19.0;
-    public static double HORIZONTAL_TICKS_PER_INCH = 32.91;
-    public static double HORIZONTAL_SLIDE_TRANSFER_POS = 172 / 32.91;
+    private double HORIZONTAL_EXTEND_MAX_IN,
+            HORIZONTAL_TICKS_PER_INCH,
+            HORIZONTAL_SLIDE_TRANSFER_POS;
 
     // Intake Constants
     public static double INTAKE_POWER = 1.0, OUTTAKE_POWER = -0.9;
@@ -47,7 +38,6 @@ public abstract class V2RobotBase extends PinpointDrive {
     protected final HardwareMap hardwareMap;
 
     // Motors
-    public final DcMotorEx verticalSlides;
     public final DcMotorEx horizontalSlides;
     public final DcMotorEx intakeRoller;
 
@@ -55,12 +45,8 @@ public abstract class V2RobotBase extends PinpointDrive {
     // Servos
     public final Servo claw;
     public final Servo intakeArm;
-    public final Servo rungStick, swipeStick;
     public final Servo bucketServo;
     public final ServoProfiler bucketProfiler;
-
-    // Profile Constraints
-    public static ProfileConstraints BUCKET_CONSTRAINTS = new ProfileConstraints(10, 8, 5);
 
     // Sensors
     public final RevColorSensorV3 leftIntakeColorSensor, rightIntakeColorSensor;
@@ -72,11 +58,9 @@ public abstract class V2RobotBase extends PinpointDrive {
     // Cached Encoder Values
     private int verticalSlidesPos = 0;
     private int horizontalSlidesPos = 0;
-    private RungStickTask.Position rungStickPos = RungStickTask.Position.DOWN;
-    private SwipeStickTask.Position swipeStickPos = SwipeStickTask.Position.IN;
 
 
-    public V2RobotBase(HardwareMap hardwareMap) {
+    public RobotBase(HardwareMap hardwareMap) {
 
         super(hardwareMap, new Pose2d(0.0, 0.0, 0.0));
         this.hardwareMap = hardwareMap;
@@ -85,11 +69,8 @@ public abstract class V2RobotBase extends PinpointDrive {
         }
 
         // Motors:
-        verticalSlides = hardwareMap.get(DcMotorEx.class, "verticalSlides");
-        verticalSlides.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        verticalSlides.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-
         horizontalSlides = hardwareMap.get(DcMotorEx.class, "horizontalSlides");
+        if(horizontalSlidesIsReversed()) horizontalSlides.setDirection(DcMotor.Direction.REVERSE);
         horizontalSlides.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         horizontalSlides.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         horizontalSlides.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -101,10 +82,8 @@ public abstract class V2RobotBase extends PinpointDrive {
         bucketServo = hardwareMap.get(Servo.class, "bucketServo");
         claw = hardwareMap.get(Servo.class, "claw");
         intakeArm = hardwareMap.get(Servo.class, "intakeArm");
-        rungStick = hardwareMap.get(Servo.class, "rungStick");
-        swipeStick = hardwareMap.get(Servo.class, "swipeStick");
 
-        bucketProfiler = new ServoProfiler(bucketServo, BUCKET_CONSTRAINTS);
+        bucketProfiler = new ServoProfiler(bucketServo, getBucketServoProfileConstraints());
 
         // Sensors:
         leftIntakeColorSensor = hardwareMap.get(RevColorSensorV3.class, "intakeColorLeft");
@@ -115,29 +94,30 @@ public abstract class V2RobotBase extends PinpointDrive {
 
         // States:
         intakeSampleState = new IntakeSampleState(this);
+
+        HORIZONTAL_EXTEND_MAX_IN = getHorizontalExtendMaxInConstants();
+        HORIZONTAL_TICKS_PER_INCH = getHorizontalTicksPerInchConstants();
+        HORIZONTAL_SLIDE_TRANSFER_POS = getHorizontalTransferPos();
     }
 
     public void teleOpInit() {
         setIntakeArmPos(IntakeArmTask.Position.DOWN);
         bucketServo.setPosition(getBucketServoPosition(BucketTask.Position.TRANSFER));
-        RungStickTask.setPosition(this, RungStickTask.Position.DOWN);
+        initHang();
         setClawPosition(ClawTask.ClawPosition.CLOSE);
-        SwipeStickTask.setPosition(this, SwipeStickTask.Position.IN);
     }
     public void autoInit() {
         setIntakeArmPos(IntakeArmTask.Position.TRANSFER);
         bucketServo.setPosition(getBucketServoPosition(BucketTask.Position.CARRY));
-        RungStickTask.setPosition(this, RungStickTask.Position.DOWN);
+        initHang();
         setClawPosition(ClawTask.ClawPosition.OPEN);
-        SwipeStickTask.setPosition(this, SwipeStickTask.Position.IN);
     }
 
     public void autoClipInit() {
         setIntakeArmPos(IntakeArmTask.Position.TRANSFER);
         bucketServo.setPosition(getBucketServoPosition(BucketTask.Position.FLAT));
-        RungStickTask.setPosition(this, RungStickTask.Position.DOWN);
+        initHang();
         setClawPosition(ClawTask.ClawPosition.CLOSE);
-        SwipeStickTask.setPosition(this, SwipeStickTask.Position.IN);
     }
 
     // Updates
@@ -145,11 +125,14 @@ public abstract class V2RobotBase extends PinpointDrive {
         updateEncoders();
         updateProfilers();
         updatePoseEstimate();
+        updatePIDs();
         intakeSampleState.update();
     }
 
+    public abstract void updatePIDs();
+
     public void updateEncoders() {
-        verticalSlidesPos = verticalSlides.getCurrentPosition();
+        verticalSlidesPos = getVerticalSlidesHeightTicks();
     }
     public void updateHorizontalEncoder() {
         horizontalSlidesPos = horizontalSlides.getCurrentPosition();
@@ -163,35 +146,17 @@ public abstract class V2RobotBase extends PinpointDrive {
 
 
     // Utils for Vertical Slides
-    public void setVerticalSlidePowerWithEncoder(double power) {
-        if(verticalSlides.getMode() != DcMotorEx.RunMode.RUN_USING_ENCODER) {
-            verticalSlides.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
-        }
-        verticalSlides.setPower(Utils.clamp(power, -1.0, 1.0));
-    }
 
-    public void setVerticalSlidePowerWithoutEncoder(double power) {
-        if(verticalSlides.getMode() != DcMotorEx.RunMode.RUN_WITHOUT_ENCODER) {
-            verticalSlides.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
-        }
-        verticalSlides.setPower(Utils.clamp(power, -1.0, 1.0));
-    }
-
-    public void setVerticalSlidesHeight(double posInches, double power) {
-        verticalSlides.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        verticalSlides.setTargetPosition((int) (
-                (Utils.clamp(posInches, VERTICAL_EXTEND_MIN_IN, VERTICAL_EXTEND_MAX_IN)
-                        * VERTICAL_TICKS_PER_INCH)));
-        verticalSlides.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
-        verticalSlides.setPower(power);
-    }
-
-    public double getVerticalSlidesHeight() {
-        return (double) verticalSlidesPos /VERTICAL_TICKS_PER_INCH;
-    }
+    public abstract void setVerticalSlidePowerWithEncoder(double power);
+    public abstract void setVerticalSlidePowerWithoutEncoder(double power);
+    public abstract void setVerticalSlidesHeight(double posInches, double power);
+    public abstract double getVerticalSlidesHeightInch();
+    public abstract int getVerticalSlidesHeightTicks();
 
 
     // Utils for Horizontal Slides
+
+    public abstract boolean horizontalSlidesIsReversed();
     public void setHorizontalSlidesPower(double power) {
         if(horizontalSlides.getMode() != DcMotorEx.RunMode.RUN_USING_ENCODER) {
             horizontalSlides.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
@@ -214,7 +179,6 @@ public abstract class V2RobotBase extends PinpointDrive {
         horizontalSlides.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         horizontalSlides.setPower(power);
     }
-
     public int getLastHorizontalSlideDist() {
         return horizontalSlidesPos;
     }
@@ -223,15 +187,18 @@ public abstract class V2RobotBase extends PinpointDrive {
         return ((double) horizontalSlides.getCurrentPosition()) / HORIZONTAL_TICKS_PER_INCH;
     }
 
+    public abstract double getHorizontalExtendMaxInConstants();
+    public abstract double getHorizontalTicksPerInchConstants();
+    public abstract double getHorizontalTransferPos();
+
 
     // Utils for Bucket Servo
+
+    public abstract ProfileConstraints getBucketServoProfileConstraints();
     public abstract double getBucketServoPosition(BucketTask.Position position);
 
     public void setBucketServoPosition(BucketTask.Position position) {
         bucketProfiler.setTargetPosition(getBucketServoPosition(position));
-    }
-    public void setBucketServoPositionDir(BucketTask.Position position) {
-
     }
 
 
@@ -271,26 +238,9 @@ public abstract class V2RobotBase extends PinpointDrive {
     }
 
 
-    // Utils for rung stick
-    public void toggleRungStick(){
-        if (rungStickPos == RungStickTask.Position.UP) {
-            rungStickPos = RungStickTask.Position.DOWN;
-        }
-        else{
-            rungStickPos = RungStickTask.Position.UP;
-        }
-        RungStickTask.setPosition(this, rungStickPos);
-    }
+    // Utils for hang
+    public abstract void initHang();
+    public abstract void releaseHang();
+    public abstract void lowerHang();
 
-    // Utils for Swipe STick
-
-    public void toggleSwipeStick(){
-        if (swipeStickPos == SwipeStickTask.Position.OUT) {
-            swipeStickPos = SwipeStickTask.Position.IN;
-        }
-        else{
-            swipeStickPos = SwipeStickTask.Position.OUT;
-        }
-        SwipeStickTask.setPosition(this, swipeStickPos);
-    }
 }

@@ -1,16 +1,16 @@
 package org.firstinspires.ftc.teamcode.task;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.teamcode.drive.V2RobotBase;
+import org.firstinspires.ftc.teamcode.drive.RobotBase;
 
 public class IntakeWithExtensionTask extends TimedTask {
 
-    private V2RobotBase robot;
+    private RobotBase robot;
     private final double distInInches;
     private boolean started = false;
     private ElapsedTime timer;
 
-    public IntakeWithExtensionTask(V2RobotBase robot, double distInInches, int finishTimeMillis) {
+    public IntakeWithExtensionTask(RobotBase robot, double distInInches, int finishTimeMillis) {
         this.robot = robot;
         this.distInInches = distInInches;
         setFinishTimeMillis((finishTimeMillis));

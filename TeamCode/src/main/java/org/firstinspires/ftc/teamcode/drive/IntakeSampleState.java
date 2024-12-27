@@ -13,7 +13,7 @@ import org.firstinspires.ftc.teamcode.util.objectdetector.ImageProcessor;
 public class IntakeSampleState {
 
     public static double MIN_DIST_WITH_SAMPLE = 1.2;
-    private V2RobotBase robot;
+    private RobotBase robot;
     private SampleColor[] sampleColors = {SampleColor.COLOR_UNSPECIFIED, SampleColor.COLOR_UNSPECIFIED};
     private int numOfSamples = 0;
     private boolean leftSensorDetected;
@@ -52,7 +52,7 @@ public class IntakeSampleState {
         return color == SampleColor.COLOR_UNSPECIFIED;
     }
 
-    public IntakeSampleState(V2RobotBase robot) {
+    public IntakeSampleState(RobotBase robot) {
         this.robot = robot;
     }
 

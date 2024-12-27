@@ -5,11 +5,11 @@ import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.TranslationalVelConstraint;
 
 import org.firstinspires.ftc.teamcode.auto.AutoBase;
-import org.firstinspires.ftc.teamcode.drive.V2RobotBase;
+import org.firstinspires.ftc.teamcode.drive.RobotBase;
 import org.firstinspires.ftc.teamcode.task.BucketTask;
 import org.firstinspires.ftc.teamcode.task.HorizontalSlidesTask;
 import org.firstinspires.ftc.teamcode.task.IntakeArmTask;
-import org.firstinspires.ftc.teamcode.task.IntakeReverseTask;
+import org.firstinspires.ftc.teamcode.task.IntakeTask;
 import org.firstinspires.ftc.teamcode.task.IntakeWithExtensionTask;
 import org.firstinspires.ftc.teamcode.task.ParallelTask;
 import org.firstinspires.ftc.teamcode.task.RungStickTask;
@@ -93,11 +93,11 @@ public abstract class FastSamplesAutoPath extends AutoBase {
                         new ParallelTask(
                                 new IntakeArmTask(robot, IntakeArmTask.Position.TRANSFER),
                                 new BucketTask(robot, BucketTask.Position.TRANSFER),
-                                new HorizontalSlidesTask(robot, V2RobotBase.HORIZONTAL_SLIDE_TRANSFER_POS, 1.0, 1200)
+                                new HorizontalSlidesTask(robot, robot.getHorizontalTransferPos(), 1.0, 1200)
                         ),
                         new ParallelTask(
-                                new IntakeReverseTask(robot, 800, -0.8),
-                                new HorizontalSlidesTask(robot, V2RobotBase.HORIZONTAL_SLIDE_TRANSFER_POS, 1.0, 800)
+                                new IntakeTask(robot, 800, -0.8),
+                                new HorizontalSlidesTask(robot, robot.getHorizontalTransferPos(), 1.0, 800)
                         ),
                         new ParallelTask(
                                 new BucketTask(robot, BucketTask.Position.CARRY),
@@ -160,11 +160,11 @@ public abstract class FastSamplesAutoPath extends AutoBase {
                 new SeriesTask(
                         new ParallelTask(
                                 new IntakeArmTask(robot, IntakeArmTask.Position.TRANSFER),
-                                new HorizontalSlidesTask(robot, V2RobotBase.HORIZONTAL_SLIDE_TRANSFER_POS, 1.0, 1200)
+                                new HorizontalSlidesTask(robot, robot.getHorizontalTransferPos(), 1.0, 1200)
                         ),
                         new ParallelTask(
-                                new IntakeReverseTask(robot, 800, -0.8),
-                                new HorizontalSlidesTask(robot, V2RobotBase.HORIZONTAL_SLIDE_TRANSFER_POS, 1.0, 800)
+                                new IntakeTask(robot, 800, -0.8),
+                                new HorizontalSlidesTask(robot, robot.getHorizontalTransferPos(), 1.0, 800)
                         ),
                         new ParallelTask(
                                 new BucketTask(robot, BucketTask.Position.CARRY),
@@ -226,11 +226,11 @@ public abstract class FastSamplesAutoPath extends AutoBase {
                 new SeriesTask(
                         new ParallelTask(
                                 new IntakeArmTask(robot, IntakeArmTask.Position.TRANSFER),
-                                new HorizontalSlidesTask(robot, V2RobotBase.HORIZONTAL_SLIDE_TRANSFER_POS, 1.0, 1200)
+                                new HorizontalSlidesTask(robot, robot.getHorizontalTransferPos(), 1.0, 1200)
                         ),
                         new ParallelTask(
-                                new IntakeReverseTask(robot, 800, -0.8),
-                                new HorizontalSlidesTask(robot, V2RobotBase.HORIZONTAL_SLIDE_TRANSFER_POS, 1.0, 800)
+                                new IntakeTask(robot, 800, -0.8),
+                                new HorizontalSlidesTask(robot, robot.getHorizontalTransferPos(), 1.0, 800)
                         ),
                         new ParallelTask(
                                 new BucketTask(robot, BucketTask.Position.CARRY),
@@ -289,8 +289,7 @@ public abstract class FastSamplesAutoPath extends AutoBase {
                         new VerticalSlidesTask(robot, 0, 0.9, 1000)
                 ),
                 new HorizontalSlidesTask(robot, 0, 1.0,5000),
-                new IntakeArmTask(robot, IntakeArmTask.Position.DOWN),
-                new RungStickTask(robot, RungStickTask.Position.UP)
+                new IntakeArmTask(robot, IntakeArmTask.Position.DOWN)
         ));
         return task;
     }

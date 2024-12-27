@@ -1,13 +1,13 @@
 package org.firstinspires.ftc.teamcode.task;
 
-import org.firstinspires.ftc.teamcode.drive.V2RobotBase;
+import org.firstinspires.ftc.teamcode.drive.RobotBase;
 
 public class UnboundedIntakeTask implements Task, UnboundedTask{
 
-    private final V2RobotBase robot;
+    private final RobotBase robot;
     private final double intakeSpeed;
 
-    public UnboundedIntakeTask(V2RobotBase robot, double intakeSpeed) {
+    public UnboundedIntakeTask(RobotBase robot, double intakeSpeed) {
         this.intakeSpeed = intakeSpeed;
         this.robot = robot;
     }

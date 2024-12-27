@@ -1,16 +1,16 @@
 package org.firstinspires.ftc.teamcode.task;
 
 
-import org.firstinspires.ftc.teamcode.drive.V2RobotBase;
+import org.firstinspires.ftc.teamcode.drive.RobotBase;
 
 public class HorizontalSlidesTask extends TimedTask{
 
-    private V2RobotBase robot;
+    private RobotBase robot;
     private final double distInInches;
     private final double power;
     private boolean started = false;
 
-    public HorizontalSlidesTask(V2RobotBase robot, double distInInches, double power,
+    public HorizontalSlidesTask(RobotBase robot, double distInInches, double power,
                                 int finishTimeMillis) {
         this.robot = robot;
         this.distInInches = distInInches;

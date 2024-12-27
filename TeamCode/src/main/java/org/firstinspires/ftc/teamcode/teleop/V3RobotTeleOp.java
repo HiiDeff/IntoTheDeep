@@ -5,43 +5,39 @@ import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.acmerobotics.roadrunner.PoseVelocity2d;
 import com.acmerobotics.roadrunner.Vector2d;
-import com.qualcomm.hardware.rev.RevBlinkinLedDriver;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.drive.RobotFactory;
-import org.firstinspires.ftc.teamcode.drive.V2RobotBase;
+import org.firstinspires.ftc.teamcode.drive.V3Robot;
 import org.firstinspires.ftc.teamcode.task.BucketTask;
 import org.firstinspires.ftc.teamcode.task.ClawTask;
 import org.firstinspires.ftc.teamcode.task.HorizontalSlidesTask;
 import org.firstinspires.ftc.teamcode.task.IntakeArmTask;
-import org.firstinspires.ftc.teamcode.task.IntakeReverseTask;
 import org.firstinspires.ftc.teamcode.task.IntakeTask;
 import org.firstinspires.ftc.teamcode.task.ParallelTask;
 import org.firstinspires.ftc.teamcode.task.SeriesTask;
-import org.firstinspires.ftc.teamcode.task.SleepTask;
 import org.firstinspires.ftc.teamcode.task.Task;
 import org.firstinspires.ftc.teamcode.task.TimedHorizontalSlidesTask;
 import org.firstinspires.ftc.teamcode.task.UnboundedIntakeTask;
 import org.firstinspires.ftc.teamcode.task.VerticalSlidesTask;
 import org.firstinspires.ftc.teamcode.util.GamePad;
 
-@TeleOp(name = "LM2 TeleOp")
+@TeleOp(name = "V3 TeleOp")
 @Config
 
-public class LM2TeleOp extends LinearOpMode {
+public class V3RobotTeleOp extends LinearOpMode {
 
     public MultipleTelemetry multipleTelemetry;
 
-    public static double VERTICAL_STAND_POWER = 0.4;
+    public static double VERTICAL_STAND_POWER = 0.2;
     public static double VERTICAL_SLIDE_MAX_POWER = 1.0;
     public static double MIN_DRIVE_POWER = 0.01;
     public static double DELIVERY_CHAMBER_HEIGHT = 20.5;
 
-    private V2RobotBase robot;
+    private V3Robot robot;
     private GamePad gp1, gp2;
     private ElapsedTime cycleTimer;
     private double cycleSum, cycleCnt, cycleAvg;
@@ -55,7 +51,7 @@ public class LM2TeleOp extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
-        robot = (V2RobotBase) RobotFactory.createRobot(hardwareMap);
+        robot = (V3Robot) RobotFactory.createRobot(hardwareMap);
         gp1 = new GamePad(gamepad1);
         gp2 = new GamePad(gamepad2);
 
@@ -98,7 +94,7 @@ public class LM2TeleOp extends LinearOpMode {
         telemetry.addData("cycle time", cycleTimer.milliseconds());
         telemetry.addData("average cycle time (seconds)", cycleAvg);
         telemetry.addData("pose", robot.pose);
-        telemetry.addData("vertical slide position", robot.getVerticalSlidesHeight());
+        telemetry.addData("vertical slide position", robot.getVerticalSlidesHeightInch());
         telemetry.addData("horizontal slide position", robot.getHorizontalSlideDist());
 
         multipleTelemetry.addData("current bucket servo position", robot.bucketProfiler.getCurPos());
@@ -116,15 +112,11 @@ public class LM2TeleOp extends LinearOpMode {
         // Submersible Intake Preset
         if(gp2.onceY()){
             submersibleTask = new SeriesTask(
-                    new IntakeArmTask(robot, IntakeArmTask.Position.CLEAR),
                     new ParallelTask(
-                            new UnboundedIntakeTask(robot, 0.5),
-                            new HorizontalSlidesTask(robot, 14.0, 1.0, 500)
-                    ),
-                    new ParallelTask(
-                            new IntakeArmTask(robot, IntakeArmTask.Position.DOWN),
+                            new IntakeArmTask(robot, IntakeArmTask.Position.CLEAR),
                             new HorizontalSlidesTask(robot, 9.0, 1.0, 500)
-                    )
+                    ),
+                    new IntakeArmTask(robot, IntakeArmTask.Position.DOWN)
             );
         }
 
@@ -137,10 +129,14 @@ public class LM2TeleOp extends LinearOpMode {
                     ),
                     new ParallelTask(
                             new VerticalSlidesTask(robot, 0, 1.0, 2000),
-                            new TimedHorizontalSlidesTask(robot, V2RobotBase.HORIZONTAL_SLIDE_TRANSFER_POS, 1.0,1000),
-                            new IntakeArmTask(robot, IntakeArmTask.Position.TRANSFER)
-                    ),
-                    new IntakeReverseTask(robot, 700, -1.0)
+                            new SeriesTask(
+                                    new ParallelTask(
+                                            new TimedHorizontalSlidesTask(robot, robot.getHorizontalTransferPos(), 1.0,500),
+                                            new IntakeArmTask(robot, IntakeArmTask.Position.TRANSFER)
+                                    ),
+                                    new IntakeTask(robot, 700, -0.8)
+                            )
+                    )
             ); clawOpen = false;
         }
 
@@ -154,7 +150,7 @@ public class LM2TeleOp extends LinearOpMode {
                     )
             );
         }
-//
+
 //        // Deliver Preset
 //        else if(deliverTask == null && (gp2.onceB())) {
 //            deliverTask = new VerticalSlidesTask(robot, 0, 1.0, 1500);
@@ -214,7 +210,7 @@ public class LM2TeleOp extends LinearOpMode {
         } else {
             x = -gp1.leftStickY();
             y = -gp1.leftStickX();
-            a = -gp1.rightStickX() * 0.6;
+            a = -gp1.rightStickX() * 1.0;
         }
         double pow = Math.sqrt(x * x + y * y);
 //        double limPow = driveLim.calculate(pow);
@@ -245,7 +241,7 @@ public class LM2TeleOp extends LinearOpMode {
                 robot.setVerticalSlidePowerWithoutEncoder(-0.3);
             }
         } else if(deliverChamberTask == null && deliverTask == null && transferTask == null) {
-            robot.setVerticalSlidePowerWithoutEncoder(robot.getVerticalSlidesHeight() < 0.5? 0:VERTICAL_STAND_POWER);
+            robot.setVerticalSlidePowerWithoutEncoder(robot.getVerticalSlidesHeightInch() < 0.5? 0:VERTICAL_STAND_POWER);
         }
 
         // Bucket
@@ -258,7 +254,7 @@ public class LM2TeleOp extends LinearOpMode {
         }else if(gp1.onceY()) {
             robot.setBucketServoPosition(BucketTask.Position.DELIVER);
             robot.setClawPosition(ClawTask.ClawPosition.CLOSE); clawOpen = false;
-            if(robot.getVerticalSlidesHeight() >= 12) {
+            if(robot.getVerticalSlidesHeightInch() >= 12) {
                 cycleSum += cycleTimer.seconds(); cycleCnt++; cycleAvg = cycleSum/cycleCnt;
                 cycleTimer.reset();
             }
@@ -277,9 +273,12 @@ public class LM2TeleOp extends LinearOpMode {
             clawOpen = !clawOpen;
         }
 
-        // Rung Stick
-        if(gp1.back() && gp1.onceA()){
-            robot.toggleRungStick();
+        // Hang
+        if(gp1.back() && gp1.onceY()) {
+            robot.setBucketServoPosition(BucketTask.Position.FLAT);
+            robot.releaseHang();
+        } else if(gp1.back() && gp1.onceA()) {
+            robot.lowerHang();
         }
     }
 
@@ -300,9 +299,6 @@ public class LM2TeleOp extends LinearOpMode {
         } else{
             robot.stopIntake();
         }
-
-        if(gp2.onceLeftBumper()) {
-            robot.toggleSwipeStick();
-        }
     }
+
 }

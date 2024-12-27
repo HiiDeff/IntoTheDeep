@@ -1,10 +1,8 @@
 package org.firstinspires.ftc.teamcode.task;
 
 import com.acmerobotics.dashboard.config.Config;
-import com.qualcomm.robotcore.hardware.Servo;
 
-import org.firstinspires.ftc.teamcode.drive.V2Robot;
-import org.firstinspires.ftc.teamcode.drive.V2RobotBase;
+import org.firstinspires.ftc.teamcode.drive.RobotBase;
 import org.firstinspires.ftc.teamcode.util.Utils;
 
 /**
@@ -16,11 +14,11 @@ public class BucketTask extends TimedTask {
     private static final int RPM = (int) (60/(0.14*6));
     private static final int MAX_ROTATION_DEGREE = 355;
 
-    private V2RobotBase robot;
+    private RobotBase robot;
     private Position position;
     private boolean started;
 
-    public BucketTask(V2RobotBase robot, Position position) {
+    public BucketTask(RobotBase robot, Position position) {
         this.robot = robot;
         this.position = position;
     }

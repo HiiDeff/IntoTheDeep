@@ -1,10 +1,8 @@
 package org.firstinspires.ftc.teamcode.task;
 
 import com.acmerobotics.dashboard.config.Config;
-import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.teamcode.drive.V2Robot;
-import org.firstinspires.ftc.teamcode.drive.V2RobotBase;
 import org.firstinspires.ftc.teamcode.util.Utils;
 
 @Config
@@ -16,15 +14,15 @@ public class RungStickTask extends TimedTask {
 
     private static final int RPM = 90;
     private static final int MAX_ROTATION_DEGREE = 300;
-    private V2RobotBase robot;
+    private V2Robot robot;
     private Position position;
     private boolean started;
 
-    public static void setPosition(V2RobotBase robot, Position position) {
+    public static void setPosition(V2Robot robot, Position position) {
         robot.rungStick.setPosition(getTargetPos(position));
     }
 
-    public RungStickTask(V2RobotBase robot, Position position) {
+    public RungStickTask(V2Robot robot, Position position) {
         this.robot = robot;
         this.position = position;
     }

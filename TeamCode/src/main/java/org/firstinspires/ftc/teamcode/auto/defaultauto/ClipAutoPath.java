@@ -5,25 +5,19 @@ import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.TranslationalVelConstraint;
 import com.acmerobotics.roadrunner.TurnConstraints;
 
-import org.firstinspires.ftc.teamcode.auto.AutoBase;
 import org.firstinspires.ftc.teamcode.auto.NewAutoBase;
 import org.firstinspires.ftc.teamcode.auto.conditions.SampleStateCondition;
-import org.firstinspires.ftc.teamcode.drive.V2RobotBase;
 import org.firstinspires.ftc.teamcode.task.BucketTask;
 import org.firstinspires.ftc.teamcode.task.ClawTask;
 import org.firstinspires.ftc.teamcode.task.ConditionalTask;
 import org.firstinspires.ftc.teamcode.task.HorizontalSlidesTask;
 import org.firstinspires.ftc.teamcode.task.IntakeArmTask;
-import org.firstinspires.ftc.teamcode.task.IntakeReverseTask;
 import org.firstinspires.ftc.teamcode.task.IntakeTask;
-import org.firstinspires.ftc.teamcode.task.IntakeWithExtensionTask;
 import org.firstinspires.ftc.teamcode.task.ParallelTask;
-import org.firstinspires.ftc.teamcode.task.RungStickTask;
 import org.firstinspires.ftc.teamcode.task.RuntimeDrivingTask;
 import org.firstinspires.ftc.teamcode.task.SeriesTask;
 import org.firstinspires.ftc.teamcode.task.SleepTask;
 import org.firstinspires.ftc.teamcode.task.Task;
-import org.firstinspires.ftc.teamcode.task.UnboundedHorizontalSlidesTask;
 import org.firstinspires.ftc.teamcode.task.UnboundedIntakeTask;
 import org.firstinspires.ftc.teamcode.task.VerticalSlidesTask;
 
@@ -106,7 +100,7 @@ public abstract class ClipAutoPath extends NewAutoBase {
                                         new SleepTask(600)
                                 ),
                                 new ParallelTask(
-                                        new IntakeReverseTask(robot, 300, -1.0),
+                                        new IntakeTask(robot, 300, -1.0),
                                         new HorizontalSlidesTask(robot, 10.0, 1.0, 300)
                                 )
                         )
@@ -119,7 +113,7 @@ public abstract class ClipAutoPath extends NewAutoBase {
                                 new UnboundedIntakeTask(robot, 1.0),
                                 new SleepTask(300)
                         ),
-                        new IntakeReverseTask(robot,400,-1.0)
+                        new IntakeTask(robot,400,-1.0)
                 )
         );
 //        new SleepTask(1000);
@@ -159,7 +153,7 @@ public abstract class ClipAutoPath extends NewAutoBase {
                                         new SleepTask(450)
                                 ),
                                 new ParallelTask(
-                                        new IntakeReverseTask(robot, 300, -1.0),
+                                        new IntakeTask(robot, 300, -1.0),
                                         new HorizontalSlidesTask(robot, 10.0, 1.0, 300)
                                 )
                         )
@@ -172,7 +166,7 @@ public abstract class ClipAutoPath extends NewAutoBase {
                                 new UnboundedIntakeTask(robot, 1.0),
                                 new SleepTask(300)
                         ),
-                        new IntakeReverseTask(robot,400,-1.0)
+                        new IntakeTask(robot,400,-1.0)
                 )
         );
 //        new SleepTask(1000);
@@ -212,7 +206,7 @@ public abstract class ClipAutoPath extends NewAutoBase {
                                         new UnboundedIntakeTask(robot, 0.5),
                                         new SleepTask(600)
                                 ),
-                                new IntakeReverseTask(robot, 300, -1.0)
+                                new IntakeTask(robot, 300, -1.0)
                         )
                 )
         );
@@ -223,7 +217,7 @@ public abstract class ClipAutoPath extends NewAutoBase {
                                 new UnboundedIntakeTask(robot, 1.0),
                                 new SleepTask(300)
                         ),
-                        new IntakeReverseTask(robot,400,-1.0)
+                        new IntakeTask(robot,400,-1.0)
                 )
         );
 //        new SleepTask(1000);

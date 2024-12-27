@@ -1,16 +1,14 @@
 package org.firstinspires.ftc.teamcode.auto;
 
 import com.acmerobotics.dashboard.config.Config;
-import com.acmerobotics.roadrunner.Pose2d;
 import com.qualcomm.hardware.rev.RevBlinkinLedDriver;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.common.AutoStates;
-import org.firstinspires.ftc.teamcode.drive.V2RobotBase;
+import org.firstinspires.ftc.teamcode.drive.RobotBase;
 import org.firstinspires.ftc.teamcode.task.Task;
-import org.firstinspires.ftc.teamcode.util.pipelines.TeamElementPipeline;
 
 @Config
 public abstract class AutoBase extends LinearOpMode {
@@ -28,7 +26,7 @@ public abstract class AutoBase extends LinearOpMode {
     public static double LOW_SPEED = 30;
 
     protected final ElapsedTime timer = new ElapsedTime();
-    protected V2RobotBase robot;
+    protected RobotBase robot;
 
     protected AutoState state = AutoState.INIT;
     protected AutoStates autoStates = new AutoStates();
@@ -80,7 +78,7 @@ public abstract class AutoBase extends LinearOpMode {
         robot.setLightColor(RevBlinkinLedDriver.BlinkinPattern.GREEN);
     }
 
-    protected abstract V2RobotBase createRobot(HardwareMap hardwareMap);
+    protected abstract RobotBase createRobot(HardwareMap hardwareMap);
 
     protected abstract Task createStartTask();
 

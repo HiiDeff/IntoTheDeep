@@ -1,22 +1,23 @@
 package org.firstinspires.ftc.teamcode.task;
-import org.firstinspires.ftc.teamcode.drive.V2RobotBase;
+
+import org.firstinspires.ftc.teamcode.drive.RobotBase;
 
 public class VerticalSlidesTask extends TimedTask{
 
-    private V2RobotBase robot;
+    private RobotBase robot;
     private final double targetHeight;
     private final double power;
     private boolean started = false;
 
-    public VerticalSlidesTask(V2RobotBase robot, double height) {
+    public VerticalSlidesTask(RobotBase robot, double height) {
         this(robot, height, 0.9);
     }
 
-    public VerticalSlidesTask(V2RobotBase robot, double height, double power) {
+    public VerticalSlidesTask(RobotBase robot, double height, double power) {
         this(robot, height, power, height < 1 ? 1500 : 1000);
     }
 
-    public VerticalSlidesTask(V2RobotBase robot, double height, double power,
+    public VerticalSlidesTask(RobotBase robot, double height, double power,
                               int finishTimeMillis) {
         this.robot = robot;
         this.targetHeight = height;
@@ -31,7 +32,7 @@ public class VerticalSlidesTask extends TimedTask{
             robot.setVerticalSlidesHeight(targetHeight, power);
         }
         if (targetHeight < 0.001 &&
-                Math.abs(robot.getVerticalSlidesHeight() - targetHeight) < 0.1) {
+                Math.abs(robot.getVerticalSlidesHeightInch() - targetHeight) < 0.1) {
             cancel();
             return true;
         }

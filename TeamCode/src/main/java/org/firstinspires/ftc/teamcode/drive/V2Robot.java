@@ -4,15 +4,22 @@ import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.ftc.GoBildaPinpointDriver;
 import com.acmerobotics.roadrunner.ftc.GoBildaPinpointDriverRR;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.teamcode.roadrunner.MecanumDrive;
 import org.firstinspires.ftc.teamcode.roadrunner.PinpointDrive;
 import org.firstinspires.ftc.teamcode.task.BucketTask;
 import org.firstinspires.ftc.teamcode.task.ClawTask;
 import org.firstinspires.ftc.teamcode.task.IntakeArmTask;
+import org.firstinspires.ftc.teamcode.task.RungStickTask;
+import org.firstinspires.ftc.teamcode.util.Utils;
+import org.firstinspires.ftc.teamcode.util.profile.ProfileConstraints;
+
 @Config
-public class V2Robot extends V2RobotBase {
+public class V2Robot extends RobotBase {
 
     // Bucket Servo Positions
     public static double CARRY_POS = 0.7,
@@ -20,6 +27,9 @@ public class V2Robot extends V2RobotBase {
             DELIVER_POS = 0.9,
             TRANSFER_POS = 0.62, // TODO : make this flatter
             FLAT_POS = 0.79;
+
+    // Profile Constraints
+    public static ProfileConstraints BUCKET_CONSTRAINTS = new ProfileConstraints(10, 8, 5);
 
     // Intake Servo Positions
     public static double INTAKE_ARM_DOWN = 0.69,
@@ -30,9 +40,30 @@ public class V2Robot extends V2RobotBase {
     public static double CLAW_OPEN_POS = 0.5,
             CLAW_CLOSE_POS = 0.3;
 
+    // Vertical Slides Constants
+    public static double VERTICAL_EXTEND_MIN_IN = -0.2;
+    public static double VERTICAL_EXTEND_MAX_IN = 40;
+    public static double VERTICAL_TICKS_PER_INCH = 32.91 * 14 / 10; // 14 / 10 gear ratio
+
+    // Horizontal Slides Constants
+    public static double HORIZONTAL_EXTEND_MAX_IN = 19.0;
+    public static double HORIZONTAL_TICKS_PER_INCH = 32.91;
+    public static double HORIZONTAL_SLIDE_TRANSFER_POS = 172 / 32.91;
+
+
+
+    // V2 Robot Unique Hardware
+    public final DcMotorEx verticalSlides;
+    public final Servo rungStick;
 
     public V2Robot(HardwareMap hardwareMap) {
         super(hardwareMap);
+
+        verticalSlides = hardwareMap.get(DcMotorEx.class, "verticalSlides");
+        verticalSlides.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        verticalSlides.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        rungStick = hardwareMap.get(Servo.class, "rungStick");
+
         setDriveParams();
         init(hardwareMap);
     }
@@ -122,4 +153,79 @@ public class V2Robot extends V2RobotBase {
                 return CLAW_OPEN_POS;
         }
     }
+
+    // Utils for vertical slides
+    @Override
+    public void setVerticalSlidePowerWithEncoder(double power) {
+        if(verticalSlides.getMode() != DcMotorEx.RunMode.RUN_USING_ENCODER) {
+            verticalSlides.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
+        }
+        verticalSlides.setPower(Utils.clamp(power, -1.0, 1.0));
+    }
+    @Override
+    public void setVerticalSlidePowerWithoutEncoder(double power) {
+        if(verticalSlides.getMode() != DcMotorEx.RunMode.RUN_WITHOUT_ENCODER) {
+            verticalSlides.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
+        }
+        verticalSlides.setPower(Utils.clamp(power, -1.0, 1.0));
+    }
+    @Override
+    public void setVerticalSlidesHeight(double posInches, double power) {
+        verticalSlides.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        verticalSlides.setTargetPosition((int) (
+                (Utils.clamp(posInches, VERTICAL_EXTEND_MIN_IN, VERTICAL_EXTEND_MAX_IN)
+                        * VERTICAL_TICKS_PER_INCH)));
+        verticalSlides.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
+        verticalSlides.setPower(power);
+    }
+    @Override
+    public double getVerticalSlidesHeightInch() {
+        return (double) verticalSlides.getCurrentPosition() /VERTICAL_TICKS_PER_INCH;
+    }
+    @Override
+    public int getVerticalSlidesHeightTicks() {
+        return verticalSlides.getCurrentPosition();
+    }
+
+
+    //Utils for horizontal Slides
+    @Override
+    public boolean horizontalSlidesIsReversed() {
+        return false;
+    }
+    @Override
+    public double getHorizontalExtendMaxInConstants() {
+        return HORIZONTAL_EXTEND_MAX_IN;
+    }
+    @Override
+    public double getHorizontalTicksPerInchConstants() {
+        return HORIZONTAL_TICKS_PER_INCH;
+    }
+    @Override
+    public double getHorizontalTransferPos() {
+        return HORIZONTAL_SLIDE_TRANSFER_POS;
+    }
+
+    @Override
+    public ProfileConstraints getBucketServoProfileConstraints() {
+        return BUCKET_CONSTRAINTS;
+    }
+
+
+    //Utils for hang
+    @Override
+    public void initHang() {
+        RungStickTask.setPosition(this, RungStickTask.Position.DOWN);
+    }
+    @Override
+    public void releaseHang() {
+        RungStickTask.setPosition(this, RungStickTask.Position.UP);
+    }
+    @Override
+    public void lowerHang() {
+        RungStickTask.setPosition(this, RungStickTask.Position.DOWN);
+    }
+    @Override
+    public void updatePIDs() {}
+
 }

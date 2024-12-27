@@ -5,8 +5,8 @@ import com.acmerobotics.roadrunner.Pose2d;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
+import org.firstinspires.ftc.teamcode.drive.RobotBase;
 import org.firstinspires.ftc.teamcode.drive.V2Robot;
-import org.firstinspires.ftc.teamcode.drive.V2RobotBase;
 
 @Config
 @Autonomous(name = "V2 Robot - FAST SAMPLE Auto")
@@ -22,7 +22,7 @@ public class FastSamplesAuto extends FastSamplesAutoPath{
     public static int INTAKE_DELAY = 1700;
 
     @Override
-    protected V2RobotBase createRobot(HardwareMap hardwareMap) {
+    protected RobotBase createRobot(HardwareMap hardwareMap) {
         return new V2Robot(hardwareMap);
     }
 

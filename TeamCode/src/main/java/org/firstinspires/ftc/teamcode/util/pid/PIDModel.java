@@ -47,8 +47,7 @@ public abstract class PIDModel {
 //            if (!integralStarted){
 //                integralStarted = true;
 //            }
-            if (absolutePower < minPower && Math.abs(speed) < getStopSpeed() &&
-                    Math.abs(error) > getStopError()) {
+            if (absolutePower < minPower && Math.abs(speed) < getStopSpeed() && Math.abs(error) > getStopError()) {
                 power = error > 0 ? minPower : -minPower;
             }
         }

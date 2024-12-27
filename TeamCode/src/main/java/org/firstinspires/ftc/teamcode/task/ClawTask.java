@@ -1,9 +1,6 @@
 package org.firstinspires.ftc.teamcode.task;
 
-import com.qualcomm.robotcore.hardware.Servo;
-
-import org.firstinspires.ftc.teamcode.drive.V2Robot;
-import org.firstinspires.ftc.teamcode.drive.V2RobotBase;
+import org.firstinspires.ftc.teamcode.drive.RobotBase;
 import org.firstinspires.ftc.teamcode.util.Utils;
 
 public class ClawTask extends TimedTask {
@@ -11,11 +8,11 @@ public class ClawTask extends TimedTask {
     private static final int RPM = 90;
     private static final int MAX_ROTATION_DEGREE = 300;
 
-    private final V2RobotBase robot;
+    private final RobotBase robot;
     private boolean started;
     private final ClawPosition position;
 
-    public ClawTask(V2RobotBase robot, ClawPosition position) {
+    public ClawTask(RobotBase robot, ClawPosition position) {
         this.robot = robot;
         this.position = position;
     }
