@@ -69,19 +69,19 @@ public abstract class RobotBase extends PinpointDrive {
         }
 
         // Motors:
-        horizontalSlides = hardwareMap.get(DcMotorEx.class, "horizontalSlides");
+        horizontalSlides = hardwareMap.get(DcMotorEx.class, "hSlides");
         if(horizontalSlidesIsReversed()) horizontalSlides.setDirection(DcMotor.Direction.REVERSE);
         horizontalSlides.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         horizontalSlides.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         horizontalSlides.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-        intakeRoller = hardwareMap.get(DcMotorEx.class, "intakeRoller");
+        intakeRoller = hardwareMap.get(DcMotorEx.class, "iRoller");
         intakeRoller.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         // Servos:
-        bucketServo = hardwareMap.get(Servo.class, "bucketServo");
+        bucketServo = hardwareMap.get(Servo.class, "bucket");
         claw = hardwareMap.get(Servo.class, "claw");
-        intakeArm = hardwareMap.get(Servo.class, "intakeArm");
+        intakeArm = hardwareMap.get(Servo.class, "iArm");
 
         bucketProfiler = new ServoProfiler(bucketServo, getBucketServoProfileConstraints());
 
@@ -104,7 +104,7 @@ public abstract class RobotBase extends PinpointDrive {
         setIntakeArmPos(IntakeArmTask.Position.DOWN);
         bucketServo.setPosition(getBucketServoPosition(BucketTask.Position.TRANSFER));
         initHang();
-        setClawPosition(ClawTask.ClawPosition.CLOSE);
+        setClawPosition(ClawTask.ClawPosition.OPEN);
     }
     public void autoInit() {
         setIntakeArmPos(IntakeArmTask.Position.TRANSFER);
@@ -160,6 +160,12 @@ public abstract class RobotBase extends PinpointDrive {
     public void setHorizontalSlidesPower(double power) {
         if(horizontalSlides.getMode() != DcMotorEx.RunMode.RUN_USING_ENCODER) {
             horizontalSlides.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
+        }
+        horizontalSlides.setPower(power);
+    }
+    public void setHorizontalSlidesPowerWithoutEncoder(double power) {
+        if(horizontalSlides.getMode() != DcMotorEx.RunMode.RUN_WITHOUT_ENCODER) {
+            horizontalSlides.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
         }
         horizontalSlides.setPower(power);
     }

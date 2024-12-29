@@ -7,11 +7,12 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.teamcode.drive.RobotBase;
+import org.firstinspires.ftc.teamcode.drive.RobotFactory;
 import org.firstinspires.ftc.teamcode.drive.V2Robot;
 
 @Config
 
-@Autonomous(name = "V2 Robot - CLIP Auto")
+@Autonomous(name = "CLIP Auto")
 public class ClipAuto extends ClipAutoPath {
 
     public static double SUBMERSIBLE_DELIVER_DIST = -31.6, DELIVER_OFFSET = -0.4;
@@ -20,8 +21,8 @@ public class ClipAuto extends ClipAutoPath {
 
     @Override
     protected RobotBase createRobot(HardwareMap hardwareMap) {
-        return new V2Robot(hardwareMap);
-    }
+        return (RobotBase) RobotFactory.createRobot(hardwareMap); //new V2Robot(hardwareMap);
+    } //TODO ask abt this
 
     @Override
     protected Pose2d getPreloadSubmersibleDeliverPos() {
@@ -60,7 +61,7 @@ public class ClipAuto extends ClipAutoPath {
 
     @Override
     protected Pose2d getSpecimenIntakePos(int cycleNumber) {
-        return new Pose2d(0.5+0.05*cycleNumber, 30.56, -Math.PI+0.05);
+        return new Pose2d(0+0.00*cycleNumber, 30.56, -Math.PI+0.05);
     }
 
     @Override

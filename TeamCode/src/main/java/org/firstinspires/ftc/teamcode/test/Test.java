@@ -73,19 +73,19 @@ public class Test extends LinearOpMode {
         verticalSlidesRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         verticalSlidesRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
-        horizontalSlides = hardwareMap.get(DcMotorEx.class, "horizontalSlides");
+        horizontalSlides = hardwareMap.get(DcMotorEx.class, "hSlides");
         horizontalSlides.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         horizontalSlides.setDirection(DcMotor.Direction.REVERSE);
         horizontalSlides.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         horizontalSlides.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-        intakeRoller = hardwareMap.get(DcMotorEx.class, "intakeRoller");
+        intakeRoller = hardwareMap.get(DcMotorEx.class, "iRoller");
         intakeRoller.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         // Servos:
-        bucketServo = hardwareMap.get(Servo.class, "bucketServo");
+        bucketServo = hardwareMap.get(Servo.class, "bucket");
         claw = hardwareMap.get(Servo.class, "claw");
-        intakeArm = hardwareMap.get(Servo.class, "intakeArm");
+        intakeArm = hardwareMap.get(Servo.class, "iArm");
 
         // Sensors:
         leftIntakeColorSensor = hardwareMap.get(RevColorSensorV3.class, "intakeColorLeft");

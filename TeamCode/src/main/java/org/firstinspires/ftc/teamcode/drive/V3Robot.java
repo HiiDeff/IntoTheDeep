@@ -44,9 +44,9 @@ public class V3Robot extends RobotBase {
     // Hang Positions
     public static double LEFT_INIT_POS = 0.31;
     public static double LEFT_RELEASE_POS = 0.16;
-    public static double LEFT_HANG_POS = 0.83;
+    public static double LEFT_HANG_POS = 0.86;
     public static double RIGHT_INIT_POS = 0.7;
-    public static double RIGHT_RELEASE_POS = 0.855;
+    public static double RIGHT_RELEASE_POS = 0.795;
     public static double RIGHT_HANG_POS = 0.1;
 
 
@@ -83,8 +83,8 @@ public class V3Robot extends RobotBase {
         verticalSlidesRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         verticalSlidesRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
-        leftHang = hardwareMap.get(Servo.class, "leftHang");
-        rightHang = hardwareMap.get(Servo.class, "rightHang");
+        leftHang = hardwareMap.get(Servo.class, "lHang");
+        rightHang = hardwareMap.get(Servo.class, "rHang");
 
         verticalSlidesPID = new V3VerticalSlidesPID(this, PID_MIN_POWER,
                                 PID_MAX_POWER, PID_PK, PID_PI, PID_PD);
@@ -120,8 +120,8 @@ public class V3Robot extends RobotBase {
 
         // path profile parameters (in inches)
         p.maxWheelVel = 60;
-        p.minProfileAccel = -30;
-        p.maxProfileAccel = 50;
+        p.minProfileAccel = -30; //TODO change this to -40
+        p.maxProfileAccel = 50; //TODO change this to 60
 
         // turn profile parameters (in radians)
         p.maxAngVel = Math.PI; // shared with path
@@ -254,8 +254,8 @@ public class V3Robot extends RobotBase {
     }
     @Override
     public void initHang() {
-        HangTask.setHangPosition(this, HangTask.WhichHang.LEFT, HangTask.Position.INIT);
-        HangTask.setHangPosition(this, HangTask.WhichHang.RIGHT, HangTask.Position.INIT);
+        HangTask.setHangPosition(this, HangTask.WhichHang.LEFT, HangTask.Position.HANG);
+        HangTask.setHangPosition(this, HangTask.WhichHang.RIGHT, HangTask.Position.HANG);
     }
     @Override
     public void releaseHang() {

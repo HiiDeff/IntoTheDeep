@@ -125,19 +125,22 @@ public class V3RobotTeleOp extends LinearOpMode {
             transferTask = new SeriesTask(
                     new ParallelTask(
                             new BucketTask(robot, BucketTask.Position.TRANSFER),
-                            new ClawTask(robot, ClawTask.ClawPosition.CLOSE)
+                            new ClawTask(robot, ClawTask.ClawPosition.OPEN)
                     ),
                     new ParallelTask(
                             new VerticalSlidesTask(robot, 0, 1.0, 2000),
                             new SeriesTask(
                                     new ParallelTask(
-                                            new HorizontalSlidesTask(robot, robot.getHorizontalTransferPos(), 1.0,500),
+                                            new HorizontalSlidesTask(robot, robot.getHorizontalTransferPos(), 1.0,1000),
                                             new IntakeArmTask(robot, IntakeArmTask.Position.TRANSFER)
                                     ),
-                                    new IntakeTask(robot, 700, -0.8)
+                                    new ParallelTask(
+                                            new TimedHorizontalSlidesTask(robot, robot.getHorizontalTransferPos(), 1.0, 2000),
+                                            new IntakeTask(robot, 2000, -1.0)
+                                    )
                             )
                     )
-            ); clawOpen = false;
+            ); clawOpen = true;
         }
 
         // Deliver Raise Preset
@@ -145,10 +148,11 @@ public class V3RobotTeleOp extends LinearOpMode {
             deliverChamberTask = new SeriesTask(
                     new ClawTask(robot, ClawTask.ClawPosition.CLOSE),
                     new ParallelTask(
-                            new VerticalSlidesTask(robot, DELIVERY_CHAMBER_HEIGHT, 1.0, 2000),
+                            new VerticalSlidesTask(robot, DELIVERY_CHAMBER_HEIGHT, 1.0, 700),
                             new BucketTask(robot, BucketTask.Position.CHAMBER_DELIVER)
                     )
             );
+            clawOpen = false;
         }
 
 //        // Deliver Preset
@@ -175,28 +179,30 @@ public class V3RobotTeleOp extends LinearOpMode {
 
     private void runHorizontalSlides() {
 
-        if(submersibleTask==null && transferTask==null){
-            if(-gp2.leftStickY()>0.3) {
-                robot.setHorizontalSlidesPower(0.8);
+        if(-gp2.leftStickY()>0.3 || -gp2.leftStickY()<-0.3) {
+            if(submersibleTask != null){
+                submersibleTask.cancel();
+                submersibleTask = null;
+            }
+            if(transferTask != null) {
+                transferTask.cancel();
+                transferTask = null;
+            }
+
+            robot.setHorizontalSlidesPowerWithoutEncoder(-gp2.leftStickY()>0.3 ? 0.8 : -0.8);
+
+            if(gp2.rightBumper()){
+                robot.horizontalSlides.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+                robot.horizontalSlides.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            } else{
                 robot.updateHorizontalEncoder();
                 horizontalPositionUpdated = true;
             }
-            else if(-gp2.leftStickY()<-0.3) {
-                if(gp2.rightBumper()){
-                    robot.horizontalSlides.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-                    robot.horizontalSlides.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-                } else{
-                    robot.updateHorizontalEncoder();
-                }
-                robot.setHorizontalSlidesPower(-0.8);
-                horizontalPositionUpdated = true;
-            }
-            else {
-//                robot.setHorizontalSlidesPower(0);
-                if(horizontalPositionUpdated) {
-                    robot.brakeHorizontalSlides(0.05); // TODO: CHECK THIS
-                    horizontalPositionUpdated = false;
-                }
+        }
+        else if(submersibleTask == null && transferTask == null){
+            if(horizontalPositionUpdated) {
+                robot.brakeHorizontalSlides(0.05); // TODO: CHECK THIS
+                horizontalPositionUpdated = false;
             }
         }
     }
@@ -241,7 +247,7 @@ public class V3RobotTeleOp extends LinearOpMode {
                 robot.setVerticalSlidePowerWithoutEncoder(-0.3);
             }
         } else if(deliverChamberTask == null && deliverTask == null && transferTask == null) {
-            robot.setVerticalSlidePowerWithoutEncoder(robot.getVerticalSlidesHeightInch() < 0.5? 0:VERTICAL_STAND_POWER);
+            robot.setVerticalSlidePowerWithoutEncoder(robot.getVerticalSlidesHeightInch() < 1.0? 0:VERTICAL_STAND_POWER);
         }
 
         // Bucket
@@ -250,17 +256,17 @@ public class V3RobotTeleOp extends LinearOpMode {
             robot.setClawPosition(ClawTask.ClawPosition.OPEN); clawOpen = true;
         } else if(gp1.onceX()){
             robot.setBucketServoPosition(BucketTask.Position.CARRY);
-            robot.setClawPosition(ClawTask.ClawPosition.CLOSE); clawOpen = false;
-        }else if(gp1.onceY()) {
+            robot.setClawPosition(ClawTask.ClawPosition.OPEN); clawOpen = true;
+        }else if(!gp1.back() && gp1.onceY()) {
             robot.setBucketServoPosition(BucketTask.Position.DELIVER);
-            robot.setClawPosition(ClawTask.ClawPosition.CLOSE); clawOpen = false;
+            robot.setClawPosition(ClawTask.ClawPosition.OPEN); clawOpen = true;
             if(robot.getVerticalSlidesHeightInch() >= 12) {
                 cycleSum += cycleTimer.seconds(); cycleCnt++; cycleAvg = cycleSum/cycleCnt;
                 cycleTimer.reset();
             }
         } else if(!gp1.back() && !gp1.start() && gp1.onceA()) {
             robot.setBucketServoPosition(BucketTask.Position.TRANSFER);
-            robot.setClawPosition(ClawTask.ClawPosition.CLOSE); clawOpen = false;
+            robot.setClawPosition(ClawTask.ClawPosition.OPEN); clawOpen = true;
         }
 
         // Claw
@@ -275,10 +281,11 @@ public class V3RobotTeleOp extends LinearOpMode {
 
         // Hang
         if(gp1.back() && gp1.onceY()) {
-            robot.setBucketServoPosition(BucketTask.Position.FLAT);
             robot.releaseHang();
         } else if(gp1.back() && gp1.onceA()) {
             robot.lowerHang();
+            robot.setBucketServoPosition(BucketTask.Position.FLAT);
+            robot.setClawPosition(ClawTask.ClawPosition.OPEN);
         }
     }
 

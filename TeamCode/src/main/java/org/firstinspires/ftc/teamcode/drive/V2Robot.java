@@ -59,10 +59,10 @@ public class V2Robot extends RobotBase {
     public V2Robot(HardwareMap hardwareMap) {
         super(hardwareMap);
 
-        verticalSlides = hardwareMap.get(DcMotorEx.class, "verticalSlides");
+        verticalSlides = hardwareMap.get(DcMotorEx.class, "vSlides");
         verticalSlides.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         verticalSlides.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        rungStick = hardwareMap.get(Servo.class, "rungStick");
+        rungStick = hardwareMap.get(Servo.class, "rStick");
 
         setDriveParams();
         init(hardwareMap);
