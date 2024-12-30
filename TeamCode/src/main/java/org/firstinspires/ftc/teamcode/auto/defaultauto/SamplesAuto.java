@@ -6,6 +6,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.teamcode.drive.RobotBase;
+import org.firstinspires.ftc.teamcode.drive.RobotFactory;
 import org.firstinspires.ftc.teamcode.drive.V2Robot;
 
 @Config
@@ -23,7 +24,7 @@ public class SamplesAuto extends SamplesAutoPath {
 
     @Override
     protected RobotBase createRobot(HardwareMap hardwareMap) {
-        return new V2Robot(hardwareMap);
+        return (RobotBase) RobotFactory.createRobot(hardwareMap);
     }
 
     @Override

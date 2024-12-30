@@ -211,7 +211,7 @@ public class V2RobotTeleOp extends LinearOpMode {
         } else {
             x = -gp1.leftStickY();
             y = -gp1.leftStickX();
-            a = -gp1.rightStickX() * 0.6;
+            a = -gp1.rightStickX() * 0.9;
         }
         double pow = Math.sqrt(x * x + y * y);
 //        double limPow = driveLim.calculate(pow);
@@ -228,13 +228,16 @@ public class V2RobotTeleOp extends LinearOpMode {
     private void runDelivery() {
 
         // Slides
-        if(transferTask == null && (gp2.dpadUp() || gp2.dpadDown())){
+        if((gp2.dpadUp() || gp2.dpadDown())){
             if(deliverChamberTask != null) {
                 deliverChamberTask.cancel();
                 deliverChamberTask = null;
             } else if(deliverTask != null){
                 deliverTask.cancel();
                 deliverTask = null;
+            } else if(transferTask != null) {
+                transferTask.cancel();
+                transferTask = null;
             }
             if(gp2.dpadUp()) {
                 robot.setVerticalSlidePowerWithoutEncoder(1.0);

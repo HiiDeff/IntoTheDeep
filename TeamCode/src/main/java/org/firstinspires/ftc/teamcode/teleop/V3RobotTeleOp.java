@@ -36,6 +36,7 @@ public class V3RobotTeleOp extends LinearOpMode {
     public static double VERTICAL_SLIDE_MAX_POWER = 1.0;
     public static double MIN_DRIVE_POWER = 0.01;
     public static double DELIVERY_CHAMBER_HEIGHT = 20.5;
+    public static double MAX_SLIDE_EXTENSION_INCH = 21.0;
 
     private V3Robot robot;
     private GamePad gp1, gp2;
@@ -131,12 +132,16 @@ public class V3RobotTeleOp extends LinearOpMode {
                             new VerticalSlidesTask(robot, 0, 1.0, 2000),
                             new SeriesTask(
                                     new ParallelTask(
-                                            new HorizontalSlidesTask(robot, robot.getHorizontalTransferPos(), 1.0,1000),
+                                            new TimedHorizontalSlidesTask(robot, robot.getHorizontalTransferPos(), 1.0,1000),
                                             new IntakeArmTask(robot, IntakeArmTask.Position.TRANSFER)
                                     ),
                                     new ParallelTask(
-                                            new TimedHorizontalSlidesTask(robot, robot.getHorizontalTransferPos(), 1.0, 2000),
-                                            new IntakeTask(robot, 2000, -1.0)
+                                            new TimedHorizontalSlidesTask(robot, robot.getHorizontalTransferPos(), 1.0, 500),
+                                            new UnboundedIntakeTask(robot, -0.8)
+                                    ),
+                                    new ParallelTask(
+                                            new IntakeArmTask(robot, IntakeArmTask.Position.CLEAR),
+                                            new BucketTask(robot, BucketTask.Position.CARRY)
                                     )
                             )
                     )
@@ -179,7 +184,7 @@ public class V3RobotTeleOp extends LinearOpMode {
 
     private void runHorizontalSlides() {
 
-        if(-gp2.leftStickY()>0.3 || -gp2.leftStickY()<-0.3) {
+        if((robot.getHorizontalSlideDist()<MAX_SLIDE_EXTENSION_INCH && -gp2.leftStickY()>0.3) || -gp2.leftStickY()<-0.3) {
             if(submersibleTask != null){
                 submersibleTask.cancel();
                 submersibleTask = null;
@@ -233,13 +238,16 @@ public class V3RobotTeleOp extends LinearOpMode {
     private void runDelivery() {
 
         // Slides
-        if(transferTask == null && (gp2.dpadUp() || gp2.dpadDown())){
+        if((gp2.dpadUp() || gp2.dpadDown())){
             if(deliverChamberTask != null) {
                 deliverChamberTask.cancel();
                 deliverChamberTask = null;
             } else if(deliverTask != null){
                 deliverTask.cancel();
                 deliverTask = null;
+            } else if(transferTask != null) {
+                transferTask.cancel();
+                transferTask = null;
             }
             if(gp2.dpadUp()) {
                 robot.setVerticalSlidePowerWithoutEncoder(1.0);
