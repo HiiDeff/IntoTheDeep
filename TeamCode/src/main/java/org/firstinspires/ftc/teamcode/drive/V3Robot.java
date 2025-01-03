@@ -22,32 +22,32 @@ import org.firstinspires.ftc.teamcode.util.profile.ProfileConstraints;
 public class V3Robot extends RobotBase {
 
     // Bucket Servo Positions
-    public static double CARRY_POS = 0.4,
+    public static double CARRY_POS = 0.3,
             CHAMBER_DELIVER_POS = 0.70, //TODO: TUNE THIS
             DELIVER_POS = 0.71,
             TRANSFER_POS = 0.23,
-            FLAT_POS = 0.58;
+            FLAT_POS = 0.55;
 
     // Profile Constraints
     public static ProfileConstraints BUCKET_CONSTRAINTS = new ProfileConstraints(10, 30, 20);
 
 
     // Intake Servo Positions
-    public static double INTAKE_ARM_DOWN = 0.10,
+    public static double INTAKE_ARM_DOWN = 0.14,
             INTAKE_ARM_TRANSFER = 0.80,
             INTAKE_ARM_CLEAR = 0.40;
 
     // Claw Servo Positions
     public static double CLAW_OPEN_POS = 0.58,
-            CLAW_CLOSE_POS = 0.35;
+            CLAW_CLOSE_POS = 0.40;
 
     // Hang Positions
     public static double LEFT_INIT_POS = 0.31;
     public static double LEFT_RELEASE_POS = 0.16;
-    public static double LEFT_HANG_POS = 0.86;
+    public static double LEFT_HANG_POS = 0.92;
     public static double RIGHT_INIT_POS = 0.7;
     public static double RIGHT_RELEASE_POS = 0.795;
-    public static double RIGHT_HANG_POS = 0.1;
+    public static double RIGHT_HANG_POS = 0.05;
 
 
     // Vertical Slides Constants

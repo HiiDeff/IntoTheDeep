@@ -24,7 +24,7 @@ public class V2Robot extends RobotBase {
     // Bucket Servo Positions
     public static double CARRY_POS = 0.7,
             CHAMBER_DELIVER_POS = 0.87,
-            DELIVER_POS = 0.9,
+            DELIVER_POS = 1.0,
             TRANSFER_POS = 0.62, // TODO : make this flatter
             FLAT_POS = 0.79;
 

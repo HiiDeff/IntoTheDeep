@@ -42,7 +42,7 @@ public class V3RobotTeleOp extends LinearOpMode {
     private GamePad gp1, gp2;
     private ElapsedTime cycleTimer;
     private double cycleSum, cycleCnt, cycleAvg;
-    private boolean clawOpen, horizontalPositionUpdated;
+    private boolean clawOpen, horizontalPositionUpdated, hangUp;
 
     private Task submersibleTask,
             transferTask,
@@ -221,7 +221,7 @@ public class V3RobotTeleOp extends LinearOpMode {
         } else {
             x = -gp1.leftStickY();
             y = -gp1.leftStickX();
-            a = -gp1.rightStickX() * 1.0;
+            a = -gp1.rightStickX() * 0.9;
         }
         double pow = Math.sqrt(x * x + y * y);
 //        double limPow = driveLim.calculate(pow);
@@ -288,12 +288,13 @@ public class V3RobotTeleOp extends LinearOpMode {
         }
 
         // Hang
-        if(gp1.back() && gp1.onceY()) {
-            robot.releaseHang();
-        } else if(gp1.back() && gp1.onceA()) {
-            robot.lowerHang();
-            robot.setBucketServoPosition(BucketTask.Position.FLAT);
-            robot.setClawPosition(ClawTask.ClawPosition.OPEN);
+        if(gp1.onceLeftBumper() && gp1.onceRightBumper()) {
+            if(!hangUp) {
+                robot.releaseHang();
+            } else{
+                robot.lowerHang();
+                robot.setBucketServoPosition(BucketTask.Position.FLAT);
+            }hangUp = !hangUp;
         }
     }
 
