@@ -41,7 +41,7 @@ public class V3RobotTeleOp extends LinearOpMode {
     public static double VERTICAL_STAND_POWER = 0.2;
     public static double VERTICAL_SLIDE_MAX_POWER = 1.0;
     public static double MIN_DRIVE_POWER = 0.01;
-    public static double DELIVERY_CHAMBER_HEIGHT = 20.5;
+    public static double DELIVERY_CHAMBER_HEIGHT = 21.0;
     public static double MAX_SLIDE_EXTENSION_INCH = 21.0;
 
     private V3Robot robot;
@@ -49,7 +49,7 @@ public class V3RobotTeleOp extends LinearOpMode {
     private ElapsedTime cycleTimer;
     private double cycleSum, cycleCnt, cycleAvg;
     private boolean clawOpen, horizontalPositionUpdated, hangUp;
-    public static double CYCLE_DELIVER_X = 32.45, CYCLE_DELIVER_Y = 40.27, Y_OFFSET = 2.0;
+    public static double CYCLE_DELIVER_X = 31.45, CYCLE_DELIVER_Y = 40.27, Y_OFFSET = 2.0, X_OFFSET=0.4;
 
     private Task submersibleTask,
             transferTask,
@@ -358,7 +358,7 @@ public class V3RobotTeleOp extends LinearOpMode {
                                     new RuntimeDrivingTask(
                                             robot,
                                             builder -> {
-                                                Pose2d pos = new Pose2d(CYCLE_DELIVER_X, CYCLE_DELIVER_Y+Y_OFFSET*cycleNumber, Math.PI-0.05);
+                                                Pose2d pos = new Pose2d(CYCLE_DELIVER_X+X_OFFSET*cycleNumber, CYCLE_DELIVER_Y+Y_OFFSET*cycleNumber, Math.PI-0.05);
                                                 return builder.strafeToLinearHeading(pos.position, pos.heading, new TranslationalVelConstraint(60)).build(); //TODO: possibly 50 or 60
                                             }
                                     )
