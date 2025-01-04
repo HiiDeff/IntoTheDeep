@@ -3,7 +3,9 @@ package org.firstinspires.ftc.teamcode.teleop;
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
+import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.PoseVelocity2d;
+import com.acmerobotics.roadrunner.TranslationalVelConstraint;
 import com.acmerobotics.roadrunner.Vector2d;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -18,7 +20,9 @@ import org.firstinspires.ftc.teamcode.task.HorizontalSlidesTask;
 import org.firstinspires.ftc.teamcode.task.IntakeArmTask;
 import org.firstinspires.ftc.teamcode.task.IntakeTask;
 import org.firstinspires.ftc.teamcode.task.ParallelTask;
+import org.firstinspires.ftc.teamcode.task.RuntimeDrivingTask;
 import org.firstinspires.ftc.teamcode.task.SeriesTask;
+import org.firstinspires.ftc.teamcode.task.SleepTask;
 import org.firstinspires.ftc.teamcode.task.Task;
 import org.firstinspires.ftc.teamcode.task.TimedHorizontalSlidesTask;
 import org.firstinspires.ftc.teamcode.task.UnboundedIntakeTask;
@@ -29,6 +33,8 @@ import org.firstinspires.ftc.teamcode.util.GamePad;
 @Config
 
 public class V3RobotTeleOp extends LinearOpMode {
+
+    public static  int PRESET_CYCLE_CNT = 3, CLAW_OPEN_DELAY = 330;
 
     public MultipleTelemetry multipleTelemetry;
 
@@ -43,6 +49,7 @@ public class V3RobotTeleOp extends LinearOpMode {
     private ElapsedTime cycleTimer;
     private double cycleSum, cycleCnt, cycleAvg;
     private boolean clawOpen, horizontalPositionUpdated, hangUp;
+    public static double CYCLE_DELIVER_X = 32.45, CYCLE_DELIVER_Y = 40.27, Y_OFFSET = 2.0;
 
     private Task submersibleTask,
             transferTask,
@@ -65,9 +72,9 @@ public class V3RobotTeleOp extends LinearOpMode {
         while (opModeIsActive()) {
             driveRobot();
 
-            runIntake();
-            runHorizontalSlides();
-            runDelivery();
+            if(deliverChamberTask==null) runIntake();
+            if(deliverChamberTask==null) runHorizontalSlides();
+            if(deliverChamberTask==null) runDelivery();
 
             checkPreloads();
             update();
@@ -112,7 +119,7 @@ public class V3RobotTeleOp extends LinearOpMode {
 
         // Submersible Intake Preset
         if(gp2.onceY()){
-            submersibleTask = new SeriesTask(
+            submersibleTask =  new SeriesTask(
                     new ParallelTask(
                             new IntakeArmTask(robot, IntakeArmTask.Position.CLEAR),
                             new HorizontalSlidesTask(robot, 9.0, 1.0, 500)
@@ -149,15 +156,16 @@ public class V3RobotTeleOp extends LinearOpMode {
         }
 
         // Deliver Raise Preset
-        else if(!gp2.start() && gp2.onceB()) {
-            deliverChamberTask = new SeriesTask(
-                    new ClawTask(robot, ClawTask.ClawPosition.CLOSE),
-                    new ParallelTask(
-                            new VerticalSlidesTask(robot, DELIVERY_CHAMBER_HEIGHT, 1.0, 700),
-                            new BucketTask(robot, BucketTask.Position.CHAMBER_DELIVER)
-                    )
-            );
-            clawOpen = false;
+        else if(gp1.onceLeftStickButton()) {//!gp2.start() && gp2.onceB()) {
+            createSubmersibleTask();
+//            deliverChamberTask = new SeriesTask(
+//                    new ClawTask(robot, ClawTask.ClawPosition.CLOSE),
+//                    new ParallelTask(
+//                            new VerticalSlidesTask(robot, DELIVERY_CHAMBER_HEIGHT, 1.0, 700),
+//                            new BucketTask(robot, BucketTask.Position.CHAMBER_DELIVER)
+//                    )
+//            );
+//            clawOpen = false;
         }
 
 //        // Deliver Preset
@@ -231,7 +239,15 @@ public class V3RobotTeleOp extends LinearOpMode {
 //        }
 //        a = turnLim.calculate(a);
 //        telemetry.addData("driving", x + " " + y + " " + a);
-        robot.setDrivePowers(new PoseVelocity2d(new Vector2d(x, y), a));
+        if(deliverChamberTask!=null) {
+            if(pow>0.1){
+                deliverChamberTask.cancel();
+                deliverChamberTask = null;
+            }
+        }
+        else{
+            robot.setDrivePowers(new PoseVelocity2d(new Vector2d(x, y), a));
+        }
     }
 
 
@@ -315,6 +331,66 @@ public class V3RobotTeleOp extends LinearOpMode {
         } else{
             robot.stopIntake();
         }
+    }
+
+    private void createSubmersibleTask() {
+
+
+//        robot.pinpoint.resetPosAndIMU();
+        robot.pinpoint.setPosition(new Pose2d(0, 0, 0.05));
+
+        SeriesTask task = new SeriesTask();
+        for(int i=0; i<PRESET_CYCLE_CNT; i++){
+//        task.add(new SleepTask(500));
+            int cycleNumber = i;
+            task.add(
+                    new ParallelTask(
+                            new ClawTask(robot, ClawTask.ClawPosition.CLOSE),
+                            new ParallelTask(
+                                    new SeriesTask(
+                                            new SleepTask(50),
+                                            new VerticalSlidesTask(robot, DELIVERY_CHAMBER_HEIGHT, 1.0, 2000)
+                                    ),
+                                    new SeriesTask(
+                                            new SleepTask(500),
+                                            new BucketTask(robot, BucketTask.Position.CHAMBER_DELIVER)
+                                    ),
+                                    new RuntimeDrivingTask(
+                                            robot,
+                                            builder -> {
+                                                Pose2d pos = new Pose2d(CYCLE_DELIVER_X, CYCLE_DELIVER_Y+Y_OFFSET*cycleNumber, Math.PI-0.05);
+                                                return builder.strafeToLinearHeading(pos.position, pos.heading, new TranslationalVelConstraint(60)).build(); //TODO: possibly 50 or 60
+                                            }
+                                    )
+                            )
+                    )
+            );
+            task.add(
+                    new ParallelTask(
+                            new HorizontalSlidesTask(robot, 0, 1.0, 700),
+                            new VerticalSlidesTask(robot, 0, 1.0, 1000),
+                            new SeriesTask(
+                                    new SleepTask(1000),
+                                    new BucketTask(robot, BucketTask.Position.FLAT)
+                            ),
+                            new SeriesTask(
+                                    new SleepTask(CLAW_OPEN_DELAY),
+                                    new ClawTask(robot, ClawTask.ClawPosition.OPEN)
+                            ),
+                            new SeriesTask(
+                                    new SleepTask(100),
+                                    new RuntimeDrivingTask(
+                                            robot,
+                                            builder -> {
+                                                Pose2d pos = new Pose2d(-1, 0, 0.05);
+                                                return builder.strafeToLinearHeading(pos.position, pos.heading).build();
+                                            }
+                                    )
+                            )
+                    )
+            );
+        }
+        deliverChamberTask = task;
     }
 
 }
