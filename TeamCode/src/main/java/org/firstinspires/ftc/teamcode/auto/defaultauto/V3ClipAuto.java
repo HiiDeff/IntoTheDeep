@@ -15,7 +15,7 @@ import org.firstinspires.ftc.teamcode.drive.V2Robot;
 @Autonomous(name = "V3 CLIP Auto")
 public class V3ClipAuto extends ClipAutoPath {
 
-    public static double SUBMERSIBLE_DELIVER_DIST = -31.5, DELIVER_OFFSET = -0.0;
+    public static double SUBMERSIBLE_DELIVER_DIST = -31.5, DELIVER_OFFSET = -0.4;
     public static double preloadSubmersibleYVal = 3.0, cycleSubmersibleYVal = -1.0, HORIZONTAL_DELIVER_OFFSET = -1.9;
 
 
@@ -41,17 +41,17 @@ public class V3ClipAuto extends ClipAutoPath {
 
     @Override
     protected Pose2d getSecondSampleIntakePos() {
-        return new Pose2d(-23.6228, 30.1771, 2.1692);
+        return new Pose2d(-23.6228, 30.1771, 2.2092);
     }
 
     @Override
     protected Pose2d getSecondSampleOuttakePos() {
-        return new Pose2d(-23.6228, 30.1771, 0.7202);
+        return new Pose2d(-23.6228, 30.1771, 0.6202);
     }
 
     @Override
     protected Pose2d getThirdSampleIntakePos() {
-        return new Pose2d(-22.6415, 37.7287, 2.0426);
+        return new Pose2d(-22.6415, 37.7287, 1.8426);
     }
 
     @Override

@@ -42,10 +42,10 @@ public class V3Robot extends RobotBase {
             CLAW_CLOSE_POS = 0.40;
 
     // Hang Positions
-    public static double LEFT_INIT_POS = 0.31;
+    public static double LEFT_INIT_POS = 0.82;
     public static double LEFT_RELEASE_POS = 0.16;
     public static double LEFT_HANG_POS = 0.92;
-    public static double RIGHT_INIT_POS = 0.7;
+    public static double RIGHT_INIT_POS = 0.15;
     public static double RIGHT_RELEASE_POS = 0.795;
     public static double RIGHT_HANG_POS = 0.05;
 
@@ -254,8 +254,8 @@ public class V3Robot extends RobotBase {
     }
     @Override
     public void initHang() {
-        HangTask.setHangPosition(this, HangTask.WhichHang.LEFT, HangTask.Position.HANG);
-        HangTask.setHangPosition(this, HangTask.WhichHang.RIGHT, HangTask.Position.HANG);
+        HangTask.setHangPosition(this, HangTask.WhichHang.LEFT, HangTask.Position.INIT);
+        HangTask.setHangPosition(this, HangTask.WhichHang.RIGHT, HangTask.Position.INIT);
     }
     @Override
     public void releaseHang() {

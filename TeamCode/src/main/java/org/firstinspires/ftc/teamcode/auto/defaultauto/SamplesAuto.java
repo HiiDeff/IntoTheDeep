@@ -14,7 +14,7 @@ import org.firstinspires.ftc.teamcode.drive.V2Robot;
 public class SamplesAuto extends SamplesAutoPath {
 
     public static double Sample1IntakeAlignPosX = 38.463;
-    public static double Sample1IntakeAlignPosY = 1.6317;
+    public static double Sample1IntakeAlignPosY = 0.6317;
     public static double Sample2IntakeAlignPosX = 37.5016;
     public static double Sample2IntakeAlignPosY = 8.6623;
     public static double Sample3IntakeAlignPosX = 37.3329;
