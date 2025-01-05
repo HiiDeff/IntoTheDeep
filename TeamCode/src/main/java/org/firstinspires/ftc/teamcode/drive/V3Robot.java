@@ -15,6 +15,7 @@ import org.firstinspires.ftc.teamcode.task.BucketTask;
 import org.firstinspires.ftc.teamcode.task.ClawTask;
 import org.firstinspires.ftc.teamcode.task.HangTask;
 import org.firstinspires.ftc.teamcode.task.IntakeArmTask;
+import org.firstinspires.ftc.teamcode.task.SwipeStickTask;
 import org.firstinspires.ftc.teamcode.util.Utils;
 import org.firstinspires.ftc.teamcode.util.profile.ProfileConstraints;
 
@@ -31,6 +32,8 @@ public class V3Robot extends RobotBase {
     // Profile Constraints
     public static ProfileConstraints BUCKET_CONSTRAINTS = new ProfileConstraints(10, 30, 20);
 
+    //SwipeStick Servo and Positions
+    public final Servo swipeStick;
 
     // Intake Servo Positions
     public static double INTAKE_ARM_DOWN = 0.14,
@@ -43,11 +46,11 @@ public class V3Robot extends RobotBase {
 
     // Hang Positions
     public static double LEFT_INIT_POS = 0.82;
-    public static double LEFT_RELEASE_POS = 0.16;
-    public static double LEFT_HANG_POS = 0.92;
+    public static double LEFT_RELEASE_POS = 0.08;
+    public static double LEFT_HANG_POS = 0.85;
     public static double RIGHT_INIT_POS = 0.15;
-    public static double RIGHT_RELEASE_POS = 0.795;
-    public static double RIGHT_HANG_POS = 0.05;
+    public static double RIGHT_RELEASE_POS = 0.875;
+    public static double RIGHT_HANG_POS = 0.13;
 
 
     // Vertical Slides Constants
@@ -85,6 +88,8 @@ public class V3Robot extends RobotBase {
 
         leftHang = hardwareMap.get(Servo.class, "lHang");
         rightHang = hardwareMap.get(Servo.class, "rHang");
+
+        swipeStick = hardwareMap.get(Servo.class, "swipeStick");
 
         verticalSlidesPID = new V3VerticalSlidesPID(this, PID_MIN_POWER,
                                 PID_MAX_POWER, PID_PK, PID_PI, PID_PD);

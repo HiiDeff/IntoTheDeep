@@ -23,6 +23,7 @@ import org.firstinspires.ftc.teamcode.task.ParallelTask;
 import org.firstinspires.ftc.teamcode.task.RuntimeDrivingTask;
 import org.firstinspires.ftc.teamcode.task.SeriesTask;
 import org.firstinspires.ftc.teamcode.task.SleepTask;
+import org.firstinspires.ftc.teamcode.task.SwipeStickTask;
 import org.firstinspires.ftc.teamcode.task.Task;
 import org.firstinspires.ftc.teamcode.task.TimedHorizontalSlidesTask;
 import org.firstinspires.ftc.teamcode.task.UnboundedIntakeTask;
@@ -54,7 +55,8 @@ public class V3RobotTeleOp extends LinearOpMode {
     private Task submersibleTask,
             transferTask,
             deliverChamberTask,
-            deliverTask;
+            deliverTask,
+            swipeStickTask
     ;
 
     @Override
@@ -65,6 +67,7 @@ public class V3RobotTeleOp extends LinearOpMode {
 
         multipleTelemetry = new MultipleTelemetry(this.telemetry, FtcDashboard.getInstance().getTelemetry());
         robot.teleOpInit();
+        SwipeStickTask.setPosition(robot, SwipeStickTask.Position.IN);
         waitForStart();
 
         cycleTimer = new ElapsedTime();
@@ -89,6 +92,8 @@ public class V3RobotTeleOp extends LinearOpMode {
             deliverChamberTask = null;
         }if (deliverTask != null && deliverTask.perform()) {
             deliverTask = null;
+        }if(swipeStickTask != null && swipeStickTask.perform()){
+            swipeStickTask = null;
         }
 
         gp1.update();
@@ -113,7 +118,7 @@ public class V3RobotTeleOp extends LinearOpMode {
 
     private void checkPreloads() {
 
-        if(submersibleTask!=null || transferTask != null || deliverChamberTask != null) {
+        if(submersibleTask!=null || transferTask != null || deliverChamberTask != null || swipeStickTask != null) {
             return;
         }
 
@@ -188,6 +193,14 @@ public class V3RobotTeleOp extends LinearOpMode {
 //                cycleTimer.reset();
 //            }
 //        }
+
+        else if(gp2.leftBumper()){
+            swipeStickTask = new SeriesTask(
+                    new SwipeStickTask(robot, SwipeStickTask.Position.OUT),
+                    new SleepTask(50),
+                    new SwipeStickTask(robot, SwipeStickTask.Position.IN)
+            );
+        }
     }
 
     private void runHorizontalSlides() {
