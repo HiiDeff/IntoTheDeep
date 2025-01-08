@@ -31,7 +31,7 @@ public class V3Robot extends RobotBase {
             FLAT_POS = 0.55;
 
     // Profile Constraints
-    public static ProfileConstraints BUCKET_CONSTRAINTS = new ProfileConstraints(10, 30, 20);
+    public static ProfileConstraints BUCKET_CONSTRAINTS = new ProfileConstraints(10, 12, 16);
 
     //SwipeStick Servo and Positions
     public final Servo swipeStick;
@@ -40,7 +40,7 @@ public class V3Robot extends RobotBase {
     public static double INTAKE_ARM_DOWN = 0.14,
             INTAKE_ARM_TRANSFER = 0.80,
             INTAKE_ARM_CLEAR = 0.70,
-            INTAKE_ARM_SLIGHTLY_UP = 0.2; //TODO: make this closer to transfer position
+            INTAKE_ARM_SLIGHTLY_UP = 0.25; //TODO: make this closer to transfer position
 
     // Claw Servo Positions
     public static double CLAW_OPEN_POS = 0.58,
