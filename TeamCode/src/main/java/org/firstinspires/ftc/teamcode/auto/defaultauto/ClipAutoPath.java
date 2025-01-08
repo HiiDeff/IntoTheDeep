@@ -27,7 +27,7 @@ public abstract class ClipAutoPath extends NewAutoBase {
 
     public static int verticalSlidesDelay = 500;
     public static double PRELOAD_CHAMBER_HEIGHT = 20.5, DELIVERY_CHAMBER_HEIGHT = 21;
-    public static int CLAW_OPEN_DELAY = 330; //18.2745;
+    public static int CLAW_OPEN_DELAY = 420; //18.2745;
     public static int CYCLE_RETURN_SPEED = 35;
 
     @Override
@@ -87,6 +87,7 @@ public abstract class ClipAutoPath extends NewAutoBase {
 //        task.add(new SleepTask(1000));
         task.add(
                 new ParallelTask(
+                        new IntakeArmTask(robot, IntakeArmTask.Position.SLIGHTLY_UP),
                         new RuntimeDrivingTask(
                             robot,
                             builder -> {
@@ -135,13 +136,17 @@ public abstract class ClipAutoPath extends NewAutoBase {
                         new SeriesTask(
                                 new TimedHorizontalSlidesTask(robot, 10, 1.0, 500),
                                 new SleepTask(200),
-                                new HorizontalSlidesTask(robot, 21, 1.0, 300)
+                                new ParallelTask(
+                                        new HorizontalSlidesTask(robot, 21, 1.0, 300),
+                                        new IntakeArmTask(robot, IntakeArmTask.Position.DOWN)
+                                )
                         )
                 )
         );
 //        task.add(new SleepTask(1000));
         task.add(
                 new ParallelTask(
+                        new IntakeArmTask(robot, IntakeArmTask.Position.SLIGHTLY_UP),
                         new RuntimeDrivingTask(
                                 robot,
                                 builder -> {
@@ -194,13 +199,17 @@ public abstract class ClipAutoPath extends NewAutoBase {
                         new SeriesTask(
                                 new TimedHorizontalSlidesTask(robot, 15, 1.0, 500),
                                 new SleepTask(200),
-                                new HorizontalSlidesTask(robot, 21, 1.0, 300)
+                                new ParallelTask(
+                                        new HorizontalSlidesTask(robot, 21, 1.0, 300),
+                                        new IntakeArmTask(robot, IntakeArmTask.Position.DOWN)
+                                )
                         )
                 )
         );
 //        task.add(new SleepTask(1000));
         task.add(
                 new ParallelTask(
+                        new IntakeArmTask(robot, IntakeArmTask.Position.SLIGHTLY_UP),
                         new RuntimeDrivingTask(
                                 robot,
                                 builder -> {
@@ -301,8 +310,8 @@ public abstract class ClipAutoPath extends NewAutoBase {
         task.add(
                 new ParallelTask(
                         new SeriesTask(
-                                new SleepTask(500),
-                                new HorizontalSlidesTask(robot, 22.0, 1.0, 1500)
+                                new SleepTask(400),
+                                new HorizontalSlidesTask(robot, 22.0, 1.0, 2000)
                         ),
                         new VerticalSlidesTask(robot, 0, 1.0, 1000),
                         new SeriesTask(

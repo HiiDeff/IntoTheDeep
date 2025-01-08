@@ -103,7 +103,6 @@ public abstract class RobotBase extends PinpointDrive {
     public void teleOpInit() {
         setIntakeArmPos(IntakeArmTask.Position.DOWN);
         bucketServo.setPosition(getBucketServoPosition(BucketTask.Position.TRANSFER));
-        initHang();
         setClawPosition(ClawTask.ClawPosition.OPEN);
     }
     public void autoInit() {

@@ -31,7 +31,7 @@ public class V3ClipAuto extends ClipAutoPath {
 
     @Override
     protected Pose2d getFirstSampleIntakePos() {
-        return new Pose2d(-20.962, 17.441, 2.2708);
+        return new Pose2d(-20.962, 17.441, 2.2208);
     }
 
     @Override
@@ -51,7 +51,7 @@ public class V3ClipAuto extends ClipAutoPath {
 
     @Override
     protected Pose2d getThirdSampleIntakePos() {
-        return new Pose2d(-22.6415, 37.7287, 1.8426);
+        return new Pose2d(-22.6415, 37.7287, 1.9426);
     }
 
     @Override

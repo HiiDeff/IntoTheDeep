@@ -42,15 +42,15 @@ public class V3RobotTeleOp extends LinearOpMode {
     public static double VERTICAL_STAND_POWER = 0.2;
     public static double VERTICAL_SLIDE_MAX_POWER = 1.0;
     public static double MIN_DRIVE_POWER = 0.01;
-    public static double DELIVERY_CHAMBER_HEIGHT = 21.0;
+    public static double DELIVERY_CHAMBER_HEIGHT = 21.3;
     public static double MAX_SLIDE_EXTENSION_INCH = 21.0;
 
     private V3Robot robot;
     private GamePad gp1, gp2;
     private ElapsedTime cycleTimer;
     private double cycleSum, cycleCnt, cycleAvg;
-    private boolean clawOpen, horizontalPositionUpdated, hangUp;
-    public static double CYCLE_DELIVER_X = 31.45, CYCLE_DELIVER_Y = 40.27, Y_OFFSET = 2.0, X_OFFSET=0.4;
+    private boolean clawOpen, horizontalPositionUpdated, hangUp, swipeStickOut;
+    public static double CYCLE_DELIVER_X = 31, CYCLE_DELIVER_Y = 40.27, Y_OFFSET = 2.0, X_OFFSET=0.4;
 
     private Task submersibleTask,
             transferTask,
@@ -144,12 +144,13 @@ public class V3RobotTeleOp extends LinearOpMode {
                             new VerticalSlidesTask(robot, 0, 1.0, 2000),
                             new SeriesTask(
                                     new ParallelTask(
-                                            new TimedHorizontalSlidesTask(robot, robot.getHorizontalTransferPos(), 1.0,1000),
-                                            new IntakeArmTask(robot, IntakeArmTask.Position.TRANSFER)
+                                            new TimedHorizontalSlidesTask(robot, robot.getHorizontalTransferPos(), 1.0,1000), //TODO: increase this
+                                            new IntakeArmTask(robot, IntakeArmTask.Position.TRANSFER),
+                                            new UnboundedIntakeTask(robot, 1.0)
                                     ),
                                     new ParallelTask(
                                             new TimedHorizontalSlidesTask(robot, robot.getHorizontalTransferPos(), 1.0, 500),
-                                            new UnboundedIntakeTask(robot, -0.8)
+                                            new UnboundedIntakeTask(robot, -1.0)
                                     ),
                                     new ParallelTask(
                                             new IntakeArmTask(robot, IntakeArmTask.Position.CLEAR),
@@ -161,8 +162,9 @@ public class V3RobotTeleOp extends LinearOpMode {
         }
 
         // Deliver Raise Preset
-        else if(gp1.onceLeftStickButton()) {//!gp2.start() && gp2.onceB()) {
+        else if(gp1.onceLeftTrigger()) {//!gp2.start() && gp2.onceB()) {
             createSubmersibleTask();
+            clawOpen = true;
 //            deliverChamberTask = new SeriesTask(
 //                    new ClawTask(robot, ClawTask.ClawPosition.CLOSE),
 //                    new ParallelTask(
@@ -325,6 +327,16 @@ public class V3RobotTeleOp extends LinearOpMode {
                 robot.setBucketServoPosition(BucketTask.Position.FLAT);
             }hangUp = !hangUp;
         }
+
+        //Swipe Stick
+        if(gp1.onceRightTrigger()){
+            if(!swipeStickOut) {
+                SwipeStickTask.setPosition(robot, SwipeStickTask.Position.OUT);
+            } else {
+                SwipeStickTask.setPosition(robot, SwipeStickTask.Position.IN);
+            }
+            swipeStickOut = !swipeStickOut;
+        }
     }
 
     private void runIntake() {
@@ -372,7 +384,7 @@ public class V3RobotTeleOp extends LinearOpMode {
                                             robot,
                                             builder -> {
                                                 Pose2d pos = new Pose2d(CYCLE_DELIVER_X+X_OFFSET*cycleNumber, CYCLE_DELIVER_Y+Y_OFFSET*cycleNumber, Math.PI-0.05);
-                                                return builder.strafeToLinearHeading(pos.position, pos.heading, new TranslationalVelConstraint(60)).build(); //TODO: possibly 50 or 60
+                                                return builder.strafeToLinearHeading(pos.position, pos.heading).build(); //TODO: possibly 50 or 60
                                             }
                                     )
                             )

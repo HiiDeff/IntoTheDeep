@@ -45,7 +45,8 @@ public class IntakeArmTask extends TimedTask {
     public enum Position {
         TRANSFER,
         DOWN,
-        CLEAR
+        CLEAR,
+        SLIGHTLY_UP
     }
 }
 

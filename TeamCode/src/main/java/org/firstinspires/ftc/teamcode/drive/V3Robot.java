@@ -25,7 +25,8 @@ public class V3Robot extends RobotBase {
     // Bucket Servo Positions
     public static double CARRY_POS = 0.3,
             CHAMBER_DELIVER_POS = 0.70, //TODO: TUNE THIS
-            DELIVER_POS = 0.71,
+            DELIVER_POS = 0.80, //TODO: change?
+
             TRANSFER_POS = 0.23,
             FLAT_POS = 0.55;
 
@@ -38,7 +39,8 @@ public class V3Robot extends RobotBase {
     // Intake Servo Positions
     public static double INTAKE_ARM_DOWN = 0.14,
             INTAKE_ARM_TRANSFER = 0.80,
-            INTAKE_ARM_CLEAR = 0.40;
+            INTAKE_ARM_CLEAR = 0.70,
+            INTAKE_ARM_SLIGHTLY_UP = 0.2; //TODO: make this closer to transfer position
 
     // Claw Servo Positions
     public static double CLAW_OPEN_POS = 0.58,
@@ -163,6 +165,8 @@ public class V3Robot extends RobotBase {
     @Override
     public double getIntakeArmPosition(IntakeArmTask.Position position) {
         switch(position) {
+            case SLIGHTLY_UP:
+                return INTAKE_ARM_SLIGHTLY_UP;
             case TRANSFER:
                 return INTAKE_ARM_TRANSFER;
             case CLEAR:
