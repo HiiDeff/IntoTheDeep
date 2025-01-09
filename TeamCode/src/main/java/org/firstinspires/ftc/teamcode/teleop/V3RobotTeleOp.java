@@ -12,6 +12,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.drive.RobotFactory;
 import org.firstinspires.ftc.teamcode.drive.V3Robot;
 import org.firstinspires.ftc.teamcode.task.BucketTask;
@@ -43,7 +44,7 @@ public class V3RobotTeleOp extends LinearOpMode {
     public static double DELIVERY_LOW_BASKET_HEIGHT = 24.0;
     public static double MAX_SLIDE_EXTENSION_INCH = 21.0;
 
-    public static double CYCLE_DELIVER_X = 31.45, CYCLE_DELIVER_Y = 40.27, Y_OFFSET = 2.0, X_OFFSET = 0.4;
+    public static double CYCLE_DELIVER_X = 31.45, CYCLE_DELIVER_Y = 40.27, Y_OFFSET = 2.5;
 
     public MultipleTelemetry multipleTelemetry;
 
@@ -101,9 +102,9 @@ public class V3RobotTeleOp extends LinearOpMode {
         telemetry.addData("horizontal slide position", robot.getHorizontalSlideDist());
         telemetry.update();
 
-        multipleTelemetry.addData("current bucket servo position", robot.bucketProfiler.getCurPos());
-        multipleTelemetry.addData("target bucket servo position", robot.bucketProfiler.getTargetPos());
-        multipleTelemetry.update();
+//        multipleTelemetry.addData("current bucket servo position", robot.bucketProfiler.getCurPos());
+//        multipleTelemetry.addData("target bucket servo position", robot.bucketProfiler.getTargetPos());
+//        multipleTelemetry.update();
     }
 
     private void checkPreloads() {
@@ -343,8 +344,9 @@ public class V3RobotTeleOp extends LinearOpMode {
         SeriesTask task = new SeriesTask();
         if (robot.getVerticalSlidesHeightInch() > 15) {
             if (deliveryPose != null) {
-                deliveryPose = new Pose2d(deliveryPose.position.x,
-                        deliveryPose.position.y + Y_OFFSET, Math.PI - 0.05);
+                deliveryPose = new Pose2d(robot.pinpoint.getPosition().getX(DistanceUnit.INCH),
+                        robot.pinpoint.getPosition().getY(DistanceUnit.INCH) + Y_OFFSET,
+                        Math.PI - 0.05);
             }
             task.add(
                     new ParallelTask(
@@ -377,15 +379,16 @@ public class V3RobotTeleOp extends LinearOpMode {
         task.add(
                 new ParallelTask(
                         new ClawTask(robot, ClawTask.ClawPosition.CLOSE),
-                        new ParallelTask(
-                                new SeriesTask(
-                                        new SleepTask(50),
-                                        new VerticalSlidesTask(robot, DELIVERY_CHAMBER_HEIGHT, 1.0, 2000)
-                                ),
-                                new SeriesTask(
-                                        new SleepTask(500),
-                                        new BucketTask(robot, BucketTask.Position.CHAMBER_DELIVER)
-                                ),
+                        new SeriesTask(
+                                new SleepTask(300),
+                                new VerticalSlidesTask(robot, DELIVERY_CHAMBER_HEIGHT, 1.0, 2000)
+                        ),
+                        new SeriesTask(
+                                new SleepTask(700),
+                                new BucketTask(robot, BucketTask.Position.CHAMBER_DELIVER)
+                        ),
+                        new SeriesTask(
+                                new SleepTask(200),
                                 new RuntimeDrivingTask(
                                         robot,
                                         builder -> builder.strafeToLinearHeading(deliveryPose.position, deliveryPose.heading, new TranslationalVelConstraint(60)).build()
