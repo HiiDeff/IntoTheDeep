@@ -25,10 +25,9 @@ import org.firstinspires.ftc.teamcode.task.VerticalSlidesTask;
 @Config
 public abstract class ClipAutoPath extends NewAutoBase {
 
-    public static int verticalSlidesDelay = 500;
-    public static double PRELOAD_CHAMBER_HEIGHT = 20.5, DELIVERY_CHAMBER_HEIGHT = 21;
-    public static int CLAW_OPEN_DELAY = 420; //18.2745;
-    public static int CYCLE_RETURN_SPEED = 35;
+    public static double PRELOAD_CHAMBER_HEIGHT = 21.5, DELIVERY_CHAMBER_HEIGHT = 22;
+    public static int CLAW_OPEN_DELAY = 450, CLAW_CLOSE_DELAY = 100;
+    public static int CYCLE_RETURN_SPEED = 30;
 
     @Override
     protected Task createStartTask() {
@@ -137,7 +136,7 @@ public abstract class ClipAutoPath extends NewAutoBase {
                                 new TimedHorizontalSlidesTask(robot, 10, 1.0, 500),
                                 new SleepTask(200),
                                 new ParallelTask(
-                                        new HorizontalSlidesTask(robot, 21, 1.0, 300),
+                                        new HorizontalSlidesTask(robot, 19, 1.0, 300),
                                         new IntakeArmTask(robot, IntakeArmTask.Position.DOWN)
                                 )
                         )
@@ -271,24 +270,21 @@ public abstract class ClipAutoPath extends NewAutoBase {
                                         robot,
                                         builder -> {
                                             Pose2d pos = getSpecimenIntakePos(cycleNumber);
-                                            return builder.strafeToLinearHeading(pos.position, pos.heading).build();
+                                            return builder.strafeToLinearHeading(pos.position, pos.heading, new TranslationalVelConstraint(CYCLE_RETURN_SPEED)).build();
                                         }
                                 )
                         )
                 )
         );
-//        task.add(new SleepTask(500));
         task.add(
-                new ParallelTask(
+                new SeriesTask(
                         new ClawTask(robot, ClawTask.ClawPosition.CLOSE),
+                        new SleepTask(CLAW_CLOSE_DELAY),
                         new ParallelTask(
+                                new VerticalSlidesTask(robot, DELIVERY_CHAMBER_HEIGHT, 1.0, 2000),
                                 new SeriesTask(
-                                        new SleepTask(50),
-                                        new VerticalSlidesTask(robot, DELIVERY_CHAMBER_HEIGHT, 1.0, 2000)
-                                ),
-                                new SeriesTask(
-                                    new SleepTask(500),
-                                    new BucketTask(robot, BucketTask.Position.CHAMBER_DELIVER)
+                                        new SleepTask(500),
+                                        new BucketTask(robot, BucketTask.Position.CHAMBER_DELIVER)
                                 ),
                                 new RuntimeDrivingTask(
                                         robot,
@@ -300,7 +296,6 @@ public abstract class ClipAutoPath extends NewAutoBase {
                         )
                 )
         );
-//        task.add(new SleepTask(500));
         return task;
     }
     @Override

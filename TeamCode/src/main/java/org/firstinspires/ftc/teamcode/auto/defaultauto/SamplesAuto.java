@@ -13,11 +13,11 @@ import org.firstinspires.ftc.teamcode.drive.V2Robot;
 @Autonomous(name = "V2 Robot - SAMPLE Auto")
 public class SamplesAuto extends SamplesAutoPath {
 
-    public static double Sample1IntakeAlignPosX = 37;
+    public static double Sample1IntakeAlignPosX = 36.5;
     public static double Sample1IntakeAlignPosY = 0.6317;
-    public static double Sample2IntakeAlignPosX = 37;
+    public static double Sample2IntakeAlignPosX = 36.5;
     public static double Sample2IntakeAlignPosY = 7;
-    public static double Sample3IntakeAlignPosX = 37;
+    public static double Sample3IntakeAlignPosX = 36.5;
     public static double Sample3IntakeAlignPosY = 17.9128;
 
     public static int INTAKE_DELAY = 2000;
@@ -29,7 +29,7 @@ public class SamplesAuto extends SamplesAutoPath {
 
     @Override
     protected Pose2d getPreloadBucketAlignPos() {
-        return new Pose2d(5.9944, 24.2038, -Math.PI/4);
+        return new Pose2d(5, 25, -Math.PI/4);
     }
 
     @Override

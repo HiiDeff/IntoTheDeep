@@ -52,7 +52,8 @@ public class RobotTest extends LinearOpMode {
 
 
             robot.updateEverything();
-            multipleTelemetry.addData("pid power", robot.verticalSlidesPID.getPower());
+            multipleTelemetry.addData("current position", robot.getVerticalSlidesHeightInch());
+            multipleTelemetry.addData("PID target position", targetPos);
             multipleTelemetry.update();
 
         }

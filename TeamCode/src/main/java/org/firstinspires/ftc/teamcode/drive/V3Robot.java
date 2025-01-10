@@ -59,6 +59,8 @@ public class V3Robot extends RobotBase {
     public static double VERTICAL_EXTEND_MIN_IN = -0.2;
     public static double VERTICAL_EXTEND_MAX_IN = 38.6;
     public static double VERTICAL_TICKS_PER_INCH = 1240.0/38.6;
+    public static double VERTICAL_SLIDE_DOWN_POWER_TELEOP = -0.5;
+    public static double VERTICAL_SLIDE_DOWN_POWER_AUTO = -0.7;
 
     // Horizontal Slides Constants
     public static double HORIZONTAL_EXTEND_MAX_IN = 22.0;
@@ -191,14 +193,14 @@ public class V3Robot extends RobotBase {
     // Utils for vertical slides
     @Override
     public void setVerticalSlidePowerWithEncoder(double power) {
-        verticalSlidesLeft.setPower(Utils.clamp(power, -0.3, 1.0));
-        verticalSlidesRight.setPower(Utils.clamp(power, -0.3, 1.0));
+        verticalSlidesLeft.setPower(Utils.clamp(power, VERTICAL_SLIDE_DOWN_POWER_AUTO, 1.0));
+        verticalSlidesRight.setPower(Utils.clamp(power, VERTICAL_SLIDE_DOWN_POWER_AUTO, 1.0));
     }
     @Override
     public void setVerticalSlidePowerWithoutEncoder(double power) {
         verticalSlidesRunToPosition = false;
-        verticalSlidesLeft.setPower(Utils.clamp(power, -1.0, 1.0));
-        verticalSlidesRight.setPower(Utils.clamp(power, -1.0, 1.0));
+        verticalSlidesLeft.setPower(Utils.clamp(power, VERTICAL_SLIDE_DOWN_POWER_TELEOP, 1.0));
+        verticalSlidesRight.setPower(Utils.clamp(power, VERTICAL_SLIDE_DOWN_POWER_TELEOP, 1.0));
     }
     @Override
     public void setVerticalSlidesHeight(double posInches, double power) {
