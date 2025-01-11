@@ -39,7 +39,7 @@ public class V3RobotTeleOp extends LinearOpMode {
     public static double VERTICAL_STAND_POWER = 0.2;
     public static double VERTICAL_SLIDE_MAX_POWER = 1.0;
     public static double MIN_DRIVE_POWER = 0.01;
-    public static double DELIVERY_CHAMBER_HEIGHT = 22;
+    public static double DELIVERY_CHAMBER_HEIGHT = 20.8;
     public static double DELIVERY_HIGH_BASKET_HEIGHT = 38.6;
     public static double DELIVERY_LOW_BASKET_HEIGHT = 24.0;
     public static double MAX_SLIDE_EXTENSION_INCH = 21.0;
