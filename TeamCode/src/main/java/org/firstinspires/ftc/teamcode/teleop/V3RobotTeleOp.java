@@ -242,7 +242,7 @@ public class V3RobotTeleOp extends LinearOpMode {
             if (gp2.dpadUp()) {
                 robot.setVerticalSlidePowerWithoutEncoder(1.0);
             } else {
-                robot.setVerticalSlidePowerWithoutEncoder(-0.3);
+                robot.setVerticalSlidePowerWithoutEncoder(-0.5);
             }
         } else if (deliverChamberTask == null && deliverTask == null && transferTask == null) {
             robot.setVerticalSlidePowerWithoutEncoder(robot.getVerticalSlidesHeightInch() < 1.0 ? 0 : VERTICAL_STAND_POWER);

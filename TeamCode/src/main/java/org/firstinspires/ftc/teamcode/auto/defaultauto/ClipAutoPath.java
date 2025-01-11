@@ -196,7 +196,7 @@ public abstract class ClipAutoPath extends NewAutoBase {
                                 }
                         ),
                         new SeriesTask(
-                                new TimedHorizontalSlidesTask(robot, 15, 1.0, 500),
+                                new TimedHorizontalSlidesTask(robot, 14, 1.0, 500),
                                 new SleepTask(200),
                                 new ParallelTask(
                                         new HorizontalSlidesTask(robot, 21, 1.0, 300),
