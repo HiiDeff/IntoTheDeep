@@ -16,8 +16,8 @@ import org.firstinspires.ftc.teamcode.drive.V2Robot;
 public class V3ClipAuto extends ClipAutoPath {
 
     public static double PRELOAD_DELIVER_X = -30.5, PRELOAD_DELIVER_Y = 3.0,
-            CYCLE_DELIVER_X = -30.5, CYCLE_OFFSET_X = -0.0, CYCLE_OFFSET_Y = 1.5,
-            CYCLE_DELIVER_Y = -9.0;
+            CYCLE_DELIVER_X = -30.5, CYCLE_OFFSET_X = -0.0, CYCLE_OFFSET_Y = 2,
+            CYCLE_DELIVER_Y = -11.0;
 
 
     @Override

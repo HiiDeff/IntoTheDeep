@@ -154,6 +154,16 @@ public class V2Robot extends RobotBase {
         }
     }
 
+    // General Utils
+
+    @Override
+    public void resetHorizontalAndVerticalSlidesEncoderPositions() {
+        horizontalSlides.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        horizontalSlides.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        verticalSlides.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        verticalSlides.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+    }
+
     // Utils for vertical slides
     @Override
     public void setVerticalSlidePowerWithEncoder(double power) {
@@ -227,5 +237,6 @@ public class V2Robot extends RobotBase {
     }
     @Override
     public void updatePIDs() {}
+
 
 }

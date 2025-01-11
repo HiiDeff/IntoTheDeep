@@ -190,6 +190,19 @@ public class V3Robot extends RobotBase {
         }
     }
 
+
+    // General Utils
+
+    @Override
+    public void resetHorizontalAndVerticalSlidesEncoderPositions() {
+        horizontalSlides.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        horizontalSlides.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        verticalSlidesLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        verticalSlidesLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        verticalSlidesLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        verticalSlidesRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+    }
+
     // Utils for vertical slides
     @Override
     public void setVerticalSlidePowerWithEncoder(double power) {

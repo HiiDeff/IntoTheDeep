@@ -141,7 +141,9 @@ public abstract class RobotBase extends PinpointDrive {
     }
 
 
-    // Utils
+    // General Utils
+
+    public abstract void resetHorizontalAndVerticalSlidesEncoderPositions();
 
 
     // Utils for Vertical Slides

@@ -44,7 +44,7 @@ public class V3RobotTeleOp extends LinearOpMode {
     public static double DELIVERY_LOW_BASKET_HEIGHT = 24.0;
     public static double MAX_SLIDE_EXTENSION_INCH = 21.0;
 
-    public static double CYCLE_DELIVER_X = 30, CYCLE_DELIVER_Y = 40, Y_OFFSET = 1.5;
+    public static double CYCLE_DELIVER_X = 25, CYCLE_DELIVER_Y = 40, Y_OFFSET = 1.5;
 
     public MultipleTelemetry multipleTelemetry;
 
@@ -172,7 +172,7 @@ public class V3RobotTeleOp extends LinearOpMode {
         }
     }
 
-    private void runHorizontalSlides() {
+    private void runHorizontalSlides() { //TODO: check this logic
         if ((robot.getHorizontalSlideDist() < MAX_SLIDE_EXTENSION_INCH && -gp2.leftStickY() > 0.3) || -gp2.leftStickY() < -0.3) {
             if (submersibleTask != null) {
                 submersibleTask.cancel();
@@ -184,8 +184,7 @@ public class V3RobotTeleOp extends LinearOpMode {
             }
             robot.setHorizontalSlidesPowerWithoutEncoder(-gp2.leftStickY() > 0.3 ? 0.8 : -0.8);
             if (gp2.rightBumper()) {
-                robot.horizontalSlides.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-                robot.horizontalSlides.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+                robot.resetHorizontalAndVerticalSlidesEncoderPositions();
             } else {
                 robot.updateHorizontalEncoder();
                 horizontalPositionUpdated = true;
@@ -344,7 +343,7 @@ public class V3RobotTeleOp extends LinearOpMode {
         SeriesTask task = new SeriesTask();
         if (robot.getVerticalSlidesHeightInch() > 15) {
             if (deliveryPose != null) {
-                deliveryPose = new Pose2d(robot.pinpoint.getPosition().getX(DistanceUnit.INCH),
+                deliveryPose = new Pose2d(CYCLE_DELIVER_X,
                         robot.pinpoint.getPosition().getY(DistanceUnit.INCH) + Y_OFFSET,
                         Math.PI - 0.05);
             }
@@ -365,7 +364,7 @@ public class V3RobotTeleOp extends LinearOpMode {
                                     new RuntimeDrivingTask(
                                             robot,
                                             builder -> {
-                                                Pose2d pos = new Pose2d(-1, 0, 0.05);
+                                                Pose2d pos = new Pose2d(-1, 0, 0.15);
                                                 return builder.strafeToLinearHeading(pos.position, pos.heading).build();
                                             }
                                     )
