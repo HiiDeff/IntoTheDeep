@@ -4,13 +4,14 @@ import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.teamcode.drive.V2Robot;
 import org.firstinspires.ftc.teamcode.util.GamePad;
 
 @TeleOp(name = "Servo Tester", group = "Test")
-@Disabled
+//@Disabled
 @Config
 
 public class ServoTest extends LinearOpMode {
@@ -20,18 +21,50 @@ public class ServoTest extends LinearOpMode {
     private GamePad gp1;
 
     Servo claw;
-    public static double pos = 0.78;
-    //public static double leftPos = 0.58, rightPos = 0.41;
+    Servo deliveryServo;
+
+    DcMotorEx intakeMotor;
+    //public static double pos = 0.78;
+    public static double intakeUpPos = 0.34, intakeDownPos = 0.92;
+    public static double deliveryUpPos = 0.87, deliveryDownPos = 0.32;
+    public static double POWER = 0.7;
+    //0.34 intake transfer pos
+    //0.92 intake intake pos
+    //0.32 delivery transfer pos
+    //0.87 delivery intake(from wall) pos
 
     @Override
     public void runOpMode() throws InterruptedException {
-
+        gp1 = new GamePad(gamepad1);
         claw = hardwareMap.get(Servo.class, "intakeArm");
+        deliveryServo = hardwareMap.get(Servo.class, "deliveryArm");
+        intakeMotor = hardwareMap.get(DcMotorEx.class, "intakeMotor");
 
         waitForStart();
 
         while (opModeIsActive()) {
-            claw.setPosition(pos);
+            if(gp1.onceA()) {
+                intakeMotor.setPower(POWER);
+                telemetry.addData("A Pressed", "power: " + POWER);
+                telemetry.update();
+            } else if (gp1.onceB()) {
+                intakeMotor.setPower(-POWER);
+                telemetry.addData("B Pressed", "power: " + POWER);
+                telemetry.update();
+            } else if(gp1.onceX()){
+                intakeMotor.setPower(0.0);
+                telemetry.addData("Stopped Motor", "power: " + POWER);
+                telemetry.update();
+            } else if(gp1.dpadUp()){
+                claw.setPosition(intakeUpPos);
+            } else if(gp1.dpadDown()){
+                claw.setPosition(intakeDownPos);
+            } else if(gp1.rightBumper()){
+                deliveryServo.setPosition(deliveryUpPos);
+            }else if (gp1.leftBumper()){
+                deliveryServo.setPosition(deliveryDownPos);
+            }
+            gp1.update();;
         }
     }
 }

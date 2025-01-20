@@ -1,15 +1,16 @@
 package org.firstinspires.ftc.teamcode.test;
 
 import com.acmerobotics.dashboard.config.Config;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.Servo;
 
+import org.firstinspires.ftc.teamcode.util.GamePad;
+
 @TeleOp(name = "Tester", group = "Test")
-@Disabled
+//@Disabled
 @Config
 
 public class Test extends LinearOpMode {
@@ -19,24 +20,43 @@ public class Test extends LinearOpMode {
 //    private GamePad gp1;
 
     DcMotorEx intakeMotor;
+
+    Servo deliveryServo;
+    Servo intakeServo;
     Servo servo;
-    public static boolean servoDown = true;
-    public static double servoPos = 0.95, motorPower = 0.0;
+    private GamePad gp1;
+
+    public static double POWER = -0.7;
+    public static double deliveryServoPos = 0.95, intakeServoPos = 0.0;
 
     @Override
     public void runOpMode() throws InterruptedException {
-        //robot = new LM1Robot(hardwareMap);
-
-        servo = hardwareMap.get(Servo.class, "servo");
-        intakeMotor = hardwareMap.get(DcMotorEx.class, "motor");
-        intakeMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-
+        gp1 = new GamePad(gamepad1);
+        //intakeMotor = hardwareMap.get(DcMotorEx.class, "intakeMotor");
+        //intakeMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        //intakeMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        deliveryServo = hardwareMap.get(Servo.class, "deliveryServo");
+        intakeServo = hardwareMap.get(Servo.class, "intakeServo");
+;
         waitForStart();
 
         while (opModeIsActive()) {
-//            if(servoDown) servo.setPosition(0.95);
-            servo.setPosition(servoPos);
-            intakeMotor.setPower(motorPower);
+            /*if(gp1.onceA()) {
+                intakeMotor.setPower(POWER);
+                telemetry.addData("A Pressed", "power: " + POWER);
+                telemetry.update();
+            } else if (gp1.onceB()) {
+                intakeMotor.setPower(-POWER);
+                telemetry.addData("B Pressed", "power: " + POWER);
+                telemetry.update();
+            } else if(gp1.onceX()){
+                intakeMotor.setPower(0.0);
+                telemetry.addData("Stopped Motor", "power: " + POWER);
+                telemetry.update();
+            }*/
+            gp1.update();
+
+//            telemetry.update();
         }
     }
 }
