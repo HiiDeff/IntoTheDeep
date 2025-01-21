@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.teleop;
 
+import android.util.Log;
+
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
@@ -39,7 +41,7 @@ public class V3RobotTeleOp extends LinearOpMode {
     public static double VERTICAL_STAND_POWER = 0.2;
     public static double VERTICAL_SLIDE_MAX_POWER = 1.0;
     public static double MIN_DRIVE_POWER = 0.01;
-    public static double DELIVERY_CHAMBER_HEIGHT = 20.8;
+    public static double DELIVERY_CHAMBER_HEIGHT = 21.3;
     public static double DELIVERY_HIGH_BASKET_HEIGHT = 38.6;
     public static double DELIVERY_LOW_BASKET_HEIGHT = 24.0;
     public static double MAX_SLIDE_EXTENSION_INCH = 21.0;
@@ -47,6 +49,7 @@ public class V3RobotTeleOp extends LinearOpMode {
     public static double CYCLE_DELIVER_X = 25, CYCLE_DELIVER_Y = 40, Y_OFFSET = 1.5;
 
     public MultipleTelemetry multipleTelemetry;
+    public ElapsedTime elapsedTime = new ElapsedTime();
 
     private V3Robot robot;
     private GamePad gp1, gp2;
@@ -68,16 +71,21 @@ public class V3RobotTeleOp extends LinearOpMode {
         SwipeStickTask.setPosition(robot, SwipeStickTask.Position.IN);
         gp1 = new GamePad(gamepad1);
         gp2 = new GamePad(gamepad2);
-        multipleTelemetry = new MultipleTelemetry(this.telemetry, FtcDashboard.getInstance().getTelemetry());
+//        multipleTelemetry = new MultipleTelemetry(this.telemetry, FtcDashboard.getInstance().getTelemetry());
         waitForStart();
         cycleTimer = new ElapsedTime();
+
+
         while (opModeIsActive()) {
+
             driveRobot();
             if (deliverChamberTask == null) runIntake();
             if (deliverChamberTask == null) runHorizontalSlides();
             if (deliverChamberTask == null) runDelivery();
             checkPreloads();
             update();
+            Log.i("ethan ", ""+ elapsedTime.milliseconds());
+            elapsedTime.reset();
         }
     }
 
@@ -94,13 +102,13 @@ public class V3RobotTeleOp extends LinearOpMode {
     }
 
     private void updateTelemetry() {
-        telemetry.addData("colors", robot.getIntakeColorToString());
-        telemetry.addData("cycle time", cycleTimer.milliseconds());
-        telemetry.addData("average cycle time (seconds)", cycleAvg);
-        telemetry.addData("pose", robot.pose);
-        telemetry.addData("vertical slide position", robot.getVerticalSlidesHeightInch());
-        telemetry.addData("horizontal slide position", robot.getHorizontalSlideDist());
-        telemetry.update();
+//        telemetry.addData("colors", robot.getIntakeColorToString());
+//        telemetry.addData("cycle time", cycleTimer.milliseconds());
+//        telemetry.addData("average cycle time (seconds)", cycleAvg);
+//        telemetry.addData("pose", robot.pose);
+//        telemetry.addData("vertical slide position", robot.getVerticalSlidesHeightInch());
+//        telemetry.addData("horizontal slide position", robot.getHorizontalSlideDist());
+//        telemetry.update();
 
 //        multipleTelemetry.addData("current bucket servo position", robot.bucketProfiler.getCurPos());
 //        multipleTelemetry.addData("target bucket servo position", robot.bucketProfiler.getTargetPos());
@@ -276,6 +284,9 @@ public class V3RobotTeleOp extends LinearOpMode {
                 robot.setBucketServoPosition(BucketTask.Position.FLAT);
             }
             hangUp = !hangUp;
+        }
+        if(gp1.back() && gp1.onceY()) {
+            robot.initHang();
         }
         //Swipe Stick
         if (gp1.onceRightTrigger()) {

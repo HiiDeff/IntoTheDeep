@@ -30,7 +30,7 @@ public class HangTest extends LinearOpMode {
     public MultipleTelemetry multipleTelemetry;
     // Servos
     public Servo leftHang, rightHang;
-    public static double leftHangPos, rightHangPos;
+    public static double leftHangPos = 0.58, rightHangPos = 0.40;
     public static boolean testLeftHang, testRightHang;
 
     @Override
@@ -41,8 +41,8 @@ public class HangTest extends LinearOpMode {
         for (LynxModule module : hardwareMap.getAll(LynxModule.class)) {
             module.setBulkCachingMode(LynxModule.BulkCachingMode.AUTO);
         }
-        leftHang = hardwareMap.get(Servo.class, "leftHang");
-        rightHang = hardwareMap.get(Servo.class, "rightHang");
+        leftHang = hardwareMap.get(Servo.class, "lHang");
+        rightHang = hardwareMap.get(Servo.class, "rHang");
 
         waitForStart();
         while(opModeIsActive()) {

@@ -307,8 +307,8 @@ public abstract class SamplesAutoPath extends AutoBase {
                 ),
                 new HorizontalSlidesTask(robot, 0, 1.0,5000),
                 new IntakeArmTask(robot, IntakeArmTask.Position.DOWN),
-                new HangTask((V3Robot) robot, HangTask.WhichHang.LEFT, HangTask.Position.RELEASE),
-                new HangTask((V3Robot) robot, HangTask.WhichHang.RIGHT, HangTask.Position.RELEASE)
+                new HangTask((V3Robot) robot, HangTask.WhichHang.LEFT, HangTask.Position.VERTICAL),
+                new HangTask((V3Robot) robot, HangTask.WhichHang.RIGHT, HangTask.Position.VERTICAL)
         ));
         return task;
     }

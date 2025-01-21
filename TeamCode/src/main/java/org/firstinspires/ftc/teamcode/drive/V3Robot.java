@@ -38,7 +38,7 @@ public class V3Robot extends RobotBase {
 
     // Intake Servo Positions
     public static double INTAKE_ARM_DOWN = 0.14,
-            INTAKE_ARM_TRANSFER = 0.80,
+            INTAKE_ARM_TRANSFER = 0.83,
             INTAKE_ARM_CLEAR = 0.70,
             INTAKE_ARM_SLIGHTLY_UP = 0.25; //TODO: make this closer to transfer position
 
@@ -47,12 +47,15 @@ public class V3Robot extends RobotBase {
             CLAW_CLOSE_POS = 0.40;
 
     // Hang Positions
-    public static double LEFT_INIT_POS = 0.82;
+    public static double LEFT_INIT_POS = 0.58;
     public static double LEFT_RELEASE_POS = 0.08;
     public static double LEFT_HANG_POS = 0.85;
-    public static double RIGHT_INIT_POS = 0.15;
+    public static double RIGHT_INIT_POS = 0.40;
     public static double RIGHT_RELEASE_POS = 0.875;
     public static double RIGHT_HANG_POS = 0.13;
+    public static double LEFT_VERTICAL_POS = 0.25;
+    public static double RIGHT_VERTICAL_POS = 0.70;
+
 
 
     // Vertical Slides Constants
@@ -199,7 +202,7 @@ public class V3Robot extends RobotBase {
         horizontalSlides.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         verticalSlidesLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         verticalSlidesLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        verticalSlidesLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        verticalSlidesRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         verticalSlidesRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
     }
 
@@ -267,6 +270,8 @@ public class V3Robot extends RobotBase {
 
     public double getHangTargetPos(HangTask.WhichHang placer, HangTask.Position position) {
         switch (position) {
+            case VERTICAL:
+                return placer == HangTask.WhichHang.LEFT ? LEFT_VERTICAL_POS : RIGHT_VERTICAL_POS;
             case INIT:
                 return placer == HangTask.WhichHang.LEFT ? LEFT_INIT_POS: RIGHT_INIT_POS;
             case RELEASE:

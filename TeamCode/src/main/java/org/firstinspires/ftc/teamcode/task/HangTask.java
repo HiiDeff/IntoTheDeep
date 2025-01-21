@@ -57,7 +57,8 @@ public class HangTask extends TimedTask {
     public enum Position {
         RELEASE,
         HANG,
-        INIT
+        INIT,
+        VERTICAL
     }
 }
 
