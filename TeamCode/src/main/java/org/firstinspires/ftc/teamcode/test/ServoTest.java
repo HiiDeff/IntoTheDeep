@@ -1,7 +1,6 @@
 package org.firstinspires.ftc.teamcode.test;
 
 import com.acmerobotics.dashboard.config.Config;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
@@ -20,8 +19,8 @@ public class ServoTest extends LinearOpMode {
     private V2Robot robot;
     private GamePad gp1;
 
-    Servo claw;
-    Servo deliveryServo;
+    Servo intakeArm;
+    Servo deliveryArm;
 
     DcMotorEx intakeMotor;
     //public static double pos = 0.78;
@@ -36,8 +35,8 @@ public class ServoTest extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
         gp1 = new GamePad(gamepad1);
-        claw = hardwareMap.get(Servo.class, "intakeArm");
-        deliveryServo = hardwareMap.get(Servo.class, "deliveryArm");
+        intakeArm = hardwareMap.get(Servo.class, "intakeArm");
+        deliveryArm = hardwareMap.get(Servo.class, "deliveryArm");
         intakeMotor = hardwareMap.get(DcMotorEx.class, "intakeMotor");
 
         waitForStart();
@@ -56,13 +55,13 @@ public class ServoTest extends LinearOpMode {
                 telemetry.addData("Stopped Motor", "power: " + POWER);
                 telemetry.update();
             } else if(gp1.dpadUp()){
-                claw.setPosition(intakeUpPos);
+                intakeArm.setPosition(intakeUpPos);
             } else if(gp1.dpadDown()){
-                claw.setPosition(intakeDownPos);
+                intakeArm.setPosition(intakeDownPos);
             } else if(gp1.rightBumper()){
-                deliveryServo.setPosition(deliveryUpPos);
+                deliveryArm.setPosition(deliveryUpPos);
             }else if (gp1.leftBumper()){
-                deliveryServo.setPosition(deliveryDownPos);
+                deliveryArm.setPosition(deliveryDownPos);
             }
             gp1.update();;
         }
