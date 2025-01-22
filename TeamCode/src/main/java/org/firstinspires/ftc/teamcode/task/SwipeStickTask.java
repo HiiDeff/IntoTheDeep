@@ -1,9 +1,9 @@
 package org.firstinspires.ftc.teamcode.task;
 
 import com.acmerobotics.dashboard.config.Config;
-import com.qualcomm.robotcore.hardware.Servo;
 
-import org.firstinspires.ftc.teamcode.drive.V3Robot;
+import org.firstinspires.ftc.teamcode.drive.RobotBase;
+import org.firstinspires.ftc.teamcode.drive.V3Robot.V3Robot;
 import org.firstinspires.ftc.teamcode.util.Utils;
 
 @Config
@@ -15,15 +15,15 @@ public class SwipeStickTask extends TimedTask {
 
     private static final int RPM = 30;
     private static final int MAX_ROTATION_DEGREE = 300;
-    private V3Robot robot;
+    private RobotBase robot;
     private Position position;
     private boolean started;
 
-    public static void setPosition(V3Robot robot, Position position) {
+    public static void setPosition(RobotBase robot, Position position) {
         robot.swipeStick.setPosition(getTargetPos(position));
     }
 
-    public SwipeStickTask(V3Robot robot, Position position) {
+    public SwipeStickTask(RobotBase robot, Position position) {
         this.robot = robot;
         this.position = position;
     }

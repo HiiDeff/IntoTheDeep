@@ -9,7 +9,7 @@ import org.firstinspires.ftc.teamcode.util.Utils;
  * Dual mode speed servo has 90 RPM under 4.8 v and 300 degree max rotation.
  */
 @Config
-public class BucketTask extends TimedTask {
+public class DeliveryArmTask extends TimedTask {
 
     private static final int RPM = (int) (60/(0.14*6));
     private static final int MAX_ROTATION_DEGREE = 355;
@@ -18,7 +18,7 @@ public class BucketTask extends TimedTask {
     private Position position;
     private boolean started;
 
-    public BucketTask(RobotBase robot, Position position) {
+    public DeliveryArmTask(RobotBase robot, Position position) {
         this.robot = robot;
         this.position = position;
     }
@@ -26,11 +26,11 @@ public class BucketTask extends TimedTask {
     @Override
     protected boolean performInternal() {
         if (!started) {
-            double currPos = robot.bucketServo.getPosition();
-            double targetPos = robot.getBucketServoPosition(position);
+            double currPos = robot.deliveryArm.getPosition();
+            double targetPos = robot.getDeliveryArmServoPosition(position);
             setFinishTimeMillis(Utils.getEstimatedServoTime(RPM, MAX_ROTATION_DEGREE,
                     targetPos - currPos));
-            robot.bucketProfiler.setTargetPosition(targetPos);
+            robot.deliveryArmProfiler.setTargetPosition(targetPos);
             started = true;
         }
         return false;

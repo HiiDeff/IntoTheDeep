@@ -4,34 +4,43 @@ import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.hardware.rev.RevBlinkinLedDriver;
-import com.qualcomm.hardware.rev.RevColorSensorV3;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.teamcode.roadrunner.PinpointDrive;
-import org.firstinspires.ftc.teamcode.task.BucketTask;
 import org.firstinspires.ftc.teamcode.task.ClawTask;
+import org.firstinspires.ftc.teamcode.task.DeliveryArmTask;
+import org.firstinspires.ftc.teamcode.task.HangTask;
 import org.firstinspires.ftc.teamcode.task.IntakeArmTask;
-import org.firstinspires.ftc.teamcode.task.RungStickTask;
 import org.firstinspires.ftc.teamcode.util.Utils;
+import org.firstinspires.ftc.teamcode.util.pid.PIDCoefficients;
 import org.firstinspires.ftc.teamcode.util.profile.ProfileConstraints;
 import org.firstinspires.ftc.teamcode.util.profile.ServoProfiler;
 
 @Config
 public abstract class RobotBase extends PinpointDrive {
 
+
+    ///////////////////* CONSTANTS *///////////////////
+
+    // Vertical Slides Constants
+    public static double VERTICAL_EXTEND_MIN_IN = -0.2, VERTICAL_EXTEND_MAX_IN;
+    public static double VERTICAL_TICKS_PER_INCH;
+    public static double VERTICAL_SLIDE_DOWN_POWER_TELEOP = -0.5, VERTICAL_SLIDE_DOWN_POWER_AUTO = -0.7;
+
     // Horizontal Slides Constants
-    public static double HORIZONTAL_EXTEND_MIN_IN = -0.05;
-    private double HORIZONTAL_EXTEND_MAX_IN,
-            HORIZONTAL_TICKS_PER_INCH,
-            HORIZONTAL_SLIDE_TRANSFER_POS;
+    public static double HORIZONTAL_EXTEND_MIN_IN = -0.05, HORIZONTAL_EXTEND_MAX_IN = 22.0;
+    public static double HORIZONTAL_TICKS_PER_INCH = 31.8181818;
+    public static double HORIZONTAL_SLIDE_TRANSFER_POS = 64 / HORIZONTAL_TICKS_PER_INCH;
 
     // Intake Constants
     public static double INTAKE_POWER = 1.0, OUTTAKE_POWER = -0.9;
 
-    // States
+
+
+    ///////////////////* HARDWARE *///////////////////
 
 
     // Common
@@ -39,18 +48,20 @@ public abstract class RobotBase extends PinpointDrive {
 
     // Motors
     public final DcMotorEx horizontalSlides;
+    public final DcMotorEx verticalSlidesLeft, verticalSlidesRight;
     public final DcMotorEx intakeRoller;
-
 
     // Servos
     public final Servo claw;
     public final Servo intakeArm;
-    public final Servo bucketServo;
-    public final ServoProfiler bucketProfiler;
+    public final Servo deliveryArm;
+    public final Servo leftHang, rightHang;
+    public final Servo swipeStick;
 
-    // Sensors
-    public final RevColorSensorV3 leftIntakeColorSensor, rightIntakeColorSensor;
-    public final IntakeSampleState intakeSampleState;
+    // Motion PIDs + Profilers
+    public static PIDCoefficients VERTICAL_SLIDES_PID_COEFFICIENTS = new PIDCoefficients(0.3, 1.0, 0.02, 0.0, 0.0,0.22); // new PIDCoefficients(0.3, 1.0, 0.006, 0.0, 0.0,0.16); //0.07 min ff, 0.37 = max ff, so do
+    public final VerticalSlidesPID verticalSlidesPID;
+    public final ServoProfiler deliveryArmProfiler;
 
     // Lights
     private final RevBlinkinLedDriver light;
@@ -58,6 +69,10 @@ public abstract class RobotBase extends PinpointDrive {
     // Cached Encoder Values
     private int verticalSlidesPos = 0;
     private int horizontalSlidesPos = 0;
+    private int lastHorizontalSlidesPos = 0;
+
+    // States
+    private boolean verticalSlidesRunToPosition = false;
 
 
     public RobotBase(HardwareMap hardwareMap) {
@@ -70,7 +85,7 @@ public abstract class RobotBase extends PinpointDrive {
 
         // Motors:
         horizontalSlides = hardwareMap.get(DcMotorEx.class, "hSlides");
-        if(horizontalSlidesIsReversed()) horizontalSlides.setDirection(DcMotor.Direction.REVERSE);
+        horizontalSlides.setDirection(DcMotor.Direction.REVERSE);
         horizontalSlides.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         horizontalSlides.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         horizontalSlides.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -78,87 +93,127 @@ public abstract class RobotBase extends PinpointDrive {
         intakeRoller = hardwareMap.get(DcMotorEx.class, "iRoller");
         intakeRoller.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
+        verticalSlidesLeft = hardwareMap.get(DcMotorEx.class, "vSlidesL");
+        verticalSlidesLeft.setDirection(DcMotor.Direction.REVERSE);
+        verticalSlidesLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        verticalSlidesLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        verticalSlidesRight = hardwareMap.get(DcMotorEx.class, "vSlidesR");
+        verticalSlidesRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        verticalSlidesRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
+        verticalSlidesPID = new VerticalSlidesPID(this, VERTICAL_SLIDES_PID_COEFFICIENTS);
+
+
         // Servos:
-        bucketServo = hardwareMap.get(Servo.class, "bucket");
+        swipeStick = hardwareMap.get(Servo.class, "swipeStick");
+        deliveryArm = hardwareMap.get(Servo.class, "dArm");
         claw = hardwareMap.get(Servo.class, "claw");
         intakeArm = hardwareMap.get(Servo.class, "iArm");
+        leftHang = hardwareMap.get(Servo.class, "lHang");
+        rightHang = hardwareMap.get(Servo.class, "rHang");
 
-        bucketProfiler = new ServoProfiler(bucketServo, getBucketServoProfileConstraints());
-
-        // Sensors:
-        leftIntakeColorSensor = hardwareMap.get(RevColorSensorV3.class, "intakeColorLeft");
-        rightIntakeColorSensor = hardwareMap.get(RevColorSensorV3.class, "intakeColorRight");
+        deliveryArmProfiler = new ServoProfiler(deliveryArm, getDeliveryArmServoProfileConstraints());
 
         // Lights:
         light = hardwareMap.get(RevBlinkinLedDriver.class, "light");
 
-        // States:
-        intakeSampleState = new IntakeSampleState(this);
+        // Update Constants
 
-        HORIZONTAL_EXTEND_MAX_IN = getHorizontalExtendMaxInConstants();
-        HORIZONTAL_TICKS_PER_INCH = getHorizontalTicksPerInchConstants();
-        HORIZONTAL_SLIDE_TRANSFER_POS = getHorizontalTransferPos();
+        VERTICAL_TICKS_PER_INCH = getVerticalSlidesTicksPerInch();
+        VERTICAL_EXTEND_MAX_IN = getVerticalSlidesMaxIn();
+
     }
+
+
+
+    ///////////////////* INIT *///////////////////
 
     public void teleOpInit() {
         setIntakeArmPos(IntakeArmTask.Position.DOWN);
-        bucketServo.setPosition(getBucketServoPosition(BucketTask.Position.TRANSFER));
+        deliveryArm.setPosition(getDeliveryArmServoPosition(DeliveryArmTask.Position.TRANSFER));
 //        initHang();
         setClawPosition(ClawTask.ClawPosition.OPEN);
     }
     public void autoInit() {
         setIntakeArmPos(IntakeArmTask.Position.DOWN);
-        bucketServo.setPosition(getBucketServoPosition(BucketTask.Position.CARRY));
+        deliveryArm.setPosition(getDeliveryArmServoPosition(DeliveryArmTask.Position.CARRY));
         initHang();
         setClawPosition(ClawTask.ClawPosition.OPEN);
     }
 
     public void autoClipInit() {
         setIntakeArmPos(IntakeArmTask.Position.TRANSFER);
-        bucketServo.setPosition(getBucketServoPosition(BucketTask.Position.FLAT));
+        deliveryArm.setPosition(getDeliveryArmServoPosition(DeliveryArmTask.Position.FLAT));
         initHang();
         setClawPosition(ClawTask.ClawPosition.CLOSE);
     }
 
-    // Updates
+    ///////////////////* UPDATES *///////////////////
+
     public void updateEverything() {
         updateEncoders();
-        updateProfilers();
         updatePoseEstimate();
+        updateProfilers();
         updatePIDs();
-        intakeSampleState.update();
+        updateIntakeSampleState();
     }
-
-    public abstract void updatePIDs();
-
+    public void updatePIDs() {
+        if(verticalSlidesRunToPosition) {
+            setVerticalSlidePowerForPID(VERTICAL_SLIDES_PID_COEFFICIENTS.feedForward + verticalSlidesPID.getPower());
+        }
+    }
     public void updateEncoders() {
-        verticalSlidesPos = getVerticalSlidesHeightTicks();
-    }
-    public void updateHorizontalEncoder() {
+        verticalSlidesPos = verticalSlidesLeft.getCurrentPosition();
         horizontalSlidesPos = horizontalSlides.getCurrentPosition();
     }
+    public void updateLastHorizontalEncoder() {
+        lastHorizontalSlidesPos = horizontalSlidesPos;
+    }
     public void updateProfilers() {
-        bucketProfiler.updatePosition();
+        deliveryArmProfiler.updatePosition();
+    }
+    public abstract void updateIntakeSampleState();
+
+
+    ///////////////////* GENERAL UTILS *///////////////////
+
+    public void resetHorizontalAndVerticalSlidesEncoderPositions() {
+        horizontalSlides.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        horizontalSlides.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        verticalSlidesLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        verticalSlidesLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        verticalSlidesRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        verticalSlidesRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
     }
 
 
-    // General Utils
+    ///////////////////* VERTICAL SLIDES UTILS *///////////////////
 
-    public abstract void resetHorizontalAndVerticalSlidesEncoderPositions();
+    public abstract double getVerticalSlidesTicksPerInch();
+    public abstract double getVerticalSlidesMaxIn();
+    public void setVerticalSlidePowerForPID(double power) {
+        verticalSlidesLeft.setPower(Utils.clamp(power, VERTICAL_SLIDE_DOWN_POWER_AUTO, 1.0));
+        verticalSlidesRight.setPower(Utils.clamp(power, VERTICAL_SLIDE_DOWN_POWER_AUTO, 1.0));
+    }
+    public void setVerticalSlidePowerWithoutEncoder(double power) {
+        verticalSlidesRunToPosition = false;
+        verticalSlidesLeft.setPower(Utils.clamp(power, VERTICAL_SLIDE_DOWN_POWER_TELEOP, 1.0));
+        verticalSlidesRight.setPower(Utils.clamp(power, VERTICAL_SLIDE_DOWN_POWER_TELEOP, 1.0));
+    }
+    public void setVerticalSlidesHeight(double posInches) {
+        verticalSlidesRunToPosition = true;
+        verticalSlidesPID.setTargetPosition((int) (posInches * VERTICAL_TICKS_PER_INCH));
+    }
+    public double getVerticalSlidesHeightInch() {
+        return verticalSlidesPos/VERTICAL_TICKS_PER_INCH;
+    }
+    public int getVerticalSlidesHeightTicks() {
+        return verticalSlidesLeft.getCurrentPosition();
+    }
 
 
-    // Utils for Vertical Slides
+    ///////////////////* HORIZONTAL SLIDES UTILS *///////////////////
 
-    public abstract void setVerticalSlidePowerWithEncoder(double power);
-    public abstract void setVerticalSlidePowerWithoutEncoder(double power);
-    public abstract void setVerticalSlidesHeight(double posInches, double power);
-    public abstract double getVerticalSlidesHeightInch();
-    public abstract int getVerticalSlidesHeightTicks();
-
-
-    // Utils for Horizontal Slides
-
-    public abstract boolean horizontalSlidesIsReversed();
     public void setHorizontalSlidesPower(double power) {
         if(horizontalSlides.getMode() != DcMotorEx.RunMode.RUN_USING_ENCODER) {
             horizontalSlides.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
@@ -171,14 +226,12 @@ public abstract class RobotBase extends PinpointDrive {
         }
         horizontalSlides.setPower(power);
     }
-
     public void brakeHorizontalSlides(double brakePower) {
         horizontalSlides.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        horizontalSlides.setTargetPosition(getLastHorizontalSlideDist());
+        horizontalSlides.setTargetPosition(lastHorizontalSlidesPos);
         horizontalSlides.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         horizontalSlides.setPower(brakePower);
     }
-
     public void setHorizontalSlideDist(double posInches, double power) {
         horizontalSlides.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         horizontalSlides.setTargetPosition((int) (
@@ -188,36 +241,39 @@ public abstract class RobotBase extends PinpointDrive {
         horizontalSlides.setPower(power);
     }
     public int getLastHorizontalSlideDist() {
-        return horizontalSlidesPos;
+        return lastHorizontalSlidesPos;
     }
-
-    public double getHorizontalSlideDist() {
+    public double getHorizontalSlideDistInch() {
         return ((double) horizontalSlides.getCurrentPosition()) / HORIZONTAL_TICKS_PER_INCH;
     }
-
-    public abstract double getHorizontalExtendMaxInConstants();
-    public abstract double getHorizontalTicksPerInchConstants();
-    public abstract double getHorizontalTransferPos();
-
-
-    // Utils for Bucket Servo
-
-    public abstract ProfileConstraints getBucketServoProfileConstraints();
-    public abstract double getBucketServoPosition(BucketTask.Position position);
-
-    public void setBucketServoPosition(BucketTask.Position position) {
-        bucketProfiler.setTargetPosition(getBucketServoPosition(position));
+    public double getHorizontalSlideTransferPos() {
+        return HORIZONTAL_SLIDE_TRANSFER_POS;
     }
 
 
-    // Utils for Intake Arm
+    ///////////////////* DELIVERY UTILS *///////////////////
+
+    public abstract ProfileConstraints getDeliveryArmServoProfileConstraints();
+    public abstract double getDeliveryArmServoPosition(DeliveryArmTask.Position position);
+    public void setDeliveryArmServoPosition(DeliveryArmTask.Position position) {
+        deliveryArmProfiler.setTargetPosition(getDeliveryArmServoPosition(position));
+    }
+
+
+    ///////////////////* CLAW UTILS *///////////////////
+
+    public abstract double getClawPosition(ClawTask.ClawPosition position);
+    public void setClawPosition(ClawTask.ClawPosition position) {
+        claw.setPosition(getClawPosition(position));
+    }
+
+
+    ///////////////////* INTAKE UTILS *///////////////////
+
     public abstract double getIntakeArmPosition(IntakeArmTask.Position position);
     public void setIntakeArmPos(IntakeArmTask.Position position) {
         intakeArm.setPosition(getIntakeArmPosition(position));
     }
-
-
-    // Utils for Roller Intake
     public void runIntakeIn() {
         intakeRoller.setPower(INTAKE_POWER);
     }
@@ -230,25 +286,27 @@ public abstract class RobotBase extends PinpointDrive {
     }
 
 
-    // Utils for claw
-    public abstract double getClawPosition(ClawTask.ClawPosition position);
-    public void setClawPosition(ClawTask.ClawPosition position) {
-        claw.setPosition(getClawPosition(position));
-    }
+    ///////////////////* COLOR SENSOR + LIGHTS UTILS *///////////////////
 
-
-    // Utils for lights
+    public abstract boolean isSampleIn();
     public void setLightColor(RevBlinkinLedDriver.BlinkinPattern pattern) {
         light.setPattern(pattern);
     }
-    public String getIntakeColorToString() {
-        return intakeSampleState.getStripLightColors();
+
+    ///////////////////* HANG UTILS *///////////////////
+
+    public abstract double getHangTargetPos(HangTask.WhichHang placer, HangTask.Position position);
+    public void initHang() {
+        HangTask.setHangPosition(this, HangTask.WhichHang.LEFT, HangTask.Position.INIT);
+        HangTask.setHangPosition(this, HangTask.WhichHang.RIGHT, HangTask.Position.INIT);
     }
+    public void releaseHang() {
+        HangTask.setHangPosition(this, HangTask.WhichHang.LEFT, HangTask.Position.RELEASE);
+        HangTask.setHangPosition(this, HangTask.WhichHang.RIGHT, HangTask.Position.RELEASE);
 
-
-    // Utils for hang
-    public abstract void initHang();
-    public abstract void releaseHang();
-    public abstract void lowerHang();
-
+    }
+    public void lowerHang() {
+        HangTask.setHangPosition(this, HangTask.WhichHang.LEFT, HangTask.Position.HANG);
+        HangTask.setHangPosition(this, HangTask.WhichHang.RIGHT, HangTask.Position.HANG);
+    }
 }

@@ -1,28 +1,35 @@
-package org.firstinspires.ftc.teamcode.drive;
+package org.firstinspires.ftc.teamcode.drive.V3Robot;
 
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.ftc.GoBildaPinpointDriver;
 import com.acmerobotics.roadrunner.ftc.GoBildaPinpointDriverRR;
+import com.qualcomm.hardware.rev.RevColorSensorV3;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
+import org.firstinspires.ftc.teamcode.drive.RobotBase;
 import org.firstinspires.ftc.teamcode.roadrunner.MecanumDrive;
 import org.firstinspires.ftc.teamcode.roadrunner.PinpointDrive;
-import org.firstinspires.ftc.teamcode.task.BucketTask;
 import org.firstinspires.ftc.teamcode.task.ClawTask;
+import org.firstinspires.ftc.teamcode.task.DeliveryArmTask;
 import org.firstinspires.ftc.teamcode.task.HangTask;
 import org.firstinspires.ftc.teamcode.task.IntakeArmTask;
 import org.firstinspires.ftc.teamcode.task.SwipeStickTask;
 import org.firstinspires.ftc.teamcode.util.Utils;
+import org.firstinspires.ftc.teamcode.util.pid.PIDCoefficients;
 import org.firstinspires.ftc.teamcode.util.profile.ProfileConstraints;
 
 @Config
 public class V3Robot extends RobotBase {
 
-    // Bucket Servo Positions
+
+    ///////////////////* CONSTANTS *///////////////////
+
+
+    // Delivery Servo Positions
     public static double CARRY_POS = 0.3,
             CHAMBER_DELIVER_POS = 0.70, //TODO: TUNE THIS
             DELIVER_POS = 0.80, //TODO: change?
@@ -30,11 +37,10 @@ public class V3Robot extends RobotBase {
             TRANSFER_POS = 0.23,
             FLAT_POS = 0.55;
 
-    // Profile Constraints
-    public static ProfileConstraints BUCKET_CONSTRAINTS = new ProfileConstraints(10, 12, 16);
+    public static double VERTICAL_TICKS_PER_INCH  =  1240.0/38.6, VERTICAL_EXTEND_MAX_INCH = 38.6;
 
-    //SwipeStick Servo and Positions
-    public final Servo swipeStick;
+    // Profile Constraints
+    public static ProfileConstraints DELIVERY_ARM_CONSTRAINTS = new ProfileConstraints(10, 12, 16);
 
     // Intake Servo Positions
     public static double INTAKE_ARM_DOWN = 0.14,
@@ -50,56 +56,30 @@ public class V3Robot extends RobotBase {
     public static double LEFT_INIT_POS = 0.58;
     public static double LEFT_RELEASE_POS = 0.08;
     public static double LEFT_HANG_POS = 0.85;
+    public static double LEFT_VERTICAL_POS = 0.25;
     public static double RIGHT_INIT_POS = 0.40;
     public static double RIGHT_RELEASE_POS = 0.875;
     public static double RIGHT_HANG_POS = 0.13;
-    public static double LEFT_VERTICAL_POS = 0.25;
     public static double RIGHT_VERTICAL_POS = 0.70;
 
 
+    ///////////////////* HARDWARE *///////////////////
 
-    // Vertical Slides Constants
-    public static double VERTICAL_EXTEND_MIN_IN = -0.2;
-    public static double VERTICAL_EXTEND_MAX_IN = 38.6;
-    public static double VERTICAL_TICKS_PER_INCH = 1240.0/38.6;
-    public static double VERTICAL_SLIDE_DOWN_POWER_TELEOP = -0.5;
-    public static double VERTICAL_SLIDE_DOWN_POWER_AUTO = -0.7;
+    // Sensors
+    public final RevColorSensorV3 leftIntakeColorSensor, rightIntakeColorSensor;
 
-    // Horizontal Slides Constants
-    public static double HORIZONTAL_EXTEND_MAX_IN = 22.0;
-    public static double HORIZONTAL_TICKS_PER_INCH = 31.8181818;
-    public static double HORIZONTAL_SLIDE_TRANSFER_POS = 64 / HORIZONTAL_TICKS_PER_INCH;
-
-    public final DcMotorEx verticalSlidesLeft, verticalSlidesRight;
-    public final Servo leftHang, rightHang;
-
-    // PIDF
-
-    public static double PID_FEED_FORWARD = 0.16, PID_MIN_POWER = 0.3, PID_MAX_POWER = 1.0, PID_PK = 0.006, PID_PI = 0.0, PID_PD = 0.0;
-    public final V3VerticalSlidesPID verticalSlidesPID;
-
-    // States
-    private boolean verticalSlidesRunToPosition = false;
+    public final V3IntakeSampleState intakeSampleState;
 
 
     public V3Robot(HardwareMap hardwareMap) {
         super(hardwareMap);
 
-        verticalSlidesLeft = hardwareMap.get(DcMotorEx.class, "vSlidesL");
-        verticalSlidesLeft.setDirection(DcMotor.Direction.REVERSE);
-        verticalSlidesLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        verticalSlidesLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        verticalSlidesRight = hardwareMap.get(DcMotorEx.class, "vSlidesR");
-        verticalSlidesRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        verticalSlidesRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        // Sensors:
+        leftIntakeColorSensor = hardwareMap.get(RevColorSensorV3.class, "intakeColorLeft");
+        rightIntakeColorSensor = hardwareMap.get(RevColorSensorV3.class, "intakeColorRight");
 
-        leftHang = hardwareMap.get(Servo.class, "lHang");
-        rightHang = hardwareMap.get(Servo.class, "rHang");
-
-        swipeStick = hardwareMap.get(Servo.class, "swipeStick");
-
-        verticalSlidesPID = new V3VerticalSlidesPID(this, PID_MIN_POWER,
-                                PID_MAX_POWER, PID_PK, PID_PI, PID_PD);
+        // States:
+        intakeSampleState = new V3IntakeSampleState(this);
 
         setDriveParams();
         init(hardwareMap);
@@ -151,7 +131,7 @@ public class V3Robot extends RobotBase {
     }
 
     @Override
-    public double getBucketServoPosition(BucketTask.Position position) {
+    public double getDeliveryArmServoPosition(DeliveryArmTask.Position position) {
         switch(position) {
             case CARRY:
                 return CARRY_POS;
@@ -166,7 +146,6 @@ public class V3Robot extends RobotBase {
                 return TRANSFER_POS;
         }
     }
-
     @Override
     public double getIntakeArmPosition(IntakeArmTask.Position position) {
         switch(position) {
@@ -181,7 +160,6 @@ public class V3Robot extends RobotBase {
                 return INTAKE_ARM_DOWN;
         }
     }
-
     @Override
     public double getClawPosition(ClawTask.ClawPosition position) {
         switch(position) {
@@ -192,82 +170,11 @@ public class V3Robot extends RobotBase {
                 return CLAW_OPEN_POS;
         }
     }
-
-
-    // General Utils
-
     @Override
-    public void resetHorizontalAndVerticalSlidesEncoderPositions() {
-        horizontalSlides.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        horizontalSlides.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        verticalSlidesLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        verticalSlidesLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        verticalSlidesRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        verticalSlidesRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-    }
-
-    // Utils for vertical slides
-    @Override
-    public void setVerticalSlidePowerWithEncoder(double power) {
-        verticalSlidesLeft.setPower(Utils.clamp(power, VERTICAL_SLIDE_DOWN_POWER_AUTO, 1.0));
-        verticalSlidesRight.setPower(Utils.clamp(power, VERTICAL_SLIDE_DOWN_POWER_AUTO, 1.0));
+    public ProfileConstraints getDeliveryArmServoProfileConstraints() {
+        return DELIVERY_ARM_CONSTRAINTS;
     }
     @Override
-    public void setVerticalSlidePowerWithoutEncoder(double power) {
-        verticalSlidesRunToPosition = false;
-        verticalSlidesLeft.setPower(Utils.clamp(power, VERTICAL_SLIDE_DOWN_POWER_TELEOP, 1.0));
-        verticalSlidesRight.setPower(Utils.clamp(power, VERTICAL_SLIDE_DOWN_POWER_TELEOP, 1.0));
-    }
-    @Override
-    public void setVerticalSlidesHeight(double posInches, double power) {
-        verticalSlidesRunToPosition = true;
-        verticalSlidesPID.setTargetPosition((int)(posInches*VERTICAL_TICKS_PER_INCH));
-    }
-    @Override
-    public void updatePIDs() {
-        if(verticalSlidesRunToPosition) {
-            setVerticalSlidePowerWithEncoder(PID_FEED_FORWARD + verticalSlidesPID.getPower());
-        }
-    }
-
-
-    @Override
-    public double getVerticalSlidesHeightInch() {
-        return verticalSlidesLeft.getCurrentPosition()/VERTICAL_TICKS_PER_INCH;
-    }
-    @Override
-    public int getVerticalSlidesHeightTicks() {
-        return verticalSlidesLeft.getCurrentPosition();
-    }
-
-
-
-    // Utils for horizontal slides
-    @Override
-    public boolean horizontalSlidesIsReversed() {
-        return true;
-    }
-    @Override
-    public double getHorizontalExtendMaxInConstants() {
-        return HORIZONTAL_EXTEND_MAX_IN;
-    }
-    @Override
-    public double getHorizontalTicksPerInchConstants() {
-        return HORIZONTAL_TICKS_PER_INCH;
-    }
-    @Override
-    public double getHorizontalTransferPos() {
-        return HORIZONTAL_SLIDE_TRANSFER_POS;
-    }
-
-    @Override
-    public ProfileConstraints getBucketServoProfileConstraints() {
-        return BUCKET_CONSTRAINTS;
-    }
-
-
-    //Utils for hang
-
     public double getHangTargetPos(HangTask.WhichHang placer, HangTask.Position position) {
         switch (position) {
             case VERTICAL:
@@ -281,19 +188,26 @@ public class V3Robot extends RobotBase {
                 return placer == HangTask.WhichHang.LEFT ? LEFT_HANG_POS : RIGHT_HANG_POS;
         }
     }
+    // Update Constants
     @Override
-    public void initHang() {
-        HangTask.setHangPosition(this, HangTask.WhichHang.LEFT, HangTask.Position.INIT);
-        HangTask.setHangPosition(this, HangTask.WhichHang.RIGHT, HangTask.Position.INIT);
+    public double getVerticalSlidesTicksPerInch() {
+        return VERTICAL_TICKS_PER_INCH;
     }
     @Override
-    public void releaseHang() {
-        HangTask.setHangPosition(this, HangTask.WhichHang.LEFT, HangTask.Position.RELEASE);
-        HangTask.setHangPosition(this, HangTask.WhichHang.RIGHT, HangTask.Position.RELEASE);
+    public double getVerticalSlidesMaxIn() {
+        return VERTICAL_EXTEND_MAX_INCH;
+    }
+    // Color Sensor Utils
+    @Override
+    public void updateIntakeSampleState() {
+        intakeSampleState.update();
     }
     @Override
-    public void lowerHang() {
-        HangTask.setHangPosition(this, HangTask.WhichHang.LEFT, HangTask.Position.HANG);
-        HangTask.setHangPosition(this, HangTask.WhichHang.RIGHT, HangTask.Position.HANG);
+    public boolean isSampleIn() {
+        return intakeSampleState.IsSampleIn();
     }
+    public String getIntakeColorToString() {
+        return intakeSampleState.getStripLightColors();
+    }
+
 }

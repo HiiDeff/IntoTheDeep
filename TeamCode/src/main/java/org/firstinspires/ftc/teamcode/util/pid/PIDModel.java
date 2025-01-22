@@ -11,12 +11,12 @@ public abstract class PIDModel {
 
     protected double lastTarget = Integer.MAX_VALUE;
 
-    public PIDModel(double minPower, double maxPower, double pK, double iK, double dK) {
-        this.minPower = minPower;
-        this.maxPower = maxPower;
-        this.kP = pK;
-        this.kI = iK;
-        this.kD = dK;
+    public PIDModel(PIDCoefficients pidCoefficients) {
+        this.minPower = pidCoefficients.minPower;
+        this.maxPower = pidCoefficients.maxPower;
+        this.kP = pidCoefficients.kP;
+        this.kI = pidCoefficients.kI;
+        this.kD = pidCoefficients.kD;
     }
 
     private ElapsedTime timer = null;

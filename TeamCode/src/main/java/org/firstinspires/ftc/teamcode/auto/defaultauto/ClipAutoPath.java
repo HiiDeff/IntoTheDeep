@@ -7,9 +7,9 @@ import com.acmerobotics.roadrunner.TurnConstraints;
 
 import org.firstinspires.ftc.teamcode.auto.NewAutoBase;
 import org.firstinspires.ftc.teamcode.auto.conditions.SampleStateCondition;
-import org.firstinspires.ftc.teamcode.task.BucketTask;
 import org.firstinspires.ftc.teamcode.task.ClawTask;
 import org.firstinspires.ftc.teamcode.task.ConditionalTask;
+import org.firstinspires.ftc.teamcode.task.DeliveryArmTask;
 import org.firstinspires.ftc.teamcode.task.HorizontalSlidesTask;
 import org.firstinspires.ftc.teamcode.task.IntakeArmTask;
 import org.firstinspires.ftc.teamcode.task.IntakeTask;
@@ -44,7 +44,7 @@ public abstract class ClipAutoPath extends NewAutoBase {
                         new VerticalSlidesTask(robot, PRELOAD_CHAMBER_HEIGHT, 1.0, 1000),
                         new SeriesTask(
                                 new SleepTask(500),
-                                new BucketTask(robot, BucketTask.Position.CHAMBER_DELIVER)
+                                new DeliveryArmTask(robot, DeliveryArmTask.Position.CHAMBER_DELIVER)
                         ),
                         new SeriesTask(
                                 new SleepTask(200),
@@ -58,7 +58,7 @@ public abstract class ClipAutoPath extends NewAutoBase {
                         new VerticalSlidesTask(robot, 0, 1.0, 1000),
                         new SeriesTask(
                                 new SleepTask(1000),
-                                new BucketTask(robot, BucketTask.Position.FLAT)
+                                new DeliveryArmTask(robot, DeliveryArmTask.Position.FLAT)
                         ),
                         new SeriesTask(
                                 new SleepTask(CLAW_OPEN_DELAY),
@@ -258,7 +258,7 @@ public abstract class ClipAutoPath extends NewAutoBase {
                         new VerticalSlidesTask(robot, 0, 1.0, 1000),
                         new SeriesTask(
                                 new SleepTask(1000),
-                                new BucketTask(robot, BucketTask.Position.FLAT)
+                                new DeliveryArmTask(robot, DeliveryArmTask.Position.FLAT)
                         ),
                         new SeriesTask(
                                 new SleepTask(CLAW_OPEN_DELAY),
@@ -284,7 +284,7 @@ public abstract class ClipAutoPath extends NewAutoBase {
                                 new VerticalSlidesTask(robot, DELIVERY_CHAMBER_HEIGHT, 1.0, 2000),
                                 new SeriesTask(
                                         new SleepTask(500),
-                                        new BucketTask(robot, BucketTask.Position.CHAMBER_DELIVER)
+                                        new DeliveryArmTask(robot, DeliveryArmTask.Position.CHAMBER_DELIVER)
                                 ),
                                 new RuntimeDrivingTask(
                                         robot,
@@ -311,7 +311,7 @@ public abstract class ClipAutoPath extends NewAutoBase {
                         new VerticalSlidesTask(robot, 0, 1.0, 1000),
                         new SeriesTask(
                                 new SleepTask(1000),
-                                new BucketTask(robot, BucketTask.Position.FLAT)
+                                new DeliveryArmTask(robot, DeliveryArmTask.Position.FLAT)
                         ),
                         new SeriesTask(
                                 new SleepTask(CLAW_OPEN_DELAY),

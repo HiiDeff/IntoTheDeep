@@ -8,7 +8,6 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.common.AutoStates;
 import org.firstinspires.ftc.teamcode.drive.RobotBase;
-import org.firstinspires.ftc.teamcode.drive.V2Robot;
 import org.firstinspires.ftc.teamcode.task.Task;
 
 import java.util.ArrayList;

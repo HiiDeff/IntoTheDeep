@@ -6,10 +6,10 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.teamcode.drive.RobotBase;
-import org.firstinspires.ftc.teamcode.drive.V2Robot;
+import org.firstinspires.ftc.teamcode.drive.V3Robot.V3Robot;
 
 @Config
-@Autonomous(name = "V2 Robot - FAST SAMPLE Auto")
+@Autonomous(name = "V3 Robot - FAST SAMPLE Auto")
 public class FastSamplesAuto extends FastSamplesAutoPath{
 
     public static double Sample1IntakeAlignPosX = 25.2245;
@@ -23,7 +23,7 @@ public class FastSamplesAuto extends FastSamplesAutoPath{
 
     @Override
     protected RobotBase createRobot(HardwareMap hardwareMap) {
-        return new V2Robot(hardwareMap);
+        return new V3Robot(hardwareMap);
     }
 
     @Override

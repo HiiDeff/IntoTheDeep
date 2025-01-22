@@ -17,7 +17,6 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
-import org.firstinspires.ftc.teamcode.drive.IntakeSampleState;
 import org.firstinspires.ftc.teamcode.util.profile.ProfileConstraints;
 import org.firstinspires.ftc.teamcode.util.profile.ServoProfiler;
 

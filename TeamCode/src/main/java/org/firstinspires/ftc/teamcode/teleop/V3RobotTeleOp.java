@@ -2,7 +2,6 @@ package org.firstinspires.ftc.teamcode.teleop;
 
 import android.util.Log;
 
-import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.acmerobotics.roadrunner.Pose2d;
@@ -11,14 +10,13 @@ import com.acmerobotics.roadrunner.TranslationalVelConstraint;
 import com.acmerobotics.roadrunner.Vector2d;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.drive.RobotFactory;
-import org.firstinspires.ftc.teamcode.drive.V3Robot;
-import org.firstinspires.ftc.teamcode.task.BucketTask;
+import org.firstinspires.ftc.teamcode.drive.V3Robot.V3Robot;
 import org.firstinspires.ftc.teamcode.task.ClawTask;
+import org.firstinspires.ftc.teamcode.task.DeliveryArmTask;
 import org.firstinspires.ftc.teamcode.task.HorizontalSlidesTask;
 import org.firstinspires.ftc.teamcode.task.IntakeArmTask;
 import org.firstinspires.ftc.teamcode.task.ParallelTask;
@@ -84,7 +82,7 @@ public class V3RobotTeleOp extends LinearOpMode {
             if (deliverChamberTask == null) runDelivery();
             checkPreloads();
             update();
-            Log.i("ethan ", ""+ elapsedTime.milliseconds());
+//            Log.i("ethan ", ""+ elapsedTime.milliseconds());
             elapsedTime.reset();
         }
     }
@@ -132,24 +130,24 @@ public class V3RobotTeleOp extends LinearOpMode {
         else if (gp2.onceX()) {
             transferTask = new SeriesTask(
                     new ParallelTask(
-                            new BucketTask(robot, BucketTask.Position.TRANSFER),
+                            new DeliveryArmTask(robot, DeliveryArmTask.Position.TRANSFER),
                             new ClawTask(robot, ClawTask.ClawPosition.OPEN)
                     ),
                     new ParallelTask(
                             new VerticalSlidesTask(robot, 0, 1.0, 2000),
                             new SeriesTask(
                                     new ParallelTask(
-                                            new TimedHorizontalSlidesTask(robot, robot.getHorizontalTransferPos(), 1.0,1000), //TODO: increase this
+                                            new TimedHorizontalSlidesTask(robot, robot.getHorizontalSlideTransferPos(), 1.0,1000), //TODO: increase this
                                             new IntakeArmTask(robot, IntakeArmTask.Position.TRANSFER),
                                             new UnboundedIntakeTask(robot, 1.0)
                                     ),
                                     new ParallelTask(
-                                            new TimedHorizontalSlidesTask(robot, robot.getHorizontalTransferPos(), 1.0, 500),
+                                            new TimedHorizontalSlidesTask(robot, robot.getHorizontalSlideTransferPos(), 1.0, 500),
                                             new UnboundedIntakeTask(robot, -1.0)
                                     ),
                                     new ParallelTask(
                                             new IntakeArmTask(robot, IntakeArmTask.Position.CLEAR),
-                                            new BucketTask(robot, BucketTask.Position.CARRY)
+                                            new DeliveryArmTask(robot, DeliveryArmTask.Position.CARRY)
                                     )
                             )
                     )
@@ -175,13 +173,13 @@ public class V3RobotTeleOp extends LinearOpMode {
             deliverTask =
                     new ParallelTask(
                             new VerticalSlidesTask(robot, height, 1.0, 1500),
-                            new BucketTask(robot, BucketTask.Position.CARRY)
+                            new DeliveryArmTask(robot, DeliveryArmTask.Position.CARRY)
                     );
         }
     }
 
     private void runHorizontalSlides() { //TODO: check this logic
-        if ((robot.getHorizontalSlideDist() < MAX_SLIDE_EXTENSION_INCH && -gp2.leftStickY() > 0.3) || -gp2.leftStickY() < -0.3) {
+        if ((robot.getHorizontalSlideDistInch() < MAX_SLIDE_EXTENSION_INCH && -gp2.leftStickY() > 0.3) || -gp2.leftStickY() < -0.3) {
             if (submersibleTask != null) {
                 submersibleTask.cancel();
                 submersibleTask = null;
@@ -194,7 +192,7 @@ public class V3RobotTeleOp extends LinearOpMode {
             if (gp2.rightBumper()) {
                 robot.resetHorizontalAndVerticalSlidesEncoderPositions();
             } else {
-                robot.updateHorizontalEncoder();
+                robot.updateLastHorizontalEncoder();
                 horizontalPositionUpdated = true;
             }
         } else if (submersibleTask == null && transferTask == null) {
@@ -257,17 +255,17 @@ public class V3RobotTeleOp extends LinearOpMode {
         }
         // Bucket
         if (gp1.onceB()) {
-            robot.setBucketServoPosition(BucketTask.Position.FLAT);
+            robot.setDeliveryArmServoPosition(DeliveryArmTask.Position.FLAT);
             robot.setClawPosition(ClawTask.ClawPosition.OPEN); clawOpen = true;
         } else if (!gp1.back() && gp1.onceY()) {
-            robot.setBucketServoPosition(BucketTask.Position.DELIVER);
+            robot.setDeliveryArmServoPosition(DeliveryArmTask.Position.DELIVER);
             robot.setClawPosition(ClawTask.ClawPosition.OPEN); clawOpen = true;
             if (robot.getVerticalSlidesHeightInch() >= 12) {
                 cycleSum += cycleTimer.seconds(); cycleCnt++; cycleAvg = cycleSum / cycleCnt;
                 cycleTimer.reset();
             }
         } else if (!gp1.back() && !gp1.start() && gp1.onceA()) {
-            robot.setBucketServoPosition(BucketTask.Position.TRANSFER);
+            robot.setDeliveryArmServoPosition(DeliveryArmTask.Position.TRANSFER);
             robot.setClawPosition(ClawTask.ClawPosition.OPEN); clawOpen = true;
         }
         // Claw
@@ -281,7 +279,7 @@ public class V3RobotTeleOp extends LinearOpMode {
                 robot.releaseHang();
             } else {
                 robot.lowerHang();
-                robot.setBucketServoPosition(BucketTask.Position.FLAT);
+                robot.setDeliveryArmServoPosition(DeliveryArmTask.Position.FLAT);
             }
             hangUp = !hangUp;
         }
@@ -323,7 +321,7 @@ public class V3RobotTeleOp extends LinearOpMode {
                     new VerticalSlidesTask(robot, 0, 1.0, 1000),
                     new SeriesTask(
                             new SleepTask(1000),
-                            new BucketTask(robot, BucketTask.Position.FLAT)
+                            new DeliveryArmTask(robot, DeliveryArmTask.Position.FLAT)
                     ),
                     new SeriesTask(
                             new SleepTask(CLAW_OPEN_DELAY),
@@ -340,7 +338,7 @@ public class V3RobotTeleOp extends LinearOpMode {
                             ),
                             new SeriesTask(
                                     new SleepTask(500),
-                                    new BucketTask(robot, BucketTask.Position.CHAMBER_DELIVER)
+                                    new DeliveryArmTask(robot, DeliveryArmTask.Position.CHAMBER_DELIVER)
                             )
                     )
             );
@@ -364,7 +362,7 @@ public class V3RobotTeleOp extends LinearOpMode {
                             new VerticalSlidesTask(robot, 0, 1.0, 1000),
                             new SeriesTask(
                                     new SleepTask(1000),
-                                    new BucketTask(robot, BucketTask.Position.FLAT)
+                                    new DeliveryArmTask(robot, DeliveryArmTask.Position.FLAT)
                             ),
                             new SeriesTask(
                                     new SleepTask(CLAW_OPEN_DELAY),
@@ -395,7 +393,7 @@ public class V3RobotTeleOp extends LinearOpMode {
                         ),
                         new SeriesTask(
                                 new SleepTask(700),
-                                new BucketTask(robot, BucketTask.Position.CHAMBER_DELIVER)
+                                new DeliveryArmTask(robot, DeliveryArmTask.Position.CHAMBER_DELIVER)
                         ),
                         new SeriesTask(
                                 new SleepTask(200),

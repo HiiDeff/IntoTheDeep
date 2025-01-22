@@ -7,7 +7,6 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.teamcode.drive.RobotBase;
 import org.firstinspires.ftc.teamcode.drive.RobotFactory;
-import org.firstinspires.ftc.teamcode.drive.V2Robot;
 
 @Config
 @Autonomous(name = "V2 Robot - SAMPLE Auto")

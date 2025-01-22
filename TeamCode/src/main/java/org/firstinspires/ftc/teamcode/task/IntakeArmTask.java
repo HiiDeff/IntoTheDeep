@@ -4,7 +4,6 @@ import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.teamcode.drive.RobotBase;
-import org.firstinspires.ftc.teamcode.drive.V2Robot;
 import org.firstinspires.ftc.teamcode.util.Utils;
 
 /**
@@ -12,7 +11,6 @@ import org.firstinspires.ftc.teamcode.util.Utils;
  */
 @Config
 public class IntakeArmTask extends TimedTask {
-
 
     private static final int RPM = 50;
     private static final int MAX_ROTATION_DEGREE = 300;
@@ -32,10 +30,8 @@ public class IntakeArmTask extends TimedTask {
             Servo servo = robot.intakeArm;
             double currPos = servo.getPosition();
             double targetPos = robot.getIntakeArmPosition(position);
-            // Only consider the half of normal time since we don't have to wait for the servo to
-            // finish.
             setFinishTimeMillis(Utils.getEstimatedServoTime(RPM, MAX_ROTATION_DEGREE,
-                    targetPos - currPos) / 2);
+                    targetPos - currPos));
             servo.setPosition(targetPos);
             started = true;
         }

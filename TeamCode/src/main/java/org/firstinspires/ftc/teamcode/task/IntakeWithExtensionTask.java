@@ -23,12 +23,12 @@ public class IntakeWithExtensionTask extends TimedTask {
             robot.setHorizontalSlideDist(distInInches, 1.0);
             started = true;
         } else{
-            if (robot.intakeSampleState.IsSampleIn()) {
+            if (robot.isSampleIn()) {
                 if (timer == null) {
                     timer = new ElapsedTime();
                 } else {
                     if (timer.milliseconds() > 100) {
-                        robot.setHorizontalSlidesPower(0.2);
+                        cancel();
                         return true;
                     }
                 }
@@ -39,7 +39,7 @@ public class IntakeWithExtensionTask extends TimedTask {
 
     @Override
     public void cancel() {
-
+        robot.setHorizontalSlidesPower(0.0);
         robot.stopIntake();
     }
 }

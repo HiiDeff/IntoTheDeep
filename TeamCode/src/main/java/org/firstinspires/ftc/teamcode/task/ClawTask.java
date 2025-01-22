@@ -22,10 +22,8 @@ public class ClawTask extends TimedTask {
         if (!started) {
             double currPos = robot.claw.getPosition();
             double targetPos = robot.getClawPosition(position);
-            // Only consider the half of normal time since we don't have to wait for the servo to
-            // finish.
             setFinishTimeMillis(Utils.getEstimatedServoTime(RPM, MAX_ROTATION_DEGREE,
-                    targetPos - currPos) / 2);
+                    targetPos - currPos));
             robot.claw.setPosition(targetPos);
             started = true;
         }
