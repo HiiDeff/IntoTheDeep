@@ -59,7 +59,7 @@ public abstract class RobotBase extends PinpointDrive {
     public final Servo swipeStick;
 
     // Motion PIDs + Profilers
-    public static PIDCoefficients VERTICAL_SLIDES_PID_COEFFICIENTS = new PIDCoefficients(0.3, 1.0, 0.02, 0.0, 0.0,0.22); // new PIDCoefficients(0.3, 1.0, 0.006, 0.0, 0.0,0.16); //0.07 min ff, 0.37 = max ff, so do
+    public static PIDCoefficients VERTICAL_SLIDES_PID_COEFFICIENTS = new PIDCoefficients(0.3, 1.0, 0.015, 0.0, 0.0,0.22); // new PIDCoefficients(0.3, 1.0, 0.006, 0.0, 0.0,0.16); //0.07 min ff, 0.37 = max ff, so do
     public final VerticalSlidesPID verticalSlidesPID;
     public final ServoProfiler deliveryArmProfiler;
 
@@ -130,7 +130,7 @@ public abstract class RobotBase extends PinpointDrive {
 
     public void teleOpInit() {
         setIntakeArmPos(IntakeArmTask.Position.DOWN);
-        deliveryArm.setPosition(getDeliveryArmServoPosition(DeliveryArmTask.Position.TRANSFER));
+        deliveryArm.setPosition(getDeliveryArmServoPosition(DeliveryArmTask.Position.CARRY));
 //        initHang();
         setClawPosition(ClawTask.ClawPosition.OPEN);
     }

@@ -12,13 +12,16 @@ import org.firstinspires.ftc.teamcode.roadrunner.MecanumDrive;
 @Config
 public class RobotFactory {
     public enum Robot {
-//        V2_ROBOT,
         V3_ROBOT,
         V4_ROBOT,
         TEST_ROBOT_DEAD_WHEELS,
         TEST_ROBOT_PINPOINT;
     }
     public static Robot ACTIVE_ROBOT = Robot.V4_ROBOT;
+
+    public static Robot getActiveRobot() {
+        return ACTIVE_ROBOT;
+    }
 
     public static MecanumDrive createRobot(HardwareMap hardwareMap) {
         switch (ACTIVE_ROBOT) {

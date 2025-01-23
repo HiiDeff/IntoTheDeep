@@ -32,7 +32,7 @@ public class V4IntakeSampleState {
                     break;
                 case COLOR_UNSPECIFIED:
                 default:
-                    pattern = RevBlinkinLedDriver.BlinkinPattern.BLACK;
+                    pattern = RevBlinkinLedDriver.BlinkinPattern.RAINBOW_PARTY_PALETTE;
                     break;
             }
         }

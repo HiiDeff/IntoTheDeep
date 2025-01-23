@@ -21,7 +21,7 @@ public class V3ClipAuto extends ClipAutoPath {
 
     @Override
     protected RobotBase createRobot(HardwareMap hardwareMap) {
-        return (RobotBase) RobotFactory.createRobot(hardwareMap); //new V2Robot(hardwareMap);
+        return (RobotBase) RobotFactory.createRobot(hardwareMap);
     } //TODO ask abt this
 
     @Override

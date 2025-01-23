@@ -27,6 +27,7 @@ import org.firstinspires.ftc.teamcode.task.SleepTask;
 import org.firstinspires.ftc.teamcode.task.SwipeStickTask;
 import org.firstinspires.ftc.teamcode.task.Task;
 import org.firstinspires.ftc.teamcode.task.TimedHorizontalSlidesTask;
+import org.firstinspires.ftc.teamcode.task.UnboundedHorizontalSlidesTask;
 import org.firstinspires.ftc.teamcode.task.UnboundedIntakeTask;
 import org.firstinspires.ftc.teamcode.task.VerticalSlidesTask;
 import org.firstinspires.ftc.teamcode.util.GamePad;
@@ -136,18 +137,24 @@ public class V4RobotTeleOp extends LinearOpMode {
                             new VerticalSlidesTask(robot, robot.getVerticalSlideTransferPosition(), 1.0, 2000),
                             new SeriesTask(
                                     new ParallelTask(
-                                            new TimedHorizontalSlidesTask(robot, 0, 1.0,1000), //TODO: increase this
+                                            new TimedHorizontalSlidesTask(robot, -1.0, 1.0,1000), //TODO: increase this
                                             new IntakeArmTask(robot, IntakeArmTask.Position.TRANSFER),
                                             new UnboundedIntakeTask(robot, 1.0)
                                     ),
-                                    new ClawTask(robot, ClawTask.ClawPosition.CLOSE),
                                     new ParallelTask(
-                                            new IntakeArmTask(robot, IntakeArmTask.Position.CLEAR),
-                                            new DeliveryArmTask(robot, DeliveryArmTask.Position.CARRY)
+                                            new SeriesTask(
+                                                    new ClawTask(robot, ClawTask.ClawPosition.CLOSE),
+                                                    new SleepTask(200),
+                                                    new ParallelTask(
+                                                            new IntakeArmTask(robot, IntakeArmTask.Position.CLEAR),
+                                                            new DeliveryArmTask(robot, DeliveryArmTask.Position.DELIVER)
+                                                    )
+                                            ),
+                                            new UnboundedHorizontalSlidesTask(robot, -1.0, 1.0)
                                     )
                             )
                     )
-            ); clawOpen = false;
+                ); clawOpen = false;
         }
         // Chamber Preset
         else if (gp1.onceLeftTrigger()) {
@@ -184,7 +191,7 @@ public class V4RobotTeleOp extends LinearOpMode {
                 transferTask.cancel();
                 transferTask = null;
             }
-            robot.setHorizontalSlidesPowerWithoutEncoder(-gp2.leftStickY() > 0.3 ? 0.8 : -0.8);
+            robot.setHorizontalSlidesPowerWithoutEncoder(-gp2.leftStickY() > 0.3 ? 1.0 : -1.0);
             if (gp2.rightBumper()) {
                 robot.resetHorizontalAndVerticalSlidesEncoderPositions();
             } else {

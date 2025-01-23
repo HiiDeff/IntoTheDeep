@@ -7,6 +7,7 @@ public class UnboundedHorizontalSlidesTask implements Task, UnboundedTask {
     private final RobotBase robot;
     private final double distInInches;
     private final double power;
+    private boolean started;
 
     public UnboundedHorizontalSlidesTask(RobotBase robot, double distInInches, double power) {
         this.robot = robot;
@@ -15,7 +16,10 @@ public class UnboundedHorizontalSlidesTask implements Task, UnboundedTask {
     }
     @Override
     public boolean perform() {
-        robot.setHorizontalSlideDist(this.distInInches, power);
+        if(!started) {
+            robot.setHorizontalSlideDist(this.distInInches, power);
+            started = true;
+        }
         return false;
     }
     @Override
