@@ -22,7 +22,7 @@ public class IntakeTask extends TimedTask {
             started = true;
             robot.runIntakeWithPower(intakeSpeed);
         } else{
-            if((intakeSpeed<0) ^ (robot.intakeSampleState.IsSampleIn())) {
+            if((intakeSpeed<0) ^ (robot.isSampleIn())) {
                 if(elapsedTime == null){
                     elapsedTime = new ElapsedTime();
                 } else if(elapsedTime.milliseconds() > 50) {

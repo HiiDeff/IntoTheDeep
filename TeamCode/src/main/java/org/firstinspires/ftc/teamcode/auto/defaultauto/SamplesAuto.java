@@ -7,14 +7,13 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.teamcode.drive.RobotBase;
 import org.firstinspires.ftc.teamcode.drive.RobotFactory;
-import org.firstinspires.ftc.teamcode.drive.V2Robot;
 
 @Config
 @Autonomous(name = "V2 Robot - SAMPLE Auto")
 public class SamplesAuto extends SamplesAutoPath {
 
     public static double Sample1IntakeAlignPosX = 36.5;
-    public static double Sample1IntakeAlignPosY = 0.6317;
+    public static double Sample1IntakeAlignPosY = 0.0;
     public static double Sample2IntakeAlignPosX = 36.5;
     public static double Sample2IntakeAlignPosY = 7;
     public static double Sample3IntakeAlignPosX = 36.5;

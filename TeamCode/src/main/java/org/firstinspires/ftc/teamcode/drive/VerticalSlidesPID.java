@@ -1,14 +1,15 @@
 package org.firstinspires.ftc.teamcode.drive;
 
+import org.firstinspires.ftc.teamcode.util.pid.PIDCoefficients;
 import org.firstinspires.ftc.teamcode.util.pid.PIDModel;
 
-public class V3VerticalSlidesPID extends PIDModel {
+public class VerticalSlidesPID extends PIDModel {
 
-    private final V3Robot robot;
+    private final RobotBase robot;
     private int targetPosition;
 
-    public V3VerticalSlidesPID(V3Robot robot, double minPower, double maxPower, double pK, double iK, double dK) {
-        super(minPower, maxPower, pK, iK, dK);
+    public VerticalSlidesPID(RobotBase robot, PIDCoefficients pidCoefficients) {
+        super(pidCoefficients);
         this.robot = robot;
     }
 
@@ -33,6 +34,6 @@ public class V3VerticalSlidesPID extends PIDModel {
 
     @Override
     protected double getStopSpeed() {
-        return 0.05;
-    } //minimum speed to stop adjusting
+        return 1; //0.001 ticks/ms = 1 ticks/sec
+    } //minimum speed to stop adjusting (ticks per ms)
 }

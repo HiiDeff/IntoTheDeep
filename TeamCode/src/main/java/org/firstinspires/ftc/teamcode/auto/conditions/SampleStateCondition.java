@@ -15,6 +15,6 @@ public class SampleStateCondition implements Condition {
     }
     @Override
     public boolean shouldContinue() {
-        return robot.intakeSampleState.IsSampleIn();
+        return robot.isSampleIn();
     }
 }

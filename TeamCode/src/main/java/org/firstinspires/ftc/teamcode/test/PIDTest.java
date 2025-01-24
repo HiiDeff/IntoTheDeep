@@ -3,30 +3,18 @@ package org.firstinspires.ftc.teamcode.test;
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
-import com.acmerobotics.roadrunner.Pose2d;
-import com.acmerobotics.roadrunner.ftc.GoBildaPinpointDriverRR;
-import com.qualcomm.hardware.lynx.LynxModule;
-import com.qualcomm.hardware.rev.RevBlinkinLedDriver;
-import com.qualcomm.hardware.rev.RevColorSensorV3;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorEx;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.hardware.Servo;
 
-import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
-import org.firstinspires.ftc.teamcode.drive.IntakeSampleState;
+import org.firstinspires.ftc.teamcode.drive.RobotBase;
 import org.firstinspires.ftc.teamcode.drive.RobotFactory;
-import org.firstinspires.ftc.teamcode.drive.V3Robot;
-import org.firstinspires.ftc.teamcode.util.profile.ProfileConstraints;
-import org.firstinspires.ftc.teamcode.util.profile.ServoProfiler;
+import org.firstinspires.ftc.teamcode.drive.V3Robot.V3Robot;
+import org.firstinspires.ftc.teamcode.drive.V4Robot.V4Robot;
 
-@TeleOp(name = "Robot Test", group = "Test")
+@TeleOp(name = "PID Test", group = "Test")
 @Config
 
-public class RobotTest extends LinearOpMode {
+public class PIDTest extends LinearOpMode {
 
 
     public MultipleTelemetry multipleTelemetry;
@@ -35,7 +23,7 @@ public class RobotTest extends LinearOpMode {
 //    private LM1Robot robot;
 //    private GamePad gp1;
 
-    private V3Robot robot;
+    private RobotBase robot;
     public static double targetPos = 10.0;
 
     @Override
@@ -43,12 +31,12 @@ public class RobotTest extends LinearOpMode {
 
         multipleTelemetry = new MultipleTelemetry(this.telemetry, FtcDashboard.getInstance().getTelemetry());
 
-        robot = (V3Robot) RobotFactory.createRobot(hardwareMap);
+        robot = (RobotBase) RobotFactory.createRobot(hardwareMap);
 
         waitForStart();
         while(opModeIsActive()) {
 
-            robot.setVerticalSlidesHeight(targetPos, 1.0);
+            robot.setVerticalSlidesHeight(targetPos);
 
 
             robot.updateEverything();

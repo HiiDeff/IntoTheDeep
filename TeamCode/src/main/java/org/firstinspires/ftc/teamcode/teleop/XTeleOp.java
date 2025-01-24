@@ -13,9 +13,9 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.drive.RobotFactory;
-import org.firstinspires.ftc.teamcode.drive.V3Robot;
-import org.firstinspires.ftc.teamcode.task.BucketTask;
+import org.firstinspires.ftc.teamcode.drive.V3Robot.V3Robot;
 import org.firstinspires.ftc.teamcode.task.ClawTask;
+import org.firstinspires.ftc.teamcode.task.DeliveryArmTask;
 import org.firstinspires.ftc.teamcode.task.HorizontalSlidesTask;
 import org.firstinspires.ftc.teamcode.task.IntakeArmTask;
 import org.firstinspires.ftc.teamcode.task.ParallelTask;
@@ -95,7 +95,7 @@ public class XTeleOp extends LinearOpMode {
         telemetry.addData("colors", robot.getIntakeColorToString());
         telemetry.addData("pose", robot.pose);
         telemetry.addData("vertical slide position", robot.getVerticalSlidesHeightInch());
-        telemetry.addData("horizontal slide position", robot.getHorizontalSlideDist());
+        telemetry.addData("horizontal slide position", robot.getHorizontalSlideDistInch());
         telemetry.update();
     }
 
@@ -113,24 +113,24 @@ public class XTeleOp extends LinearOpMode {
             status = XTeleOpStatus.TRANSFERRING;
             presetTask = new SeriesTask(
                     new ParallelTask(
-                            new BucketTask(robot, BucketTask.Position.TRANSFER),
+                            new DeliveryArmTask(robot, DeliveryArmTask.Position.TRANSFER),
                             new ClawTask(robot, ClawTask.ClawPosition.OPEN)
                     ),
                     new ParallelTask(
                             new VerticalSlidesTask(robot, 0, 1.0, 2000),
                             new SeriesTask(
                                     new ParallelTask(
-                                            new TimedHorizontalSlidesTask(robot, robot.getHorizontalTransferPos(), 1.0,1000),
+                                            new TimedHorizontalSlidesTask(robot, robot.getHorizontalSlideTransferPos(), 1.0,1000),
                                             new IntakeArmTask(robot, IntakeArmTask.Position.TRANSFER),
                                             new UnboundedIntakeTask(robot, 1.0)
                                     ),
                                     new ParallelTask(
-                                            new TimedHorizontalSlidesTask(robot, robot.getHorizontalTransferPos(), 1.0, 500),
+                                            new TimedHorizontalSlidesTask(robot, robot.getHorizontalSlideTransferPos(), 1.0, 500),
                                             new UnboundedIntakeTask(robot, -1.0)
                                     ),
                                     new ParallelTask(
                                             new IntakeArmTask(robot, IntakeArmTask.Position.CLEAR),
-                                            new BucketTask(robot, BucketTask.Position.CARRY)
+                                            new DeliveryArmTask(robot, DeliveryArmTask.Position.CARRY)
                                     )
                             )
                     )
@@ -144,7 +144,7 @@ public class XTeleOp extends LinearOpMode {
             double height = gp2.back() ? DELIVERY_LOW_BASKET_HEIGHT : DELIVERY_HIGH_BASKET_HEIGHT;
             presetTask = new ParallelTask(
                     new VerticalSlidesTask(robot, height, 1.0, 1500),
-                    new BucketTask(robot, BucketTask.Position.CARRY)
+                    new DeliveryArmTask(robot, DeliveryArmTask.Position.CARRY)
             );
         }
     }
@@ -214,13 +214,13 @@ public class XTeleOp extends LinearOpMode {
             } else return;
         }
         if (inputted && !(gp2.intuitiveLeftStickY() > 0 &&
-                robot.getHorizontalSlideDist() >= MAX_HORIZONTAL_SLIDE_EXTENSION_INCH)) {
+                robot.getHorizontalSlideDistInch() >= MAX_HORIZONTAL_SLIDE_EXTENSION_INCH)) {
             robot.setHorizontalSlidesPowerWithoutEncoder(HORIZONTAL_SLIDE_POWER * (gp2.intuitiveLeftStickY() > 0 ? 1 : -1));
             if (gp2.rightBumper()) {
                 robot.horizontalSlides.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
                 robot.horizontalSlides.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
             } else {
-                robot.updateHorizontalEncoder();
+                robot.updateLastHorizontalEncoder();
                 horizontalPositionUpdated = true;
             }
         } else if (horizontalPositionUpdated) {
@@ -248,13 +248,13 @@ public class XTeleOp extends LinearOpMode {
                     < VERTICAL_HEIGHT_EPSILON ? 0 : VERTICAL_STAND_POWER);
         }
         if (gp1.sOnceX()) {
-            robot.setBucketServoPosition(BucketTask.Position.FLAT);
+            robot.setDeliveryArmServoPosition(DeliveryArmTask.Position.FLAT);
             robot.setClawPosition(ClawTask.ClawPosition.OPEN); clawOpen = true;
         } else if (gp1.sOnceB()) {
-            robot.setBucketServoPosition(BucketTask.Position.DELIVER);
+            robot.setDeliveryArmServoPosition(DeliveryArmTask.Position.DELIVER);
             robot.setClawPosition(ClawTask.ClawPosition.OPEN); clawOpen = true;
         } else if (gp1.sOnceA()) {
-            robot.setBucketServoPosition(BucketTask.Position.TRANSFER);
+            robot.setDeliveryArmServoPosition(DeliveryArmTask.Position.TRANSFER);
             robot.setClawPosition(ClawTask.ClawPosition.OPEN); clawOpen = true;
         }
         if (gp2.sOnceX()) {
@@ -266,7 +266,7 @@ public class XTeleOp extends LinearOpMode {
                 robot.releaseHang();
             } else {
                 robot.lowerHang();
-                robot.setBucketServoPosition(BucketTask.Position.FLAT);
+                robot.setDeliveryArmServoPosition(DeliveryArmTask.Position.FLAT);
             }
             hangUp = !hangUp;
         }
@@ -280,7 +280,7 @@ public class XTeleOp extends LinearOpMode {
                     new VerticalSlidesTask(robot, 0, 1.0, 1000),
                     new SeriesTask(
                             new SleepTask(1000),
-                            new BucketTask(robot, BucketTask.Position.FLAT)
+                            new DeliveryArmTask(robot, DeliveryArmTask.Position.FLAT)
                     ),
                     new SeriesTask(
                             new SleepTask(CLAW_OPEN_DELAY),
@@ -297,7 +297,7 @@ public class XTeleOp extends LinearOpMode {
                             ),
                             new SeriesTask(
                                     new SleepTask(500),
-                                    new BucketTask(robot, BucketTask.Position.CHAMBER_DELIVER)
+                                    new DeliveryArmTask(robot, DeliveryArmTask.Position.CHAMBER_DELIVER)
                             )
                     )
             );
@@ -322,7 +322,7 @@ public class XTeleOp extends LinearOpMode {
                             new VerticalSlidesTask(robot, 0, 1.0, 1000),
                             new SeriesTask(
                                     new SleepTask(1000),
-                                    new BucketTask(robot, BucketTask.Position.FLAT)
+                                    new DeliveryArmTask(robot, DeliveryArmTask.Position.FLAT)
                             ),
                             new SeriesTask(
                                     new SleepTask(CLAW_OPEN_DELAY),
@@ -353,7 +353,7 @@ public class XTeleOp extends LinearOpMode {
                         ),
                         new SeriesTask(
                                 new SleepTask(700),
-                                new BucketTask(robot, BucketTask.Position.CHAMBER_DELIVER)
+                                new DeliveryArmTask(robot, DeliveryArmTask.Position.CHAMBER_DELIVER)
                         ),
                         new SeriesTask(
                                 new SleepTask(200),

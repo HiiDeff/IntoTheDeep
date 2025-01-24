@@ -7,9 +7,9 @@ import com.acmerobotics.roadrunner.TurnConstraints;
 
 import org.firstinspires.ftc.teamcode.auto.NewAutoBase;
 import org.firstinspires.ftc.teamcode.auto.conditions.SampleStateCondition;
-import org.firstinspires.ftc.teamcode.task.BucketTask;
 import org.firstinspires.ftc.teamcode.task.ClawTask;
 import org.firstinspires.ftc.teamcode.task.ConditionalTask;
+import org.firstinspires.ftc.teamcode.task.DeliveryArmTask;
 import org.firstinspires.ftc.teamcode.task.HorizontalSlidesTask;
 import org.firstinspires.ftc.teamcode.task.IntakeArmTask;
 import org.firstinspires.ftc.teamcode.task.IntakeTask;
@@ -25,7 +25,7 @@ import org.firstinspires.ftc.teamcode.task.VerticalSlidesTask;
 @Config
 public abstract class ClipAutoPath extends NewAutoBase {
 
-    public static double PRELOAD_CHAMBER_HEIGHT = 21.5, DELIVERY_CHAMBER_HEIGHT = 22;
+    public static double PRELOAD_CHAMBER_HEIGHT = 21, DELIVERY_CHAMBER_HEIGHT = 21;
     public static int CLAW_OPEN_DELAY = 450, CLAW_CLOSE_DELAY = 100;
     public static int CYCLE_RETURN_SPEED = 30;
 
@@ -44,7 +44,7 @@ public abstract class ClipAutoPath extends NewAutoBase {
                         new VerticalSlidesTask(robot, PRELOAD_CHAMBER_HEIGHT, 1.0, 1000),
                         new SeriesTask(
                                 new SleepTask(500),
-                                new BucketTask(robot, BucketTask.Position.CHAMBER_DELIVER)
+                                new DeliveryArmTask(robot, DeliveryArmTask.Position.CHAMBER_DELIVER)
                         ),
                         new SeriesTask(
                                 new SleepTask(200),
@@ -58,7 +58,7 @@ public abstract class ClipAutoPath extends NewAutoBase {
                         new VerticalSlidesTask(robot, 0, 1.0, 1000),
                         new SeriesTask(
                                 new SleepTask(1000),
-                                new BucketTask(robot, BucketTask.Position.FLAT)
+                                new DeliveryArmTask(robot, DeliveryArmTask.Position.FLAT)
                         ),
                         new SeriesTask(
                                 new SleepTask(CLAW_OPEN_DELAY),
@@ -104,21 +104,21 @@ public abstract class ClipAutoPath extends NewAutoBase {
                                 ),
                                 new ParallelTask(
                                         new UnboundedIntakeTask(robot, -1.0),
-                                        new SleepTask(200)
+                                        new SleepTask(300)
                                 )
                         )
                 )
         );
-        task.add(
-                new SeriesTask(
-                        new ConditionalTask(new SampleStateCondition(robot)),
-                        new ParallelTask(
-                                new UnboundedIntakeTask(robot, 1.0),
-                                new SleepTask(200)
-                        ),
-                        new IntakeTask(robot,400,-1.0)
-                )
-        );
+//        task.add(
+//                new SeriesTask(
+//                        new ConditionalTask(new SampleStateCondition(robot)),
+//                        new ParallelTask(
+//                                new UnboundedIntakeTask(robot, 1.0),
+//                                new SleepTask(200)
+//                        ),
+//                        new IntakeTask(robot,400,-1.0)
+//                )
+//        );
 //        new SleepTask(1000);
         task.add(
                 new ParallelTask(
@@ -162,7 +162,7 @@ public abstract class ClipAutoPath extends NewAutoBase {
                                 ),
                                 new ParallelTask(
                                         new UnboundedIntakeTask(robot, -1.0),
-                                        new SleepTask(200)
+                                        new SleepTask(300)
                                 )
                         ),
                         new SeriesTask(
@@ -172,16 +172,16 @@ public abstract class ClipAutoPath extends NewAutoBase {
                         )
                 )
         );
-        task.add(
-                new SeriesTask(
-                        new ConditionalTask(new SampleStateCondition(robot)),
-                        new ParallelTask(
-                                new UnboundedIntakeTask(robot, 1.0),
-                                new SleepTask(200)
-                        ),
-                        new IntakeTask(robot,400,-1.0)
-                )
-        );
+//        task.add(
+//                new SeriesTask(
+//                        new ConditionalTask(new SampleStateCondition(robot)),
+//                        new ParallelTask(
+//                                new UnboundedIntakeTask(robot, 1.0),
+//                                new SleepTask(200)
+//                        ),
+//                        new IntakeTask(robot,400,-1.0)
+//                )
+//        );
 //        new SleepTask(1000);
         task.add(
                 new ParallelTask(
@@ -225,7 +225,7 @@ public abstract class ClipAutoPath extends NewAutoBase {
                                 ),
                                 new ParallelTask(
                                         new UnboundedIntakeTask(robot, -1.0),
-                                        new SleepTask(200)
+                                        new SleepTask(300)
                                 )
                         ),
                         new SeriesTask(
@@ -235,16 +235,16 @@ public abstract class ClipAutoPath extends NewAutoBase {
                         )
                 )
         );
-        task.add(
-                new SeriesTask(
-                        new ConditionalTask(new SampleStateCondition(robot)),
-                        new ParallelTask(
-                                new UnboundedIntakeTask(robot, 1.0),
-                                new SleepTask(300)
-                        ),
-                        new IntakeTask(robot,400,-1.0)
-                )
-        );
+//        task.add(
+//                new SeriesTask(
+//                        new ConditionalTask(new SampleStateCondition(robot)),
+//                        new ParallelTask(
+//                                new UnboundedIntakeTask(robot, 1.0),
+//                                new SleepTask(300)
+//                        ),
+//                        new IntakeTask(robot,400,-1.0)
+//                )
+//        );
 //        new SleepTask(1000);
         return task;
     }
@@ -258,7 +258,7 @@ public abstract class ClipAutoPath extends NewAutoBase {
                         new VerticalSlidesTask(robot, 0, 1.0, 1000),
                         new SeriesTask(
                                 new SleepTask(1000),
-                                new BucketTask(robot, BucketTask.Position.FLAT)
+                                new DeliveryArmTask(robot, DeliveryArmTask.Position.FLAT)
                         ),
                         new SeriesTask(
                                 new SleepTask(CLAW_OPEN_DELAY),
@@ -284,7 +284,7 @@ public abstract class ClipAutoPath extends NewAutoBase {
                                 new VerticalSlidesTask(robot, DELIVERY_CHAMBER_HEIGHT, 1.0, 2000),
                                 new SeriesTask(
                                         new SleepTask(500),
-                                        new BucketTask(robot, BucketTask.Position.CHAMBER_DELIVER)
+                                        new DeliveryArmTask(robot, DeliveryArmTask.Position.CHAMBER_DELIVER)
                                 ),
                                 new RuntimeDrivingTask(
                                         robot,
@@ -311,7 +311,7 @@ public abstract class ClipAutoPath extends NewAutoBase {
                         new VerticalSlidesTask(robot, 0, 1.0, 1000),
                         new SeriesTask(
                                 new SleepTask(1000),
-                                new BucketTask(robot, BucketTask.Position.FLAT)
+                                new DeliveryArmTask(robot, DeliveryArmTask.Position.FLAT)
                         ),
                         new SeriesTask(
                                 new SleepTask(CLAW_OPEN_DELAY),

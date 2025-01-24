@@ -3,7 +3,7 @@ package org.firstinspires.ftc.teamcode.task;
 import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.hardware.Servo;
 
-import org.firstinspires.ftc.teamcode.drive.V3Robot;
+import org.firstinspires.ftc.teamcode.drive.RobotBase;
 import org.firstinspires.ftc.teamcode.util.Utils;
 
 /**
@@ -20,17 +20,17 @@ public class HangTask extends TimedTask {
     private static final int MAX_ROTATION_DEGREE = 1620; // 4.5 turn
 
 
-    private final V3Robot robot;
+    private final RobotBase robot;
     private final Position position;
     private final WhichHang hang;
     private boolean started;
 
-    public static void setHangPosition(V3Robot robot,
-            WhichHang placer, Position position) {
+    public static void setHangPosition(RobotBase robot,
+                                       WhichHang placer, Position position) {
         getHangServo(robot, placer).setPosition(robot.getHangTargetPos(placer, position));
     }
 
-    public HangTask(V3Robot robot, WhichHang hang, Position position) {
+    public HangTask(RobotBase robot, WhichHang hang, Position position) {
         this.robot = robot;
         this.hang = hang;
         this.position = position;
@@ -50,14 +50,15 @@ public class HangTask extends TimedTask {
         return false;
     }
 
-    private static Servo getHangServo(V3Robot robot, WhichHang hang) {
+    private static Servo getHangServo(RobotBase robot, WhichHang hang) {
         return hang == WhichHang.LEFT ? robot.leftHang : robot.rightHang;
     }
 
     public enum Position {
         RELEASE,
         HANG,
-        INIT
+        INIT,
+        VERTICAL
     }
 }
 

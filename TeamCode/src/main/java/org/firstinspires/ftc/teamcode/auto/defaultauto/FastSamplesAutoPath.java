@@ -5,14 +5,12 @@ import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.TranslationalVelConstraint;
 
 import org.firstinspires.ftc.teamcode.auto.AutoBase;
-import org.firstinspires.ftc.teamcode.drive.RobotBase;
-import org.firstinspires.ftc.teamcode.task.BucketTask;
+import org.firstinspires.ftc.teamcode.task.DeliveryArmTask;
 import org.firstinspires.ftc.teamcode.task.HorizontalSlidesTask;
 import org.firstinspires.ftc.teamcode.task.IntakeArmTask;
 import org.firstinspires.ftc.teamcode.task.IntakeTask;
 import org.firstinspires.ftc.teamcode.task.IntakeWithExtensionTask;
 import org.firstinspires.ftc.teamcode.task.ParallelTask;
-import org.firstinspires.ftc.teamcode.task.RungStickTask;
 import org.firstinspires.ftc.teamcode.task.RuntimeDrivingTask;
 import org.firstinspires.ftc.teamcode.task.SeriesTask;
 import org.firstinspires.ftc.teamcode.task.SleepTask;
@@ -45,7 +43,7 @@ public abstract class FastSamplesAutoPath extends AutoBase {
                             return builder.strafeToLinearHeading(pos.position, pos.heading, new TranslationalVelConstraint(45)).build();
                         }
                 ),
-                new BucketTask(robot, BucketTask.Position.DELIVER),
+                new DeliveryArmTask(robot, DeliveryArmTask.Position.DELIVER),
                 new SleepTask(500),
                 new IntakeArmTask(robot, IntakeArmTask.Position.DOWN)
         ));
@@ -58,7 +56,7 @@ public abstract class FastSamplesAutoPath extends AutoBase {
         //SAMPLE 1
         task.add(new ParallelTask(
                 new ParallelTask(
-                        new BucketTask(robot, BucketTask.Position.FLAT),
+                        new DeliveryArmTask(robot, DeliveryArmTask.Position.FLAT),
                         new RuntimeDrivingTask(
                                 robot,
                                 builder -> {
@@ -92,15 +90,15 @@ public abstract class FastSamplesAutoPath extends AutoBase {
                 new SeriesTask(
                         new ParallelTask(
                                 new IntakeArmTask(robot, IntakeArmTask.Position.TRANSFER),
-                                new BucketTask(robot, BucketTask.Position.TRANSFER),
-                                new HorizontalSlidesTask(robot, robot.getHorizontalTransferPos(), 1.0, 1200)
+                                new DeliveryArmTask(robot, DeliveryArmTask.Position.TRANSFER),
+                                new HorizontalSlidesTask(robot, robot.getHorizontalSlideTransferPos(), 1.0, 1200)
                         ),
                         new ParallelTask(
                                 new IntakeTask(robot, 800, -0.8),
-                                new HorizontalSlidesTask(robot, robot.getHorizontalTransferPos(), 1.0, 800)
+                                new HorizontalSlidesTask(robot, robot.getHorizontalSlideTransferPos(), 1.0, 800)
                         ),
                         new ParallelTask(
-                                new BucketTask(robot, BucketTask.Position.CARRY),
+                                new DeliveryArmTask(robot, DeliveryArmTask.Position.CARRY),
                                 new VerticalSlidesTask(robot, 39, 1.0, 2000)
                         )
                 ),
@@ -124,12 +122,12 @@ public abstract class FastSamplesAutoPath extends AutoBase {
 //                            return builder.strafeToLinearHeading(pos.position, pos.heading).build();
 //                        }
 //                ),
-                new BucketTask(robot, BucketTask.Position.DELIVER),
+                new DeliveryArmTask(robot, DeliveryArmTask.Position.DELIVER),
                 new SleepTask(500)
         ));
         //SECOND SAMPLE
         task.add(new ParallelTask(
-                new BucketTask(robot, BucketTask.Position.TRANSFER),
+                new DeliveryArmTask(robot, DeliveryArmTask.Position.TRANSFER),
                 new IntakeArmTask(robot, IntakeArmTask.Position.DOWN),
                 new RuntimeDrivingTask(
                         robot,
@@ -160,14 +158,14 @@ public abstract class FastSamplesAutoPath extends AutoBase {
                 new SeriesTask(
                         new ParallelTask(
                                 new IntakeArmTask(robot, IntakeArmTask.Position.TRANSFER),
-                                new HorizontalSlidesTask(robot, robot.getHorizontalTransferPos(), 1.0, 1200)
+                                new HorizontalSlidesTask(robot, robot.getHorizontalSlideTransferPos(), 1.0, 1200)
                         ),
                         new ParallelTask(
                                 new IntakeTask(robot, 800, -0.8),
-                                new HorizontalSlidesTask(robot, robot.getHorizontalTransferPos(), 1.0, 800)
+                                new HorizontalSlidesTask(robot, robot.getHorizontalSlideTransferPos(), 1.0, 800)
                         ),
                         new ParallelTask(
-                                new BucketTask(robot, BucketTask.Position.CARRY),
+                                new DeliveryArmTask(robot, DeliveryArmTask.Position.CARRY),
                                 new VerticalSlidesTask(robot, 39, 1.0, 2000)
                         )
                 ),
@@ -190,12 +188,12 @@ public abstract class FastSamplesAutoPath extends AutoBase {
 //                            return builder.strafeToLinearHeading(pos.position, pos.heading).build();
 //                        }
 //                ),
-                new BucketTask(robot, BucketTask.Position.DELIVER),
+                new DeliveryArmTask(robot, DeliveryArmTask.Position.DELIVER),
                 new SleepTask(450)
         ));
         //THIRD SAMPLE
         task.add(new ParallelTask(
-                new BucketTask(robot, BucketTask.Position.TRANSFER),
+                new DeliveryArmTask(robot, DeliveryArmTask.Position.TRANSFER),
                 new IntakeArmTask(robot, IntakeArmTask.Position.DOWN),
                 new RuntimeDrivingTask(
                         robot,
@@ -226,14 +224,14 @@ public abstract class FastSamplesAutoPath extends AutoBase {
                 new SeriesTask(
                         new ParallelTask(
                                 new IntakeArmTask(robot, IntakeArmTask.Position.TRANSFER),
-                                new HorizontalSlidesTask(robot, robot.getHorizontalTransferPos(), 1.0, 1200)
+                                new HorizontalSlidesTask(robot, robot.getHorizontalSlideTransferPos(), 1.0, 1200)
                         ),
                         new ParallelTask(
                                 new IntakeTask(robot, 800, -0.8),
-                                new HorizontalSlidesTask(robot, robot.getHorizontalTransferPos(), 1.0, 800)
+                                new HorizontalSlidesTask(robot, robot.getHorizontalSlideTransferPos(), 1.0, 800)
                         ),
                         new ParallelTask(
-                                new BucketTask(robot, BucketTask.Position.CARRY),
+                                new DeliveryArmTask(robot, DeliveryArmTask.Position.CARRY),
                                 new VerticalSlidesTask(robot, 39, 1.0, 2000)
                         )
                 ),
@@ -257,7 +255,7 @@ public abstract class FastSamplesAutoPath extends AutoBase {
 //                            return builder.strafeToLinearHeading(pos.position, pos.heading).build();
 //                        }
 //                ),
-                new BucketTask(robot, BucketTask.Position.DELIVER),
+                new DeliveryArmTask(robot, DeliveryArmTask.Position.DELIVER),
                 new SleepTask(500)
         ));
         return task;
@@ -267,7 +265,7 @@ public abstract class FastSamplesAutoPath extends AutoBase {
         state = AutoState.FINISH;
         SeriesTask task = new SeriesTask();
         task.add(new ParallelTask(
-                new BucketTask(robot, BucketTask.Position.TRANSFER),
+                new DeliveryArmTask(robot, DeliveryArmTask.Position.TRANSFER),
                 new RuntimeDrivingTask(
                         robot,
                         builder -> {

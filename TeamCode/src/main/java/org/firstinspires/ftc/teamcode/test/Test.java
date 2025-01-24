@@ -17,7 +17,6 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
-import org.firstinspires.ftc.teamcode.drive.IntakeSampleState;
 import org.firstinspires.ftc.teamcode.util.profile.ProfileConstraints;
 import org.firstinspires.ftc.teamcode.util.profile.ServoProfiler;
 
@@ -44,13 +43,12 @@ public class Test extends LinearOpMode {
     // Servos
     public Servo claw;
     public Servo intakeArm;
-    public Servo bucketServo;
+    public Servo deliveryArmServo;
     public static double maxVelo = 0;
 
-    public static double clawPos = 0.0, intakeArmPos = 0.0, bucketServoPos = 0.0;
+    public static double clawPos = 0.0, intakeArmPos = 0.0, deliveryArmServoPos = 0.0;
 
     // Sensors
-    public RevColorSensorV3 leftIntakeColorSensor, rightIntakeColorSensor;
 
     public GoBildaPinpointDriverRR pinpoint;
 
@@ -83,13 +81,10 @@ public class Test extends LinearOpMode {
         intakeRoller.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         // Servos:
-        bucketServo = hardwareMap.get(Servo.class, "bucket");
+        deliveryArmServo = hardwareMap.get(Servo.class, "dArm");
         claw = hardwareMap.get(Servo.class, "claw");
         intakeArm = hardwareMap.get(Servo.class, "iArm");
 
-        // Sensors:
-        leftIntakeColorSensor = hardwareMap.get(RevColorSensorV3.class, "intakeColorLeft");
-        rightIntakeColorSensor = hardwareMap.get(RevColorSensorV3.class, "intakeColorRight");
 
         leftFront = hardwareMap.get(DcMotorEx.class, "leftFront");
         leftBack = hardwareMap.get(DcMotorEx.class, "leftBack");
@@ -126,7 +121,7 @@ public class Test extends LinearOpMode {
             rightFront.setPower(RFPower);
             claw.setPosition(clawPos);
             intakeArm.setPosition(intakeArmPos);
-            bucketServo.setPosition(bucketServoPos);
+            deliveryArmServo.setPosition(deliveryArmServoPos);
 
             maxVelo = Math.max(maxVelo, verticalSlidesLeft.getVelocity());
 
@@ -140,8 +135,6 @@ public class Test extends LinearOpMode {
             multipleTelemetry.addData("v slide pos left ", verticalSlidesLeft.getCurrentPosition());
             multipleTelemetry.addData("v slide pos right ", verticalSlidesRight.getCurrentPosition());
             multipleTelemetry.addData("h slide pos ", horizontalSlides.getCurrentPosition());
-            multipleTelemetry.addData("color sensor 1 ", leftIntakeColorSensor.getDistance(DistanceUnit.INCH));
-            multipleTelemetry.addData("color sensor 2 ", rightIntakeColorSensor.getDistance(DistanceUnit.INCH));
             multipleTelemetry.addData("pinpoint", pinpoint.getPositionRR());
             multipleTelemetry.update();
 

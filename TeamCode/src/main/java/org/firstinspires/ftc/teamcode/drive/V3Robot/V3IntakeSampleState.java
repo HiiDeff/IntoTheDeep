@@ -1,19 +1,18 @@
-package org.firstinspires.ftc.teamcode.drive;
+package org.firstinspires.ftc.teamcode.drive.V3Robot;
 
 import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.hardware.rev.RevBlinkinLedDriver;
 import com.qualcomm.robotcore.hardware.NormalizedRGBA;
-import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.util.objectdetector.HSV;
 import org.firstinspires.ftc.teamcode.util.objectdetector.ImageProcessor;
 
 @Config
-public class IntakeSampleState {
+public class V3IntakeSampleState {
 
     public static double MIN_DIST_WITH_SAMPLE = 1.2;
-    private RobotBase robot;
+    private V3Robot robot;
     private SampleColor[] sampleColors = {SampleColor.COLOR_UNSPECIFIED, SampleColor.COLOR_UNSPECIFIED};
     private int numOfSamples = 0;
     private boolean leftSensorDetected;
@@ -53,7 +52,7 @@ public class IntakeSampleState {
         return color == SampleColor.COLOR_UNSPECIFIED;
     }
 
-    public IntakeSampleState(RobotBase robot) {
+    public V3IntakeSampleState(V3Robot robot) {
         this.robot = robot;
     }
 
@@ -85,11 +84,11 @@ public class IntakeSampleState {
         setStripLightColors();
     }
 
-    public int getNumOfPixels() {
+    public int getNumOfSamples() {
         return numOfSamples;
     }
 
-    public SampleColor getPixelColor(int index) {
+    public SampleColor getSampleColor(int index) {
         if (index < 0 || index > 1) return SampleColor.COLOR_UNSPECIFIED;
         return sampleColors[index];
     }
@@ -97,15 +96,15 @@ public class IntakeSampleState {
     private SampleColor toHDColor(NormalizedRGBA color) {
         HSV hsv = ImageProcessor.ColorToHsv(color);
         if (ImageProcessor.isYellow(hsv)) {
-            return IntakeSampleState.SampleColor.COLOR_YELLOW;
+            return V3IntakeSampleState.SampleColor.COLOR_YELLOW;
         }
         if (ImageProcessor.isRed(hsv)) {
-            return IntakeSampleState.SampleColor.COLOR_RED;
+            return V3IntakeSampleState.SampleColor.COLOR_RED;
         }
         if (ImageProcessor.isBlue(hsv)) {
-            return IntakeSampleState.SampleColor.COLOR_BLUE;
+            return V3IntakeSampleState.SampleColor.COLOR_BLUE;
         }
-        return IntakeSampleState.SampleColor.COLOR_UNSPECIFIED;
+        return V3IntakeSampleState.SampleColor.COLOR_UNSPECIFIED;
     }
 
     public enum SampleColor {
