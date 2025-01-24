@@ -34,6 +34,6 @@ public class VerticalSlidesPID extends PIDModel {
 
     @Override
     protected double getStopSpeed() {
-        return 0.001; //0.001 ticks/ms = 1 ticks/sec
+        return 1; //0.001 ticks/ms = 1 ticks/sec
     } //minimum speed to stop adjusting (ticks per ms)
 }

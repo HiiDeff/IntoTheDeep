@@ -59,7 +59,7 @@ public abstract class RobotBase extends PinpointDrive {
     public final Servo swipeStick;
 
     // Motion PIDs + Profilers
-    public static PIDCoefficients VERTICAL_SLIDES_PID_COEFFICIENTS = new PIDCoefficients(0.3, 1.0, 0.015, 0.0, 0.0,0.22); // new PIDCoefficients(0.3, 1.0, 0.006, 0.0, 0.0,0.16); //0.07 min ff, 0.37 = max ff, so do
+    public static PIDCoefficients VERTICAL_SLIDES_PID_COEFFICIENTS; // = new PIDCoefficients(0.3, 1.0, 0.015, 0.0, 0.0,0.22); // new PIDCoefficients(0.3, 1.0, 0.006, 0.0, 0.0,0.16); //0.07 min ff, 0.37 = max ff, so do
     public final VerticalSlidesPID verticalSlidesPID;
     public final ServoProfiler deliveryArmProfiler;
 
@@ -101,8 +101,8 @@ public abstract class RobotBase extends PinpointDrive {
         verticalSlidesRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         verticalSlidesRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
+        VERTICAL_SLIDES_PID_COEFFICIENTS = getVerticalSlidesPidCoefficients();
         verticalSlidesPID = new VerticalSlidesPID(this, VERTICAL_SLIDES_PID_COEFFICIENTS);
-
 
         // Servos:
         swipeStick = hardwareMap.get(Servo.class, "swipeStick");
@@ -191,6 +191,7 @@ public abstract class RobotBase extends PinpointDrive {
 
     public abstract double getVerticalSlidesTicksPerInch();
     public abstract double getVerticalSlidesMaxIn();
+    public abstract PIDCoefficients getVerticalSlidesPidCoefficients();
     public void setVerticalSlidePowerForPID(double power) {
         verticalSlidesLeft.setPower(Utils.clamp(power, VERTICAL_SLIDE_DOWN_POWER_AUTO, 1.0));
         verticalSlidesRight.setPower(Utils.clamp(power, VERTICAL_SLIDE_DOWN_POWER_AUTO, 1.0));

@@ -6,6 +6,7 @@ import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
+import org.firstinspires.ftc.teamcode.drive.RobotBase;
 import org.firstinspires.ftc.teamcode.drive.RobotFactory;
 import org.firstinspires.ftc.teamcode.drive.V3Robot.V3Robot;
 import org.firstinspires.ftc.teamcode.drive.V4Robot.V4Robot;
@@ -22,7 +23,7 @@ public class PIDTest extends LinearOpMode {
 //    private LM1Robot robot;
 //    private GamePad gp1;
 
-    private V4Robot robot;
+    private RobotBase robot;
     public static double targetPos = 10.0;
 
     @Override
@@ -30,7 +31,7 @@ public class PIDTest extends LinearOpMode {
 
         multipleTelemetry = new MultipleTelemetry(this.telemetry, FtcDashboard.getInstance().getTelemetry());
 
-        robot = (V4Robot) RobotFactory.createRobot(hardwareMap);
+        robot = (RobotBase) RobotFactory.createRobot(hardwareMap);
 
         waitForStart();
         while(opModeIsActive()) {

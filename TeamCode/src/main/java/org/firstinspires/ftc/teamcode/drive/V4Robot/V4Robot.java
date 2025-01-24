@@ -41,7 +41,8 @@ public class V4Robot extends RobotBase {
     public static double VERTICAL_SLIDE_TRANSFER_POSITION = 0 / VERTICAL_TICKS_PER_INCH;
     //HORIZONTAL TICKS PER INCH = 736/23 =
 
-    // Profile Constraints
+    // PID + Profile Constraints
+    public static PIDCoefficients V4_VERTICAL_SLIDES_PID_COEFFICIENTS = new PIDCoefficients(0.3, 1.0, 0.015, 0.0, 0.0,0.22); // new PIDCoefficients(0.3, 1.0, 0.006, 0.0, 0.0,0.16); //0.07 min ff, 0.37 = max ff, so do
     public static ProfileConstraints DELIVERY_ARM_CONSTRAINTS = new ProfileConstraints(10, 12, 16);
 
     // Intake Servo Positions
@@ -199,6 +200,12 @@ public class V4Robot extends RobotBase {
     public double getVerticalSlidesMaxIn() {
         return VERTICAL_EXTEND_MAX_INCH;
     }
+
+    @Override
+    public PIDCoefficients getVerticalSlidesPidCoefficients() {
+        return V4_VERTICAL_SLIDES_PID_COEFFICIENTS;
+    }
+
     public double getVerticalSlideTransferPosition() {
         return VERTICAL_SLIDE_TRANSFER_POSITION;
     }

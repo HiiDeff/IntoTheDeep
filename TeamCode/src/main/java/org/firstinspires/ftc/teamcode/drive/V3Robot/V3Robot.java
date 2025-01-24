@@ -37,9 +37,11 @@ public class V3Robot extends RobotBase {
             TRANSFER_POS = 0.23,
             FLAT_POS = 0.55;
 
-    public static double VERTICAL_TICKS_PER_INCH  =  1240.0/38.6, VERTICAL_EXTEND_MAX_INCH = 38.6;
+    public static double VERTICAL_TICKS_PER_INCH  =  743.0/23, VERTICAL_EXTEND_MAX_INCH = 38.6;
 
-    // Profile Constraints
+    // PID + Profile Constraints
+    public static PIDCoefficients V3_VERTICAL_SLIDES_PID_COEFFICIENTS = new PIDCoefficients(0.3, 1.0, 0.016, 0.0, 0.0,0.30); // new PIDCoefficients(0.3, 1.0, 0.006, 0.0, 0.0,0.16); //0.07 min ff, 0.37 = max ff, so do
+
     public static ProfileConstraints DELIVERY_ARM_CONSTRAINTS = new ProfileConstraints(10, 12, 16);
 
     // Intake Servo Positions
@@ -197,6 +199,12 @@ public class V3Robot extends RobotBase {
     public double getVerticalSlidesMaxIn() {
         return VERTICAL_EXTEND_MAX_INCH;
     }
+
+    @Override
+    public PIDCoefficients getVerticalSlidesPidCoefficients() {
+        return V3_VERTICAL_SLIDES_PID_COEFFICIENTS;
+    }
+
     // Color Sensor Utils
     @Override
     public void updateIntakeSampleState() {
