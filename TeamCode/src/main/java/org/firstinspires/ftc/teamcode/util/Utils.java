@@ -20,17 +20,15 @@ public class Utils {
     public static int getEstimatedServoTime(int rpm, int maxRotationDegree, double travelDist) {
         double secondsPerRotation = 60.0 / rpm;
         double secondsForFullRange = maxRotationDegree / 360.0 * secondsPerRotation;
-        RobotLog.ee("lswu-degug", "waiting time: %d, diff: %f",
-                (int) (Math.abs(travelDist) * secondsForFullRange * 1000), travelDist);
         return (int) (Math.abs(travelDist) * secondsForFullRange * 1000);
     }
 
     // Estimates the max travel time with consideration of servo load and servo travel direction.
     // If a negative travelDist means going up, set negativeIsUp to true.
     public static int getEstimatedServoTimeHeavyLoad(int rpm, int maxRotationDegree,
-            double travelDist, boolean negativeIsUp) {
+            double travelDist) {
         int basicTime = getEstimatedServoTime(rpm, maxRotationDegree, travelDist);
-        if (isGoingUp(travelDist, negativeIsUp)) {
+        if (isGoingUp(travelDist, true)) {
             basicTime *= 2;
         }
         return basicTime;
