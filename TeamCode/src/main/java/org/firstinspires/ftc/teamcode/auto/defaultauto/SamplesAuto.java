@@ -12,11 +12,11 @@ import org.firstinspires.ftc.teamcode.drive.RobotFactory;
 @Autonomous(name = "V2 Robot - SAMPLE Auto")
 public class SamplesAuto extends SamplesAutoPath {
 
-    public static double Sample1IntakeAlignPosX = 36.5;
+    public static double Sample1IntakeAlignPosX = 35.5;
     public static double Sample1IntakeAlignPosY = 0.0;
-    public static double Sample2IntakeAlignPosX = 36.5;
+    public static double Sample2IntakeAlignPosX = 35.5;
     public static double Sample2IntakeAlignPosY = 7;
-    public static double Sample3IntakeAlignPosX = 36.5;
+    public static double Sample3IntakeAlignPosX = 35.5;
     public static double Sample3IntakeAlignPosY = 17.9128;
 
     public static int INTAKE_DELAY = 2000;
