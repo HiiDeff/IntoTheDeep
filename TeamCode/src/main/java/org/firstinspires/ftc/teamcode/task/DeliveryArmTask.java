@@ -41,7 +41,8 @@ public class DeliveryArmTask extends TimedTask {
         CHAMBER_DELIVER,
         DELIVER,
         FLAT,
-        TRANSFER
+        TRANSFER,
+        UP
     }
 }
 

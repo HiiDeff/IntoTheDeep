@@ -18,6 +18,7 @@ import org.firstinspires.ftc.teamcode.task.DeliveryArmTask;
 import org.firstinspires.ftc.teamcode.task.HangTask;
 import org.firstinspires.ftc.teamcode.task.IntakeArmTask;
 import org.firstinspires.ftc.teamcode.task.SwipeStickTask;
+import org.firstinspires.ftc.teamcode.util.SampleColor;
 import org.firstinspires.ftc.teamcode.util.Utils;
 import org.firstinspires.ftc.teamcode.util.pid.PIDCoefficients;
 import org.firstinspires.ftc.teamcode.util.profile.ProfileConstraints;
@@ -32,10 +33,10 @@ public class V4Robot extends RobotBase {
     // Delivery Servo Positions
     public static double CARRY_POS = 0.5,
             CHAMBER_DELIVER_POS = 0.35, //TODO: TUNE THIS
-            DELIVER_POS = 0.70, //TODO: change?
-
+            DELIVER_POS = 0.73, //TODO: change?
             TRANSFER_POS = 0.27,
-            FLAT_POS = 0.875;
+            FLAT_POS = 0.875,
+            UP_POS = 0.6;
 
     public static double VERTICAL_TICKS_PER_INCH  = 943.0/29, VERTICAL_EXTEND_MAX_INCH = 29;
     public static double VERTICAL_SLIDE_TRANSFER_POSITION = 0 / VERTICAL_TICKS_PER_INCH;
@@ -46,10 +47,11 @@ public class V4Robot extends RobotBase {
     public static ProfileConstraints DELIVERY_ARM_CONSTRAINTS = new ProfileConstraints(10, 12, 16);
 
     // Intake Servo Positions
-    public static double INTAKE_ARM_DOWN = 0.89,
+    public static double INTAKE_ARM_DOWN = 0.87,
             INTAKE_ARM_TRANSFER = 0.36,
             INTAKE_ARM_CLEAR = 0.40,
-            INTAKE_ARM_SLIGHTLY_UP = 0.76; //TODO: make this closer to transfer position
+            INTAKE_ARM_SLIGHTLY_UP = 0.76, //TODO: make this closer to transfer position
+            INTAKE_ARM_UP = 0.5; // Position high enough above the submersible bar
 
     // Claw Servo Positions
     public static double CLAW_OPEN_POS = 0.25, //0.35,
@@ -143,6 +145,8 @@ public class V4Robot extends RobotBase {
                 return DELIVER_POS;
             case FLAT:
                 return FLAT_POS;
+            case UP:
+                return UP_POS;
             case TRANSFER:
             default:
                 return TRANSFER_POS;
@@ -157,6 +161,8 @@ public class V4Robot extends RobotBase {
                 return INTAKE_ARM_TRANSFER;
             case CLEAR:
                 return INTAKE_ARM_CLEAR;
+            case UP:
+                return INTAKE_ARM_UP;
             case DOWN:
             default:
                 return INTAKE_ARM_DOWN;
@@ -215,10 +221,17 @@ public class V4Robot extends RobotBase {
     public void updateIntakeSampleState() {
         intakeSampleState.update();
     }
+
     @Override
     public boolean isSampleIn() {
         return intakeSampleState.IsSampleIn();
     }
+
+    @Override
+    public SampleColor getSampleColor() {
+        return intakeSampleState.getSampleColor();
+    }
+
     public String getIntakeColorToString() {
         return intakeSampleState.getStripLightColors();
     }

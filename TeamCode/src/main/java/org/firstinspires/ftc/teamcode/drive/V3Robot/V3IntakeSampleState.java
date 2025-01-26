@@ -5,6 +5,7 @@ import com.qualcomm.hardware.rev.RevBlinkinLedDriver;
 import com.qualcomm.robotcore.hardware.NormalizedRGBA;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
+import org.firstinspires.ftc.teamcode.util.SampleColor;
 import org.firstinspires.ftc.teamcode.util.objectdetector.HSV;
 import org.firstinspires.ftc.teamcode.util.objectdetector.ImageProcessor;
 
@@ -96,21 +97,14 @@ public class V3IntakeSampleState {
     private SampleColor toHDColor(NormalizedRGBA color) {
         HSV hsv = ImageProcessor.ColorToHsv(color);
         if (ImageProcessor.isYellow(hsv)) {
-            return V3IntakeSampleState.SampleColor.COLOR_YELLOW;
+            return SampleColor.COLOR_YELLOW;
         }
         if (ImageProcessor.isRed(hsv)) {
-            return V3IntakeSampleState.SampleColor.COLOR_RED;
+            return SampleColor.COLOR_RED;
         }
         if (ImageProcessor.isBlue(hsv)) {
-            return V3IntakeSampleState.SampleColor.COLOR_BLUE;
+            return SampleColor.COLOR_BLUE;
         }
-        return V3IntakeSampleState.SampleColor.COLOR_UNSPECIFIED;
-    }
-
-    public enum SampleColor {
-        COLOR_UNSPECIFIED,
-        COLOR_YELLOW,
-        COLOR_BLUE,
-        COLOR_RED
+        return SampleColor.COLOR_UNSPECIFIED;
     }
 }

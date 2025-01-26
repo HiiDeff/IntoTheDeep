@@ -11,6 +11,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.teamcode.drive.RobotBase;
+import org.firstinspires.ftc.teamcode.drive.V4Robot.V4IntakeSampleState;
 import org.firstinspires.ftc.teamcode.roadrunner.MecanumDrive;
 import org.firstinspires.ftc.teamcode.roadrunner.PinpointDrive;
 import org.firstinspires.ftc.teamcode.task.ClawTask;
@@ -18,6 +19,7 @@ import org.firstinspires.ftc.teamcode.task.DeliveryArmTask;
 import org.firstinspires.ftc.teamcode.task.HangTask;
 import org.firstinspires.ftc.teamcode.task.IntakeArmTask;
 import org.firstinspires.ftc.teamcode.task.SwipeStickTask;
+import org.firstinspires.ftc.teamcode.util.SampleColor;
 import org.firstinspires.ftc.teamcode.util.Utils;
 import org.firstinspires.ftc.teamcode.util.pid.PIDCoefficients;
 import org.firstinspires.ftc.teamcode.util.profile.ProfileConstraints;
@@ -214,6 +216,12 @@ public class V3Robot extends RobotBase {
     public boolean isSampleIn() {
         return intakeSampleState.IsSampleIn();
     }
+
+    @Override
+    public SampleColor getSampleColor() {
+        return intakeSampleState.getSampleColor(0);
+    }
+
     public String getIntakeColorToString() {
         return intakeSampleState.getStripLightColors();
     }

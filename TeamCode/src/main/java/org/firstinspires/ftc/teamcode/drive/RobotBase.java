@@ -9,11 +9,13 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
+import org.firstinspires.ftc.teamcode.drive.V4Robot.V4IntakeSampleState;
 import org.firstinspires.ftc.teamcode.roadrunner.PinpointDrive;
 import org.firstinspires.ftc.teamcode.task.ClawTask;
 import org.firstinspires.ftc.teamcode.task.DeliveryArmTask;
 import org.firstinspires.ftc.teamcode.task.HangTask;
 import org.firstinspires.ftc.teamcode.task.IntakeArmTask;
+import org.firstinspires.ftc.teamcode.util.SampleColor;
 import org.firstinspires.ftc.teamcode.util.Utils;
 import org.firstinspires.ftc.teamcode.util.pid.PIDCoefficients;
 import org.firstinspires.ftc.teamcode.util.profile.ProfileConstraints;
@@ -130,7 +132,7 @@ public abstract class RobotBase extends PinpointDrive {
 
     public void teleOpInit() {
         setIntakeArmPos(IntakeArmTask.Position.DOWN);
-        deliveryArm.setPosition(getDeliveryArmServoPosition(DeliveryArmTask.Position.CARRY));
+        deliveryArm.setPosition(getDeliveryArmServoPosition(DeliveryArmTask.Position.TRANSFER));
 //        initHang();
         setClawPosition(ClawTask.ClawPosition.OPEN);
     }
@@ -290,6 +292,9 @@ public abstract class RobotBase extends PinpointDrive {
     ///////////////////* COLOR SENSOR + LIGHTS UTILS *///////////////////
 
     public abstract boolean isSampleIn();
+
+    public abstract SampleColor getSampleColor();
+
     public void setLightColor(RevBlinkinLedDriver.BlinkinPattern pattern) {
         light.setPattern(pattern);
     }
