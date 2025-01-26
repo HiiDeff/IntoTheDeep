@@ -114,7 +114,7 @@ public class V3Robot extends RobotBase {
 
         // path profile parameters (in inches)
         p.maxWheelVel = 60;
-        p.minProfileAccel = -30; //TODO change this to -40
+        p.minProfileAccel = -40; //TODO change this to -40
         p.maxProfileAccel = 50; //TODO change this to 60
 
         // turn profile parameters (in radians)
@@ -215,7 +215,7 @@ public class V3Robot extends RobotBase {
         return intakeSampleState.IsSampleIn();
     }
     public String getIntakeColorToString() {
-        return intakeSampleState.getStripLightColors();
+        return intakeSampleState.getIntakeColors();
     }
 
 }

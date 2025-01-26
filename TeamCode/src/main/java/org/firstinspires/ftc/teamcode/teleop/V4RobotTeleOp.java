@@ -1,7 +1,5 @@
 package org.firstinspires.ftc.teamcode.teleop;
 
-import android.util.Log;
-
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.acmerobotics.roadrunner.Pose2d;
@@ -14,7 +12,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.drive.RobotFactory;
-import org.firstinspires.ftc.teamcode.drive.V3Robot.V3Robot;
+import org.firstinspires.ftc.teamcode.drive.SensorUpdateThread;
 import org.firstinspires.ftc.teamcode.drive.V4Robot.V4Robot;
 import org.firstinspires.ftc.teamcode.task.ClawTask;
 import org.firstinspires.ftc.teamcode.task.DeliveryArmTask;
@@ -63,6 +61,8 @@ public class V4RobotTeleOp extends LinearOpMode {
             deliverChamberTask,
             deliverTask,
             swipeStickTask;
+    private SensorUpdateThread sensorUpdateThread;
+
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -74,6 +74,8 @@ public class V4RobotTeleOp extends LinearOpMode {
         waitForStart();
         cycleTimer = new ElapsedTime();
 
+        sensorUpdateThread = new SensorUpdateThread(robot);
+        sensorUpdateThread.start();
 
         while (opModeIsActive()) {
 

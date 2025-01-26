@@ -17,7 +17,7 @@ public class RobotFactory {
         TEST_ROBOT_DEAD_WHEELS,
         TEST_ROBOT_PINPOINT;
     }
-    public static Robot ACTIVE_ROBOT = Robot.V4_ROBOT;
+    public static Robot ACTIVE_ROBOT = Robot.V3_ROBOT;
 
     public static Robot getActiveRobot() {
         return ACTIVE_ROBOT;

@@ -8,6 +8,8 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.util.objectdetector.HSV;
 import org.firstinspires.ftc.teamcode.util.objectdetector.ImageProcessor;
 
+import java.util.Arrays;
+
 @Config
 public class V3IntakeSampleState {
 
@@ -44,7 +46,7 @@ public class V3IntakeSampleState {
         }
         robot.setLightColor(pattern);
     }
-    public String getStripLightColors() {
+    public synchronized String getIntakeColors() {
         return sampleColors[0].name()+" "+sampleColors[1].name();
     }
 
@@ -56,8 +58,7 @@ public class V3IntakeSampleState {
         this.robot = robot;
     }
 
-    public boolean IsSampleIn()
-    {
+    public synchronized boolean IsSampleIn() {
 //        double leftDist = robot.leftIntakeColorSensor.getDistance(DistanceUnit.INCH);
 //        double rightDist = robot.rightIntakeColorSensor.getDistance(DistanceUnit.INCH);
 
@@ -66,29 +67,50 @@ public class V3IntakeSampleState {
     }
 
     public void update() {
-        numOfSamples = 0;
+
+        int tempNumOfSamples = 0;
+        SampleColor[] tempSampleColors = {SampleColor.COLOR_UNSPECIFIED, SampleColor.COLOR_UNSPECIFIED};
+        boolean tempLeftSensorDetected = false;
+
         double leftDist = robot.leftIntakeColorSensor.getDistance(DistanceUnit.INCH);
+        if(leftDist < MIN_DIST_WITH_SAMPLE){
+            tempNumOfSamples++;
+            tempSampleColors[0] = toHDColor(robot.leftIntakeColorSensor.getNormalizedColors());
+            tempLeftSensorDetected = true;
+        }
         double rightDist = robot.rightIntakeColorSensor.getDistance(DistanceUnit.INCH);
-        sampleColors[0] = SampleColor.COLOR_UNSPECIFIED;
-        sampleColors[1] = SampleColor.COLOR_UNSPECIFIED;
-        leftSensorDetected = false;
-        if (leftDist < MIN_DIST_WITH_SAMPLE) {
-            numOfSamples++;
-            sampleColors[0] = toHDColor(robot.leftIntakeColorSensor.getNormalizedColors());
-            leftSensorDetected = true;
-        }
         if (rightDist < MIN_DIST_WITH_SAMPLE) {
-            numOfSamples++;
-            sampleColors[1] = toHDColor(robot.rightIntakeColorSensor.getNormalizedColors());
+            tempNumOfSamples++;
+            tempSampleColors[1] = toHDColor(robot.rightIntakeColorSensor.getNormalizedColors());
         }
+
+//        sampleColors[0] = SampleColor.COLOR_UNSPECIFIED;
+//        sampleColors[1] = SampleColor.COLOR_UNSPECIFIED;
+//        leftSensorDetected = false;
+//        if (leftDist < MIN_DIST_WITH_SAMPLE) {
+//            numOfSamples++;
+//            sampleColors[0] = toHDColor(robot.leftIntakeColorSensor.getNormalizedColors());
+//            leftSensorDetected = true;
+//        }
+//        if (rightDist < MIN_DIST_WITH_SAMPLE) {
+//            numOfSamples++;
+//            sampleColors[1] = toHDColor(robot.rightIntakeColorSensor.getNormalizedColors());
+//        }
+        updateInternal(tempNumOfSamples, tempSampleColors, tempLeftSensorDetected);
+    }
+    private synchronized void updateInternal(int tempNumOfSamples, SampleColor[] tempSampleColors, boolean tempLeftSensorDetected) {
+        numOfSamples = tempNumOfSamples;
+        sampleColors[0] = tempSampleColors[0];
+        sampleColors[1] = tempSampleColors[1];
+        leftSensorDetected = tempLeftSensorDetected;
         setStripLightColors();
     }
 
-    public int getNumOfSamples() {
+    public synchronized int getNumOfSamples() {
         return numOfSamples;
     }
 
-    public SampleColor getSampleColor(int index) {
+    public synchronized SampleColor getSampleColor(int index) {
         if (index < 0 || index > 1) return SampleColor.COLOR_UNSPECIFIED;
         return sampleColors[index];
     }

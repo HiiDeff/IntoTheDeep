@@ -155,7 +155,7 @@ public abstract class RobotBase extends PinpointDrive {
         updatePoseEstimate();
         updateProfilers();
         updatePIDs();
-        updateIntakeSampleState();
+//        updateIntakeSampleState();
     }
     public void updatePIDs() {
         if(verticalSlidesRunToPosition) {

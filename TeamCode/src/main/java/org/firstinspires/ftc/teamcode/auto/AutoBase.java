@@ -8,6 +8,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.common.AutoStates;
 import org.firstinspires.ftc.teamcode.drive.RobotBase;
+import org.firstinspires.ftc.teamcode.drive.SensorUpdateThread;
 import org.firstinspires.ftc.teamcode.task.Task;
 
 @Config
@@ -30,6 +31,7 @@ public abstract class AutoBase extends LinearOpMode {
 
     protected AutoState state = AutoState.INIT;
     protected AutoStates autoStates = new AutoStates();
+    protected SensorUpdateThread sensorUpdateThread;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -42,6 +44,9 @@ public abstract class AutoBase extends LinearOpMode {
         Task task = createStartTask();
         robot.setLightColor(RevBlinkinLedDriver.BlinkinPattern.BLACK);
         timer.reset();
+
+        sensorUpdateThread = new SensorUpdateThread(robot);
+        sensorUpdateThread.start();
 
         boolean done = false;
         while (opModeIsActive() && !done && task != null) {

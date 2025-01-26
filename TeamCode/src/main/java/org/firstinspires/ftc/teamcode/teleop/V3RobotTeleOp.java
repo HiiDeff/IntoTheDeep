@@ -1,7 +1,5 @@
 package org.firstinspires.ftc.teamcode.teleop;
 
-import android.util.Log;
-
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.acmerobotics.roadrunner.Pose2d;
@@ -14,6 +12,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.drive.RobotFactory;
+import org.firstinspires.ftc.teamcode.drive.SensorUpdateThread;
 import org.firstinspires.ftc.teamcode.drive.V3Robot.V3Robot;
 import org.firstinspires.ftc.teamcode.task.ClawTask;
 import org.firstinspires.ftc.teamcode.task.DeliveryArmTask;
@@ -59,8 +58,10 @@ public class V3RobotTeleOp extends LinearOpMode {
     private Task submersibleTask,
             transferTask,
             deliverChamberTask,
+            deliverChamberTaskLite,
             deliverTask,
             swipeStickTask;
+    private SensorUpdateThread sensorUpdateThread;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -73,13 +74,16 @@ public class V3RobotTeleOp extends LinearOpMode {
         waitForStart();
         cycleTimer = new ElapsedTime();
 
+        sensorUpdateThread = new SensorUpdateThread(robot);
+        sensorUpdateThread.start();
+
 
         while (opModeIsActive()) {
 
             driveRobot();
-            if (deliverChamberTask == null) runIntake();
-            if (deliverChamberTask == null) runHorizontalSlides();
-            if (deliverChamberTask == null) runDelivery();
+            if (deliverChamberTask == null && deliverChamberTaskLite == null) runIntake();
+            if (deliverChamberTask == null && deliverChamberTaskLite == null) runHorizontalSlides();
+            if (deliverChamberTask == null && deliverChamberTaskLite == null) runDelivery();
             checkPreloads();
             update();
 //            Log.i("ethan ", ""+ elapsedTime.milliseconds());
@@ -91,6 +95,7 @@ public class V3RobotTeleOp extends LinearOpMode {
         if (submersibleTask != null && submersibleTask.perform()) submersibleTask = null;
         if (transferTask != null && transferTask.perform()) transferTask = null;
         if (deliverChamberTask != null && deliverChamberTask.perform()) deliverChamberTask = null;
+        if (deliverChamberTaskLite != null && deliverChamberTaskLite.perform()) deliverChamberTaskLite = null;
         if (deliverTask != null && deliverTask.perform()) deliverTask = null;
         if (swipeStickTask != null && swipeStickTask.perform()) swipeStickTask = null;
         gp1.update();
@@ -111,10 +116,12 @@ public class V3RobotTeleOp extends LinearOpMode {
 //        multipleTelemetry.addData("current bucket servo position", robot.bucketProfiler.getCurPos());
 //        multipleTelemetry.addData("target bucket servo position", robot.bucketProfiler.getTargetPos());
 //        multipleTelemetry.update();
+        telemetry.addData("isSampleIn", robot.isSampleIn());
+        telemetry.update();
     }
 
     private void checkPreloads() {
-        if (submersibleTask != null || transferTask != null || deliverChamberTask != null || swipeStickTask != null)
+        if (submersibleTask != null || transferTask != null || deliverChamberTaskLite != null || deliverChamberTask != null || swipeStickTask != null)
             return;
         // Submersible Intake Preset
         if (gp2.onceY()) {
@@ -238,7 +245,12 @@ public class V3RobotTeleOp extends LinearOpMode {
             if (deliverChamberTask != null) {
                 deliverChamberTask.cancel();
                 deliverChamberTask = null;
-            } else if (deliverTask != null) {
+            }
+            else if(deliverChamberTaskLite != null) {
+                deliverChamberTaskLite.cancel();
+                deliverChamberTaskLite = null;
+            }
+            else if (deliverTask != null) {
                 deliverTask.cancel();
                 deliverTask = null;
             } else if (transferTask != null) {
@@ -250,7 +262,7 @@ public class V3RobotTeleOp extends LinearOpMode {
             } else {
                 robot.setVerticalSlidePowerWithoutEncoder(-0.5);
             }
-        } else if (deliverChamberTask == null && deliverTask == null && transferTask == null) {
+        } else if (deliverChamberTaskLite == null && deliverChamberTask == null && deliverTask == null && transferTask == null) {
             robot.setVerticalSlidePowerWithoutEncoder(robot.getVerticalSlidesHeightInch() < 1.0 ? 0 : VERTICAL_STAND_POWER);
         }
         // Bucket
@@ -316,7 +328,7 @@ public class V3RobotTeleOp extends LinearOpMode {
 
     private void createSpecimenDeliveryTaskLite() {
         if (robot.getVerticalSlidesHeightInch() > 15) {
-            deliverChamberTask = new ParallelTask(
+            deliverChamberTaskLite = new ParallelTask(
                     new HorizontalSlidesTask(robot, 0, 1.0, 700),
                     new VerticalSlidesTask(robot, 0, 1.0, 1000),
                     new SeriesTask(
@@ -329,7 +341,7 @@ public class V3RobotTeleOp extends LinearOpMode {
                     )
             );
         } else {
-            deliverChamberTask = new ParallelTask(
+            deliverChamberTaskLite = new SeriesTask(
                     new ClawTask(robot, ClawTask.ClawPosition.CLOSE),
                     new ParallelTask(
                             new SeriesTask(

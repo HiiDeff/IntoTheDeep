@@ -38,7 +38,7 @@ public class V4IntakeSampleState {
         }
         robot.setLightColor(pattern);
     }
-    public String getStripLightColors() {
+    public synchronized String getIntakeColors() {
         return sampleColor.name();
     }
 
@@ -50,26 +50,32 @@ public class V4IntakeSampleState {
         this.robot = robot;
     }
 
-    public boolean IsSampleIn() {
+    public synchronized boolean IsSampleIn() {
         return numOfSamples > 0;
     }
 
     public void update() {
-        numOfSamples = 0;
+        int tempNumOfSamples = 0;
+        SampleColor tempSampleColor = SampleColor.COLOR_UNSPECIFIED;
+
         double dist = robot.intakeColorSensor.getDistance(DistanceUnit.INCH);
-        sampleColor = SampleColor.COLOR_UNSPECIFIED;
         if (dist < MIN_DIST_WITH_SAMPLE) {
-            numOfSamples = 1;
-            sampleColor = toHDColor(robot.intakeColorSensor.getNormalizedColors());
+            tempNumOfSamples = 1;
+            tempSampleColor = toHDColor(robot.intakeColorSensor.getNormalizedColors());
         }
+        updateInternal(tempNumOfSamples, tempSampleColor);
+    }
+    private synchronized void updateInternal(int tempNumOfSamples, SampleColor tempSampleColor) {
+        numOfSamples = tempNumOfSamples;
+        sampleColor = tempSampleColor;
         setStripLightColors();
     }
 
-    public int getNumOfSamples() {
+    public synchronized int getNumOfSamples() {
         return numOfSamples;
     }
 
-    public SampleColor getSampleColor() {
+    public synchronized SampleColor getSampleColor() {
         return sampleColor;
     }
 

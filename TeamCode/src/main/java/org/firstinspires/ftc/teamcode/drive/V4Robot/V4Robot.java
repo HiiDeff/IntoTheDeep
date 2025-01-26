@@ -220,7 +220,7 @@ public class V4Robot extends RobotBase {
         return intakeSampleState.IsSampleIn();
     }
     public String getIntakeColorToString() {
-        return intakeSampleState.getStripLightColors();
+        return intakeSampleState.getIntakeColors();
     }
 
 }
