@@ -6,6 +6,7 @@ public class SensorUpdateThread extends Thread {
 
     private final RobotBase robot;
 
+    public static int THREAD_SLEEP_TIME = 20;
     public SensorUpdateThread(RobotBase robot) {
         this.robot = robot;
     }
@@ -15,10 +16,10 @@ public class SensorUpdateThread extends Thread {
         try {
             while(true) {
                 robot.updateIntakeSampleState();
-                Thread.sleep(100);
+                Thread.sleep(THREAD_SLEEP_TIME);
             }
         } catch (InterruptedException e) {
-            Log.e("RCActivity", "AutoTransitioner shutdown, thread interrupted");
+            Log.e("RCActivity", "SensorUpdateThread interrupted");
         }
     }
 }

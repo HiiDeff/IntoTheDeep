@@ -40,19 +40,19 @@ public class V3Robot extends RobotBase {
     public static double VERTICAL_TICKS_PER_INCH  =  743.0/23, VERTICAL_EXTEND_MAX_INCH = 38.6;
 
     // PID + Profile Constraints
-    public static PIDCoefficients V3_VERTICAL_SLIDES_PID_COEFFICIENTS = new PIDCoefficients(0.3, 1.0, 0.016, 0.0, 0.0,0.30); // new PIDCoefficients(0.3, 1.0, 0.006, 0.0, 0.0,0.16); //0.07 min ff, 0.37 = max ff, so do
+    public static PIDCoefficients V3_VERTICAL_SLIDES_PID_COEFFICIENTS = new PIDCoefficients(0.3, 1.0, 0.013, 0.0, 0.0,0.30); // new PIDCoefficients(0.3, 1.0, 0.006, 0.0, 0.0,0.16); //0.07 min ff, 0.37 = max ff, so do
 
     public static ProfileConstraints DELIVERY_ARM_CONSTRAINTS = new ProfileConstraints(10, 12, 16);
 
     // Intake Servo Positions
-    public static double INTAKE_ARM_DOWN = 0.14,
+    public static double INTAKE_ARM_DOWN = 0.17,
             INTAKE_ARM_TRANSFER = 0.83,
             INTAKE_ARM_CLEAR = 0.70,
             INTAKE_ARM_SLIGHTLY_UP = 0.25; //TODO: make this closer to transfer position
 
     // Claw Servo Positions
     public static double CLAW_OPEN_POS = 0.58,
-            CLAW_CLOSE_POS = 0.40;
+            CLAW_CLOSE_POS = 0.38;
 
     // Hang Positions
     public static double LEFT_INIT_POS = 0.58;

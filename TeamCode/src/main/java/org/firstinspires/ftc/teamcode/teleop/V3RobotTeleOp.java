@@ -43,7 +43,7 @@ public class V3RobotTeleOp extends LinearOpMode {
     public static double DELIVERY_LOW_BASKET_HEIGHT = 24.0;
     public static double MAX_SLIDE_EXTENSION_INCH = 21.0;
 
-    public static double CYCLE_DELIVER_X = 25, CYCLE_DELIVER_Y = 40, Y_OFFSET = 1.5;
+    public static double CYCLE_DELIVER_X = 23, CYCLE_DELIVER_Y = 40, Y_OFFSET = 1.5;
 
     public MultipleTelemetry multipleTelemetry;
     public ElapsedTime elapsedTime = new ElapsedTime();
