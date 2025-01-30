@@ -20,7 +20,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.util.profile.ProfileConstraints;
 import org.firstinspires.ftc.teamcode.util.profile.ServoProfiler;
 
-@TeleOp(name = "Hang Test", group = "Test")
+@TeleOp(name = "Hang Tester", group = "Test")
 @Config
 
 public class HangTest extends LinearOpMode {

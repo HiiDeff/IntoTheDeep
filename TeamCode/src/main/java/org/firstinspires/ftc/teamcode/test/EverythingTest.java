@@ -20,10 +20,10 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.util.profile.ProfileConstraints;
 import org.firstinspires.ftc.teamcode.util.profile.ServoProfiler;
 
-@TeleOp(name = "Tester", group = "Test")
+@TeleOp(name = "Everything Tester", group = "Test")
 @Config
 
-public class Test extends LinearOpMode {
+public class EverythingTest extends LinearOpMode {
 
 
     public MultipleTelemetry multipleTelemetry;

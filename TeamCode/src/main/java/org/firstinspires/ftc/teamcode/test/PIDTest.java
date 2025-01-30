@@ -11,7 +11,7 @@ import org.firstinspires.ftc.teamcode.drive.RobotFactory;
 import org.firstinspires.ftc.teamcode.drive.V3Robot.V3Robot;
 import org.firstinspires.ftc.teamcode.drive.V4Robot.V4Robot;
 
-@TeleOp(name = "PID Test", group = "Test")
+@TeleOp(name = "PID Tester", group = "Test")
 @Config
 
 public class PIDTest extends LinearOpMode {

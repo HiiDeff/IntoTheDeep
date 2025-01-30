@@ -9,28 +9,26 @@ import org.firstinspires.ftc.teamcode.drive.V3Robot.V3Robot;
 import org.firstinspires.ftc.teamcode.util.GamePad;
 
 @TeleOp(name = "Servo Tester", group = "Test")
-//@Disabled
 @Config
 
 public class ServoTest extends LinearOpMode {
 
     //private final FtcDashboard dashboard = FtcDashboard.getInstance();
-    private V3Robot robot;
-    private GamePad gp1;
+//    private V3Robot robot;
+//    private GamePad gp1;
 
-    Servo claw;
-    public static double pos = 0.78;
-    //public static double leftPos = 0.58, rightPos = 0.41;
+    Servo servo;
+    public static double pos = 0.0;
 
     @Override
     public void runOpMode() throws InterruptedException {
 
-        claw = hardwareMap.get(Servo.class, "swipeStick");
+        servo = hardwareMap.get(Servo.class, "test");
 
         waitForStart();
 
         while (opModeIsActive()) {
-            claw.setPosition(pos);
+            servo.setPosition(pos);
         }
     }
 }
