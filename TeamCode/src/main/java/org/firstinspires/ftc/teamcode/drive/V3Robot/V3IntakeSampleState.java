@@ -23,7 +23,7 @@ public class V3IntakeSampleState {
         RevBlinkinLedDriver.BlinkinPattern pattern = RevBlinkinLedDriver.BlinkinPattern.BLACK;
 
         if(sampleColors[0] != SampleColor.COLOR_UNSPECIFIED && sampleColors[1] != SampleColor.COLOR_UNSPECIFIED && sampleColors[0] != sampleColors[1]){
-            pattern = RevBlinkinLedDriver.BlinkinPattern.WHITE;
+            pattern = RevBlinkinLedDriver.BlinkinPattern.HEARTBEAT_WHITE;
         }
         else if (numOfSamples > 0) {
             int idx = leftSensorDetected? 0:1;
