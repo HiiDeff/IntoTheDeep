@@ -15,8 +15,9 @@ public class V3ClipAuto extends ClipAutoPath {
 
     public static double PRELOAD_DELIVER_X = -31, PRELOAD_DELIVER_Y = 3.0,
             CYCLE_DELIVER_X = -31, CYCLE_OFFSET_X = -0.0, CYCLE_OFFSET_Y = 3,
-            CYCLE_DELIVER_Y = -14.0;
-    public static double THIRD_ANGLE = 1.92;
+            CYCLE_DELIVER_Y = -14.0, PARK_X = -14.57, PARK_Y = 13.11, PARK_HEADING = 1.06,
+            INTAKE_HEADING = 0.05, DELIVER_HEADING = 0.20;
+    public static double THIRD_ANGLE = 1.90;
 
 
     @Override
@@ -31,7 +32,7 @@ public class V3ClipAuto extends ClipAutoPath {
 
     @Override
     protected Pose2d getFirstSampleIntakePos() {
-        return new Pose2d(-20.962, 17.441, 2.2208);
+        return new Pose2d(-20.962, 17.441, 2.23);
     }
 
     @Override
@@ -61,16 +62,16 @@ public class V3ClipAuto extends ClipAutoPath {
 
     @Override
     protected Pose2d getSpecimenIntakePos(int cycleNumber) {
-        return new Pose2d(1.5+0.00*cycleNumber, 30.56, -Math.PI+0.05); //x = 0.5+0.05*cycleNumber for V2 Robot
+        return new Pose2d(1.5+0.00*cycleNumber, 30.56, -Math.PI+INTAKE_HEADING); //x = 0.5+0.05*cycleNumber for V2 Robot
     }
 
     @Override
     protected Pose2d getSubmersibleDeliverPos(int cycleNumber) {
-        return new Pose2d(CYCLE_DELIVER_X+cycleNumber*CYCLE_OFFSET_X, CYCLE_DELIVER_Y+cycleNumber*CYCLE_OFFSET_Y, -0.11);
+        return new Pose2d(CYCLE_DELIVER_X+cycleNumber*CYCLE_OFFSET_X, CYCLE_DELIVER_Y+cycleNumber*CYCLE_OFFSET_Y, DELIVER_HEADING);
     }
 
     @Override
     protected Pose2d getParkPos() {
-        return new Pose2d(-17.48, 16.55, 0.8561);
+        return new Pose2d(PARK_X, PARK_Y, PARK_HEADING);
     }
 }

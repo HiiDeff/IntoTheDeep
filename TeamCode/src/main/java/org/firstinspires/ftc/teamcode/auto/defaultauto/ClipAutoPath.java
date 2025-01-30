@@ -27,7 +27,7 @@ public abstract class ClipAutoPath extends NewAutoBase {
 
     public static double PRELOAD_CHAMBER_HEIGHT = 21, DELIVERY_CHAMBER_HEIGHT = 20.5;
     public static int CLAW_OPEN_DELAY = 520, CLAW_CLOSE_DELAY = 100;
-    public static int CYCLE_RETURN_SPEED = 30, PRELOAD_SPEED = 30;
+    public static int CYCLE_RETURN_SPEED = 30, PRELOAD_SPEED = 35;
 
     @Override
     protected Task createStartTask() {
@@ -112,11 +112,7 @@ public abstract class ClipAutoPath extends NewAutoBase {
         task.add(
                 new SeriesTask(
                         new ConditionalTask(new SampleStateCondition(robot)),
-                        new ParallelTask(
-                                new UnboundedIntakeTask(robot, 1.0),
-                                new SleepTask(200)
-                        ),
-                        new IntakeTask(robot,400,-1.0)
+                        new IntakeTask(robot,200,-1.0)
                 )
         );
         new SleepTask(1000);
@@ -175,11 +171,7 @@ public abstract class ClipAutoPath extends NewAutoBase {
         task.add(
                 new SeriesTask(
                         new ConditionalTask(new SampleStateCondition(robot)),
-                        new ParallelTask(
-                                new UnboundedIntakeTask(robot, 1.0),
-                                new SleepTask(200)
-                        ),
-                        new IntakeTask(robot,400,-1.0)
+                        new IntakeTask(robot,200,-1.0)
                 )
         );
 //        new SleepTask(1000);
@@ -238,11 +230,7 @@ public abstract class ClipAutoPath extends NewAutoBase {
         task.add(
                 new SeriesTask(
                         new ConditionalTask(new SampleStateCondition(robot)),
-                        new ParallelTask(
-                                new UnboundedIntakeTask(robot, 1.0),
-                                new SleepTask(300)
-                        ),
-                        new IntakeTask(robot,400,-1.0)
+                        new IntakeTask(robot,200,-1.0)
                 )
         );
 //        new SleepTask(1000);
@@ -307,7 +295,7 @@ public abstract class ClipAutoPath extends NewAutoBase {
                         new UnboundedIntakeTask(robot, 1.0),
                         new SeriesTask(
                                 new SleepTask(400),
-                                new HorizontalSlidesTask(robot, 22.0, 1.0, 2000)
+                                new HorizontalSlidesTask(robot, 21.0, 1.0, 2000)
                         ),
                         new VerticalSlidesTask(robot, 0, 1.0, 1000),
                         new SeriesTask(
