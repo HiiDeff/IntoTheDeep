@@ -36,7 +36,7 @@ public abstract class RobotBase extends PinpointDrive {
     public static double HORIZONTAL_SLIDE_TRANSFER_POS = 64 / HORIZONTAL_TICKS_PER_INCH;
 
     // Intake Constants
-    public static double INTAKE_POWER = 1.0, OUTTAKE_POWER = -0.9;
+    public static double INTAKE_POWER = 1.0, OUTTAKE_POWER = -0.4;
 
 
 
@@ -73,6 +73,8 @@ public abstract class RobotBase extends PinpointDrive {
 
     // States
     private boolean verticalSlidesRunToPosition = false;
+
+    public boolean hangUp = false;
 
 
     public RobotBase(HardwareMap hardwareMap) {
@@ -300,14 +302,19 @@ public abstract class RobotBase extends PinpointDrive {
     public void initHang() {
         HangTask.setHangPosition(this, HangTask.WhichHang.LEFT, HangTask.Position.INIT);
         HangTask.setHangPosition(this, HangTask.WhichHang.RIGHT, HangTask.Position.INIT);
+        hangUp = false;
     }
     public void releaseHang() {
         HangTask.setHangPosition(this, HangTask.WhichHang.LEFT, HangTask.Position.RELEASE);
         HangTask.setHangPosition(this, HangTask.WhichHang.RIGHT, HangTask.Position.RELEASE);
-
+        hangUp = true;
     }
     public void lowerHang() {
         HangTask.setHangPosition(this, HangTask.WhichHang.LEFT, HangTask.Position.HANG);
         HangTask.setHangPosition(this, HangTask.WhichHang.RIGHT, HangTask.Position.HANG);
+        hangUp = false;
+    }
+    public boolean isHangUp(){
+        return hangUp;
     }
 }
