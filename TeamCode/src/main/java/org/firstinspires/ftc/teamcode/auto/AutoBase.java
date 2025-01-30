@@ -72,6 +72,7 @@ public abstract class AutoBase extends LinearOpMode {
             telemetry.addData("y", robot.pose.position.y);
             telemetry.update();
         }
+        sensorUpdateThread.interrupt();
     }
 
     private boolean timeToFinish() {

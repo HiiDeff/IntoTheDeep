@@ -3,13 +3,15 @@ package org.firstinspires.ftc.teamcode.auto.defaultauto;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.teamcode.drive.RobotBase;
 import org.firstinspires.ftc.teamcode.drive.V3Robot.V3Robot;
 
 @Config
-@Autonomous(name = "V3 Robot - FAST SAMPLE Auto")
+@Disabled
+@Autonomous(name = "V3 FAST SAMPLE Auto")
 public class FastSamplesAuto extends FastSamplesAutoPath{
 
     public static double Sample1IntakeAlignPosX = 25.2245;

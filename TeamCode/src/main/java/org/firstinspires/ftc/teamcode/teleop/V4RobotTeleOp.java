@@ -87,6 +87,7 @@ public class V4RobotTeleOp extends LinearOpMode {
             update();
             elapsedTime.reset();
         }
+        sensorUpdateThread.interrupt();
     }
 
     private void update() {

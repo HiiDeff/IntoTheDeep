@@ -9,7 +9,7 @@ import org.firstinspires.ftc.teamcode.drive.RobotBase;
 import org.firstinspires.ftc.teamcode.drive.RobotFactory;
 
 @Config
-@Autonomous(name = "V2 Robot - SAMPLE Auto")
+@Autonomous(name = "V3 SAMPLE Auto")
 public class SamplesAuto extends SamplesAutoPath {
 
     public static double Sample1IntakeAlignPosX = 35.5;

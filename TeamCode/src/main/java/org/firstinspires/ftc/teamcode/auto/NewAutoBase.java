@@ -74,6 +74,7 @@ public abstract class NewAutoBase extends LinearOpMode {
             telemetry.addData("isSampleIn", robot.isSampleIn());
             telemetry.update();
         }
+        sensorUpdateThread.interrupt();
     }
 
     private boolean timeToFinish() {

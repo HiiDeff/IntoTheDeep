@@ -41,7 +41,7 @@ public class V3RobotTeleOp extends LinearOpMode {
     public static double DELIVERY_CHAMBER_HEIGHT = 21.3;
     public static double DELIVERY_HIGH_BASKET_HEIGHT = 38.6;
     public static double DELIVERY_LOW_BASKET_HEIGHT = 24.0;
-    public static double MAX_SLIDE_EXTENSION_INCH = 21.0;
+    public static double MAX_SLIDE_EXTENSION_INCH = 21.0, MAX_SLIDE_EXTENSION_INCH_WITH_HANG = 17.5;
 
     public static double CYCLE_DELIVER_X = 23, CYCLE_DELIVER_Y = 40, Y_OFFSET = 1.5;
 
@@ -89,6 +89,7 @@ public class V3RobotTeleOp extends LinearOpMode {
 //            Log.i("ethan ", ""+ elapsedTime.milliseconds());
             elapsedTime.reset();
         }
+        sensorUpdateThread.interrupt();
     }
 
     private void update() {
@@ -186,7 +187,7 @@ public class V3RobotTeleOp extends LinearOpMode {
     }
 
     private void runHorizontalSlides() { //TODO: check this logic
-        if ((robot.getHorizontalSlideDistInch() < MAX_SLIDE_EXTENSION_INCH && -gp2.leftStickY() > 0.3) || -gp2.leftStickY() < -0.3) {
+        if ((-gp2.leftStickY() > 0.3 && robot.getHorizontalSlideDistInch() < (robot.isHangUp()? MAX_SLIDE_EXTENSION_INCH_WITH_HANG : MAX_SLIDE_EXTENSION_INCH)) || -gp2.leftStickY() < -0.3) {
             if (submersibleTask != null) {
                 submersibleTask.cancel();
                 submersibleTask = null;
@@ -286,7 +287,7 @@ public class V3RobotTeleOp extends LinearOpMode {
             clawOpen = !clawOpen;
         }
         // Hang
-        if (gp1.leftBumper() && gp1.onceRightBumper()) {
+        if (gp1.leftBumper() && gp1.onceRightBumper() && robot.getHorizontalSlideDistInch()<MAX_SLIDE_EXTENSION_INCH_WITH_HANG) {
             if (!hangUp) {
                 robot.releaseHang();
             } else {
