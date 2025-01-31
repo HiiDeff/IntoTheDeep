@@ -36,7 +36,7 @@ public abstract class RobotBase extends PinpointDrive {
     public static double HORIZONTAL_SLIDE_TRANSFER_POS = 64 / HORIZONTAL_TICKS_PER_INCH;
 
     // Intake Constants
-    public static double INTAKE_POWER = 1.0, OUTTAKE_POWER = -0.4;
+    public static double INTAKE_POWER = 1.0, OUTTAKE_POWER = -0.6;
 
 
 

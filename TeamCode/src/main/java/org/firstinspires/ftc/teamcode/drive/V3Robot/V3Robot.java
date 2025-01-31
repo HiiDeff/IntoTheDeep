@@ -35,7 +35,7 @@ public class V3Robot extends RobotBase {
             DELIVER_POS = 0.80, //TODO: change?
 
             TRANSFER_POS = 0.23,
-            FLAT_POS = 0.55;
+            FLAT_POS = 0.535;
 
     public static double VERTICAL_TICKS_PER_INCH  =  743.0/23, VERTICAL_EXTEND_MAX_INCH = 38.6;
 

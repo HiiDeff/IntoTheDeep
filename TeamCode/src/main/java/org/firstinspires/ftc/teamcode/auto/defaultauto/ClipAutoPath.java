@@ -25,7 +25,7 @@ import org.firstinspires.ftc.teamcode.task.VerticalSlidesTask;
 @Config
 public abstract class ClipAutoPath extends NewAutoBase {
 
-    public static double PRELOAD_CHAMBER_HEIGHT = 21, DELIVERY_CHAMBER_HEIGHT = 20.5;
+    public static double PRELOAD_CHAMBER_HEIGHT = 21, DELIVERY_CHAMBER_HEIGHT = 20.4;
     public static int CLAW_OPEN_DELAY = 520, CLAW_CLOSE_DELAY = 100;
     public static int CYCLE_RETURN_SPEED = 30, PRELOAD_SPEED = 35;
 
@@ -188,10 +188,10 @@ public abstract class ClipAutoPath extends NewAutoBase {
                                 }
                         ),
                         new SeriesTask(
-                                new TimedHorizontalSlidesTask(robot, 13, 1.0, 800),
+                                new TimedHorizontalSlidesTask(robot, 13, 1.0, 700),
 //                                new SleepTask(200),
                                 new ParallelTask(
-                                        new HorizontalSlidesTask(robot, 20, 1.0, 500),
+                                        new HorizontalSlidesTask(robot, 20, 1.0, 700),
                                         new IntakeArmTask(robot, IntakeArmTask.Position.DOWN)
                                 )
                         )
@@ -258,7 +258,8 @@ public abstract class ClipAutoPath extends NewAutoBase {
                                         robot,
                                         builder -> {
                                             Pose2d pos = getSpecimenIntakePos(cycleNumber);
-                                            return builder.strafeToLinearHeading(pos.position, pos.heading, new TranslationalVelConstraint(CYCLE_RETURN_SPEED)).build();
+                                            if(cycleNumber==1) return builder.strafeToLinearHeading(pos.position, pos.heading).build();
+                                            else return builder.strafeToLinearHeading(pos.position, pos.heading, new TranslationalVelConstraint(CYCLE_RETURN_SPEED)).build();
                                         }
                                 )
                         )
@@ -294,7 +295,7 @@ public abstract class ClipAutoPath extends NewAutoBase {
                 new ParallelTask(
                         new UnboundedIntakeTask(robot, 1.0),
                         new SeriesTask(
-                                new SleepTask(400),
+                                new SleepTask(300),
                                 new HorizontalSlidesTask(robot, 21.0, 1.0, 2000)
                         ),
                         new VerticalSlidesTask(robot, 0, 1.0, 1000),
