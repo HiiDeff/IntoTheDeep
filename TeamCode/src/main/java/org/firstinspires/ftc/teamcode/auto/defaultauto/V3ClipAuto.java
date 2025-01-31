@@ -14,10 +14,10 @@ import org.firstinspires.ftc.teamcode.drive.RobotFactory;
 public class V3ClipAuto extends ClipAutoPath {
 
     public static double PRELOAD_DELIVER_X = -31, PRELOAD_DELIVER_Y = 3.0,
-            CYCLE_DELIVER_X = -31, CYCLE_OFFSET_X = -0.0, CYCLE_OFFSET_Y = 3.25,
+            CYCLE_DELIVER_X = -31.5, CYCLE_OFFSET_X = -0.2, CYCLE_OFFSET_Y = 3.25,
             CYCLE_DELIVER_Y = -14.0, PARK_X = -14.57, PARK_Y = 13.11, PARK_HEADING = 1.06,
-            INTAKE_HEADING = 0.05, DELIVER_HEADING = -0.23, DELIVER_HEADING_OFFSET = 0.03;
-    public static double THIRD_ANGLE = 1.90;
+            INTAKE_HEADING = 0.05, DELIVER_HEADING = -0.23, DELIVER_HEADING_OFFSET = 0.04;
+    public static double THIRD_ANGLE = 1.905;
 
 
     @Override

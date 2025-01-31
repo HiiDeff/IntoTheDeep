@@ -26,6 +26,7 @@ import org.firstinspires.ftc.teamcode.task.VerticalSlidesTask;
 public abstract class SamplesAutoPath extends AutoBase {
 
     public static int verticalSlidesDelay = 500;
+    public static int DELIVER_DRIVING_SPEED = 20;
 
     @Override
     protected Task createStartTask() {
@@ -108,7 +109,7 @@ public abstract class SamplesAutoPath extends AutoBase {
                             Pose2d pos2 = getSample1BucketDeliverPos();
                             return builder
 //                                    .strafeToLinearHeading(pos1.position, pos1.heading)
-                                    .strafeToLinearHeading(pos2.position, pos2.heading)
+                                    .strafeToLinearHeading(pos2.position, pos2.heading, new TranslationalVelConstraint(DELIVER_DRIVING_SPEED))
                                     .build();
                         }
                 )
@@ -184,7 +185,7 @@ public abstract class SamplesAutoPath extends AutoBase {
                             Pose2d pos2 = getSample2BucketDeliverPos();
                             return builder
 //                                    .strafeToLinearHeading(pos1.position, pos1.heading)
-                                    .strafeToLinearHeading(pos2.position, pos2.heading).build();
+                                    .strafeToLinearHeading(pos2.position, pos2.heading, new TranslationalVelConstraint(DELIVER_DRIVING_SPEED)).build();
                         }
                 )
         ));
@@ -259,7 +260,7 @@ public abstract class SamplesAutoPath extends AutoBase {
                             Pose2d pos2 = getSample3BucketDeliverPos();
                             return builder
 //                                    .strafeToLinearHeading(pos1.position, pos1.heading)
-                                    .strafeToLinearHeading(pos2.position, pos2.heading)
+                                    .strafeToLinearHeading(pos2.position, pos2.heading, new TranslationalVelConstraint(DELIVER_DRIVING_SPEED))
                                     .build();
                         }
                 )

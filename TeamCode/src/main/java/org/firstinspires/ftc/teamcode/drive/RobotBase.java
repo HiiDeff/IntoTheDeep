@@ -14,6 +14,7 @@ import org.firstinspires.ftc.teamcode.task.ClawTask;
 import org.firstinspires.ftc.teamcode.task.DeliveryArmTask;
 import org.firstinspires.ftc.teamcode.task.HangTask;
 import org.firstinspires.ftc.teamcode.task.IntakeArmTask;
+import org.firstinspires.ftc.teamcode.task.SwipeStickTask;
 import org.firstinspires.ftc.teamcode.util.Utils;
 import org.firstinspires.ftc.teamcode.util.pid.PIDCoefficients;
 import org.firstinspires.ftc.teamcode.util.profile.ProfileConstraints;
@@ -135,12 +136,14 @@ public abstract class RobotBase extends PinpointDrive {
         deliveryArm.setPosition(getDeliveryArmServoPosition(DeliveryArmTask.Position.CARRY));
 //        initHang();
         setClawPosition(ClawTask.ClawPosition.OPEN);
+        swipeStick.setPosition(SwipeStickTask.getTargetPos(SwipeStickTask.Position.IN));
     }
     public void autoInit() {
         setIntakeArmPos(IntakeArmTask.Position.DOWN);
         deliveryArm.setPosition(getDeliveryArmServoPosition(DeliveryArmTask.Position.CARRY));
         initHang();
         setClawPosition(ClawTask.ClawPosition.OPEN);
+        swipeStick.setPosition(SwipeStickTask.getTargetPos(SwipeStickTask.Position.IN));
     }
 
     public void autoClipInit() {
@@ -148,6 +151,7 @@ public abstract class RobotBase extends PinpointDrive {
         deliveryArm.setPosition(getDeliveryArmServoPosition(DeliveryArmTask.Position.FLAT));
         initHang();
         setClawPosition(ClawTask.ClawPosition.CLOSE);
+        swipeStick.setPosition(SwipeStickTask.getTargetPos(SwipeStickTask.Position.IN));
     }
 
     ///////////////////* UPDATES *///////////////////

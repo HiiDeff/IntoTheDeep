@@ -125,7 +125,7 @@ public class V3RobotTeleOp extends LinearOpMode {
         if (submersibleTask != null || transferTask != null || deliverChamberTaskLite != null || deliverChamberTask != null || swipeStickTask != null)
             return;
         // Submersible Intake Preset
-        if (gp2.onceY()) {
+        if (gp2.back() && gp2.onceY()) {
             submersibleTask =  new SeriesTask(
                     new ParallelTask(
                             new IntakeArmTask(robot, IntakeArmTask.Position.CLEAR),
@@ -183,6 +183,14 @@ public class V3RobotTeleOp extends LinearOpMode {
                             new VerticalSlidesTask(robot, height, 1.0, 1500),
                             new DeliveryArmTask(robot, DeliveryArmTask.Position.CARRY)
                     );
+        }
+        else if(deliverTask == null && gp2.onceY()){
+            deliverTask = new ParallelTask(
+                    new DeliveryArmTask(robot, DeliveryArmTask.Position.FLAT),
+                    new ClawTask(robot, ClawTask.ClawPosition.CLOSE),
+                    new VerticalSlidesTask(robot, 14, 1.0, 500)
+            );
+            clawOpen = false;
         }
     }
 

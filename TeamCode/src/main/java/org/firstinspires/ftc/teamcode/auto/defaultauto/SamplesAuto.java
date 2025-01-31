@@ -12,8 +12,8 @@ import org.firstinspires.ftc.teamcode.drive.RobotFactory;
 @Autonomous(name = "V3 SAMPLE Auto")
 public class SamplesAuto extends SamplesAutoPath {
 
-    public static double Sample1IntakeAlignPosX = 35.5;
-    public static double Sample1IntakeAlignPosY = 0.0;
+    public static double Sample1IntakeAlignPosX = 27.82;
+    public static double Sample1IntakeAlignPosY = 4.57, Sample1IntakeAlignHeading = 0.936;
     public static double Sample2IntakeAlignPosX = 35.5;
     public static double Sample2IntakeAlignPosY = 7;
     public static double Sample3IntakeAlignPosX = 35.5;
@@ -38,7 +38,7 @@ public class SamplesAuto extends SamplesAutoPath {
 
     @Override
     protected Pose2d getSample1IntakeAlignPos() {
-        return new Pose2d(Sample1IntakeAlignPosX, Sample1IntakeAlignPosY, Math.PI/2);
+        return new Pose2d(Sample1IntakeAlignPosX, Sample1IntakeAlignPosY, Sample1IntakeAlignHeading);
     }
 
     @Override
@@ -53,7 +53,7 @@ public class SamplesAuto extends SamplesAutoPath {
 
     @Override
     protected Pose2d getSample1BucketDeliverPos() {
-        return new Pose2d(4.2944, 25.9038, -Math.PI/4);
+        return new Pose2d(4.7944, 25.4038, -Math.PI/4);
     }
 
     @Override
@@ -73,7 +73,7 @@ public class SamplesAuto extends SamplesAutoPath {
 
     @Override
     protected Pose2d getSample2BucketDeliverPos() {
-        return new Pose2d(4.2944, 25.9038, -Math.PI/4);
+        return new Pose2d(4.7944, 25.4038, -Math.PI/4);
     }
 
     @Override
@@ -93,7 +93,7 @@ public class SamplesAuto extends SamplesAutoPath {
 
     @Override
     protected Pose2d getSample3BucketDeliverPos() {
-        return new Pose2d(4.2944, 25.9038, -Math.PI/4);
+        return new Pose2d(4.7944, 25.4038, -Math.PI/4);
     }
 
     @Override

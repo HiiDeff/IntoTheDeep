@@ -27,7 +27,7 @@ public class IntakeWithExtensionTask extends TimedTask {
                 if (timer == null) {
                     timer = new ElapsedTime();
                 } else {
-                    if (timer.milliseconds() > 100) {
+                    if (timer.milliseconds() > 300) {
                         cancel();
                         return true;
                     }
