@@ -9,8 +9,8 @@ import org.firstinspires.ftc.teamcode.util.Utils;
 @Config
 public class SwipeStickTask extends TimedTask {
 
-    public static double OUT_POSITION = 0.08,
-            IN_POSITION = 0.65;
+    public static double OUT_POSITION = 0.65,
+            IN_POSITION = 0.12;
 
 
     private static final int RPM = 30;
