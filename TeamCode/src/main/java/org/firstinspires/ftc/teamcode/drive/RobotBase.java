@@ -141,7 +141,7 @@ public abstract class RobotBase extends PinpointDrive {
     public void autoInit() {
         setIntakeArmPos(IntakeArmTask.Position.DOWN);
         deliveryArm.setPosition(getDeliveryArmServoPosition(DeliveryArmTask.Position.CARRY));
-        initHang();
+        lowerHang();
         setClawPosition(ClawTask.ClawPosition.OPEN);
         swipeStick.setPosition(SwipeStickTask.getTargetPos(SwipeStickTask.Position.IN));
     }
@@ -149,7 +149,7 @@ public abstract class RobotBase extends PinpointDrive {
     public void autoClipInit() {
         setIntakeArmPos(IntakeArmTask.Position.TRANSFER);
         deliveryArm.setPosition(getDeliveryArmServoPosition(DeliveryArmTask.Position.FLAT));
-        initHang();
+        lowerHang();
         setClawPosition(ClawTask.ClawPosition.CLOSE);
         swipeStick.setPosition(SwipeStickTask.getTargetPos(SwipeStickTask.Position.IN));
     }

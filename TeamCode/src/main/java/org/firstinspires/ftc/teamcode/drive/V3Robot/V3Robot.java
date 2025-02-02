@@ -51,7 +51,7 @@ public class V3Robot extends RobotBase {
             INTAKE_ARM_SLIGHTLY_UP = 0.25; //TODO: make this closer to transfer position
 
     // Claw Servo Positions
-    public static double CLAW_OPEN_POS = 0.58,
+    public static double CLAW_OPEN_POS = 0.60,
             CLAW_CLOSE_POS = 0.38;
 
     // Hang Positions

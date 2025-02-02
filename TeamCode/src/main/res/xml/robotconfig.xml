@@ -15,7 +15,7 @@
             <goBILDA5202SeriesMotor name="rightFront" port="2" />
             <goBILDA5202SeriesMotor name="rightBack" port="3" />
             <Servo name="claw" port="0" />
-            <Servo name="bucket" port="1" />
+            <Servo name="dArm" port="1" />
             <Servo name="iArm" port="2" />
             <Servo name="swipeStick" port="3" />
             <Servo name="lHang" port="4" />

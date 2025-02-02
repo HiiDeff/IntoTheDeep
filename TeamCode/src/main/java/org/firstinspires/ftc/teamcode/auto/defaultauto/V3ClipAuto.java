@@ -17,7 +17,7 @@ public class V3ClipAuto extends ClipAutoPath {
             CYCLE_DELIVER_X = -31.5, CYCLE_OFFSET_X = -0.2, CYCLE_OFFSET_Y = 3.25,
             CYCLE_DELIVER_Y = -14.0, PARK_X = -14.57, PARK_Y = 13.11, PARK_HEADING = 1.06,
             INTAKE_HEADING = 0.05, DELIVER_HEADING = -0.23, DELIVER_HEADING_OFFSET = 0.04;
-    public static double THIRD_ANGLE = 1.905;
+    public static double THIRD_ANGLE = 1.923;
 
 
     @Override
@@ -62,7 +62,7 @@ public class V3ClipAuto extends ClipAutoPath {
 
     @Override
     protected Pose2d getSpecimenIntakePos(int cycleNumber) {
-        return new Pose2d(1.5+0.00*(cycleNumber>1?1:0), 30.56, -Math.PI+INTAKE_HEADING); //x = 0.5+0.05*cycleNumber for V2 Robot
+        return new Pose2d(1.6+0.00*(cycleNumber>1?1:0), 30.56, -Math.PI+INTAKE_HEADING); //x = 0.5+0.05*cycleNumber for V2 Robot
     }
 
     @Override

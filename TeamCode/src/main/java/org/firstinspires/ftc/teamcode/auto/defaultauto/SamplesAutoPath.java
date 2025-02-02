@@ -82,7 +82,8 @@ public abstract class SamplesAutoPath extends AutoBase {
                         new ParallelTask(
                                 new IntakeArmTask(robot, IntakeArmTask.Position.TRANSFER),
                                 new DeliveryArmTask(robot, DeliveryArmTask.Position.TRANSFER),
-                                new HorizontalSlidesTask(robot, robot.getHorizontalSlideTransferPos(), 1.0, 1200)
+                                new HorizontalSlidesTask(robot, robot.getHorizontalSlideTransferPos(), 1.0, 1200),
+                                new UnboundedIntakeTask(robot, 1.0)
                         ),
                         new ParallelTask(
                                 new IntakeTask(robot, 300, -0.8),
@@ -158,7 +159,8 @@ public abstract class SamplesAutoPath extends AutoBase {
                 new SeriesTask(
                         new ParallelTask(
                                 new IntakeArmTask(robot, IntakeArmTask.Position.TRANSFER),
-                                new HorizontalSlidesTask(robot, robot.getHorizontalSlideTransferPos(), 1.0, 1200)
+                                new HorizontalSlidesTask(robot, robot.getHorizontalSlideTransferPos(), 1.0, 1200),
+                                new UnboundedIntakeTask(robot, 1.0)
                         ),
                         new ParallelTask(
                                 new IntakeTask(robot, 300, -0.8),
@@ -233,7 +235,8 @@ public abstract class SamplesAutoPath extends AutoBase {
                 new SeriesTask(
                         new ParallelTask(
                                 new IntakeArmTask(robot, IntakeArmTask.Position.TRANSFER),
-                                new HorizontalSlidesTask(robot, robot.getHorizontalSlideTransferPos(), 1.0, 1200)
+                                new HorizontalSlidesTask(robot, robot.getHorizontalSlideTransferPos(), 1.0, 1200),
+                                new UnboundedIntakeTask(robot, 1.0)
                         ),
                         new ParallelTask(
                                 new IntakeTask(robot, 300, -0.8),
