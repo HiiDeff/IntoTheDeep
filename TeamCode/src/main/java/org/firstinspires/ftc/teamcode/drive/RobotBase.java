@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.drive;
 
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.Pose2d;
+import com.qualcomm.hardware.limelightvision.Limelight3A;
 import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.hardware.rev.RevBlinkinLedDriver;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -67,6 +68,9 @@ public abstract class RobotBase extends PinpointDrive {
     // Lights
     private final RevBlinkinLedDriver light;
 
+    // Vision
+    public final Limelight3A limelight;
+
     // Cached Encoder Values
     private int verticalSlidesPos = 0;
     private int horizontalSlidesPos = 0;
@@ -119,6 +123,9 @@ public abstract class RobotBase extends PinpointDrive {
 
         // Lights:
         light = hardwareMap.get(RevBlinkinLedDriver.class, "light");
+
+        // Limelight:
+        limelight = hardwareMap.get(Limelight3A.class, "limelight");
 
         // Update Constants
 
