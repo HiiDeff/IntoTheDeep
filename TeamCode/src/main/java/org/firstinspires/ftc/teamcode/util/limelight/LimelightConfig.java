@@ -11,6 +11,8 @@ public class LimelightConfig {
     // yOffset: forwards is positive, backwards is negative
     // zOffset: up is positive, down is negative
 
+    // When all the values are correct, everything should be very accurate, only the zOffset (height of the camera) should be used to tune the yOffset
+
     public LimelightConfig(int resolutionX, int resolutionY,
                            double angleWithHorizontalDegrees,
                            double horizontalFOV, double verticalFOV,

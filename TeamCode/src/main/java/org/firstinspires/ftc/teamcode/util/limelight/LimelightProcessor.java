@@ -47,6 +47,7 @@ public class LimelightProcessor {
     }
 
     //receives normalized pixel coordinates as input
+    //returns x, y, and angle of object in inches and radians. Right (x) and forwards (y) are positive.
     private Coordinates calcObjectPositionOnGround(Coordinates pixel, double objectCenterHeightInch) {
 
         //Relative to the Limelight
@@ -70,10 +71,9 @@ public class LimelightProcessor {
         Log.i("objectAngleWithHorizontal",""+objectAngleWithHorizontal);
         Log.i("xAngleWithObject", ""+xAngleWithObject);
 
+        double angleToObject = Math.atan(xDistInch/yDistInch);
 
-        return new Coordinates(xDistInch, yDistInch);
-
-
+        return new Coordinates(xDistInch, yDistInch, angleToObject);
     }
 
     private double toRadians(double angDeg) {

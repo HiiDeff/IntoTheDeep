@@ -19,7 +19,7 @@ public class LimelightTest extends LinearOpMode {
 
     public static LimelightConfig LLConfig = new LimelightConfig(320, 240,
             -30, 54,41,
-            7.5,-3.5,12.75);
+            7.5,-3.5,12.75); // ROBOT 3
     public static double objectCenterHeightInch = 0.0;
     private LimelightProcessor limelightProcessor;
     private Limelight3A limelight;

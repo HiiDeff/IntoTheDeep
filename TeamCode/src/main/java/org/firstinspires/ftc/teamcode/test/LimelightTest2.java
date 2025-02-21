@@ -1,14 +1,25 @@
 package org.firstinspires.ftc.teamcode.test;
 
 import com.acmerobotics.dashboard.config.Config;
+import com.acmerobotics.roadrunner.Pose2d;
 import com.qualcomm.hardware.limelightvision.LLStatus;
 import com.qualcomm.hardware.limelightvision.Limelight3A;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.Pose2D;
+import org.firstinspires.ftc.teamcode.drive.RobotBase;
 import org.firstinspires.ftc.teamcode.drive.RobotFactory;
 import org.firstinspires.ftc.teamcode.drive.V3Robot.V3Robot;
+import org.firstinspires.ftc.teamcode.task.HorizontalSlidesTask;
 import org.firstinspires.ftc.teamcode.task.IntakeArmTask;
+import org.firstinspires.ftc.teamcode.task.ParallelTask;
+import org.firstinspires.ftc.teamcode.task.RuntimeDrivingTask;
+import org.firstinspires.ftc.teamcode.task.SeriesTask;
+import org.firstinspires.ftc.teamcode.task.Task;
+import org.firstinspires.ftc.teamcode.task.UnboundedIntakeTask;
+import org.firstinspires.ftc.teamcode.util.GamePad;
 import org.firstinspires.ftc.teamcode.util.limelight.Coordinates;
 import org.firstinspires.ftc.teamcode.util.limelight.LimelightConfig;
 import org.firstinspires.ftc.teamcode.util.limelight.LimelightProcessor;
@@ -19,23 +30,27 @@ public class LimelightTest2 extends LinearOpMode {
 
     public static LimelightConfig LLConfig = new LimelightConfig(320, 240,
             -30, 54,41,
-            7.5,-3.5,12.75);
+            7.7,4.0,13.25); //ROBOT 4 MEASUREMENTS
     public static double objectCenterHeightInch = 0.0;
     private LimelightProcessor limelightProcessor;
 
-    public V3Robot robot;
+    public RobotBase robot;
+    private GamePad gamepad;
     public static boolean updateHorizontalSlidesPosition = false;
     public static double prevY;
-    public static int sleepTime = 300;
+    public static int pipelineNo = 1, sleepTime = 300;
+    public static double distBeforeSampleInch = 13.0, forwardDist = 5.0;
+    private Task task = null;
 
     @Override
     public void runOpMode() throws InterruptedException {
-        robot = (V3Robot) RobotFactory.createRobot(hardwareMap);
+        gamepad = new GamePad(gamepad1);
+        robot = (RobotBase) RobotFactory.createRobot(hardwareMap);
         limelightProcessor = new LimelightProcessor(robot.limelight, LLConfig);
 
-        robot.limelight.pipelineSwitch(1);
+        robot.limelight.pipelineSwitch(pipelineNo);
         robot.limelight.start();
-        robot.setIntakeArmPos(IntakeArmTask.Position.TRANSFER);
+        robot.setIntakeArmPos(IntakeArmTask.Position.DOWN);
 
         waitForStart();
 
@@ -49,21 +64,51 @@ public class LimelightTest2 extends LinearOpMode {
             telemetry.addData("Pipeline", "Index: %d, Type: %s",
                     status.getPipelineIndex(), status.getPipelineType());
 
-
             Coordinates objectPosition = limelightProcessor.getObjectPosition(objectCenterHeightInch);
             telemetry.addData("objectXPos",objectPosition.x);
             telemetry.addData("objectYPos",objectPosition.y);
-            telemetry.update();
+            telemetry.addData("objectAngleRadians",objectPosition.angle);
 
+            if(gamepad.onceX()) {
+                Pose2D currentRobotPosition = robot.pinpoint.getPosition();
+                double absoluteDist = Math.sqrt(objectPosition.x*objectPosition.x + objectPosition.y*objectPosition.y);
 
-
-            if(updateHorizontalSlidesPosition) {
-                robot.setHorizontalSlideDist(objectPosition.y, 1.0);
-                updateHorizontalSlidesPosition = false;
-            }else {
-                prevY = objectPosition.y;
+                task = new SeriesTask(
+                        new IntakeArmTask(robot, IntakeArmTask.Position.TRANSFER),
+                        new ParallelTask(
+                                new RuntimeDrivingTask(robot, builder -> {
+                                    return builder
+                                            .turnTo(currentRobotPosition.getHeading(AngleUnit.RADIANS)-objectPosition.angle)
+                                            .build();
+                                    }
+                                ),
+                                new HorizontalSlidesTask(robot, absoluteDist - distBeforeSampleInch,1.0,1500)
+                        ),
+                        new IntakeArmTask(robot, IntakeArmTask.Position.DOWN),
+                        new ParallelTask(
+                                new HorizontalSlidesTask(robot, absoluteDist-distBeforeSampleInch+forwardDist, 1.0, 1500),
+                                new UnboundedIntakeTask(robot, 1.0)
+                        ),
+                        new ParallelTask(
+                                new HorizontalSlidesTask(robot, 0, 1.0, 1500),
+                                new IntakeArmTask(robot, IntakeArmTask.Position.TRANSFER),
+                                new UnboundedIntakeTask(robot, 0.5),
+                                new RuntimeDrivingTask(robot, builder ->{
+                                    return builder
+                                            .turnTo(currentRobotPosition.getHeading(AngleUnit.RADIANS))
+                                            .build();
+                                    }
+                                )
+                        ),
+                        new IntakeArmTask(robot, IntakeArmTask.Position.DOWN)
+                );
             }
 
+
+            if(task != null && task.perform())  task = null;
+            gamepad.update();
+            robot.updateEverything();
+            telemetry.update();
         }
         robot.limelight.stop();
     }
