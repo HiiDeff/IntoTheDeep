@@ -31,11 +31,11 @@ public class V4Robot extends RobotBase {
 
     // Delivery Servo Positions
     public static double CARRY_POS = 0.5,
-            CHAMBER_DELIVER_POS = 0.35, //TODO: TUNE THIS
+            CHAMBER_DELIVER_POS = 0.50, //TODO: TUNE THIS
             DELIVER_POS = 0.70, //TODO: change?
 
             TRANSFER_POS = 0.27,
-            FLAT_POS = 0.875;
+            FLAT_POS = 0.93;
 
     public static double VERTICAL_TICKS_PER_INCH  = 943.0/29, VERTICAL_EXTEND_MAX_INCH = 29;
     public static double VERTICAL_SLIDE_TRANSFER_POSITION = 0 / VERTICAL_TICKS_PER_INCH;
@@ -47,12 +47,12 @@ public class V4Robot extends RobotBase {
 
     // Intake Servo Positions
     public static double INTAKE_ARM_DOWN = 0.89,
-            INTAKE_ARM_TRANSFER = 0.36,
+            INTAKE_ARM_TRANSFER = 0.30,
             INTAKE_ARM_CLEAR = 0.40,
             INTAKE_ARM_SLIGHTLY_UP = 0.76; //TODO: make this closer to transfer position
 
     // Claw Servo Positions
-    public static double CLAW_OPEN_POS = 0.25, //0.35,
+    public static double CLAW_OPEN_POS = 0.3, //0.35,
             CLAW_CLOSE_POS = 0.10;
 
     // Hang Positions
