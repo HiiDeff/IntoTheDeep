@@ -1,9 +1,9 @@
 package org.firstinspires.ftc.teamcode.test;
 
 import com.acmerobotics.dashboard.config.Config;
-import com.acmerobotics.roadrunner.Pose2d;
+import com.qualcomm.hardware.limelightvision.LLResult;
+import com.qualcomm.hardware.limelightvision.LLResultTypes;
 import com.qualcomm.hardware.limelightvision.LLStatus;
-import com.qualcomm.hardware.limelightvision.Limelight3A;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
@@ -11,7 +11,6 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.Pose2D;
 import org.firstinspires.ftc.teamcode.drive.RobotBase;
 import org.firstinspires.ftc.teamcode.drive.RobotFactory;
-import org.firstinspires.ftc.teamcode.drive.V3Robot.V3Robot;
 import org.firstinspires.ftc.teamcode.task.HorizontalSlidesTask;
 import org.firstinspires.ftc.teamcode.task.IntakeArmTask;
 import org.firstinspires.ftc.teamcode.task.ParallelTask;
@@ -22,7 +21,11 @@ import org.firstinspires.ftc.teamcode.task.UnboundedIntakeTask;
 import org.firstinspires.ftc.teamcode.util.GamePad;
 import org.firstinspires.ftc.teamcode.util.limelight.Coordinates;
 import org.firstinspires.ftc.teamcode.util.limelight.LimelightConfig;
-import org.firstinspires.ftc.teamcode.util.limelight.LimelightProcessor;
+import org.firstinspires.ftc.teamcode.util.limelight.LimelightProcessorBase;
+import org.firstinspires.ftc.teamcode.util.limelight.LimelightSampleDetector;
+import org.firstinspires.ftc.teamcode.util.limelight.ObjectOrientation;
+
+import java.util.List;
 
 @TeleOp(name = "Limelight Tester 2", group = "Test")
 @Config
@@ -30,9 +33,8 @@ public class LimelightTest2 extends LinearOpMode {
 
     public static LimelightConfig LLConfig = new LimelightConfig(320, 240,
             -30, 54,41,
-            7.7,4.0,13.25); //ROBOT 4 MEASUREMENTS
-    public static double objectCenterHeightInch = 0.0;
-    private LimelightProcessor limelightProcessor;
+            7.7,4.0,13.75); //ROBOT 4 MEASUREMENTS
+    private LimelightSampleDetector limelightSampleDetector;
 
     public RobotBase robot;
     private GamePad gamepad;
@@ -46,7 +48,7 @@ public class LimelightTest2 extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
         gamepad = new GamePad(gamepad1);
         robot = (RobotBase) RobotFactory.createRobot(hardwareMap);
-        limelightProcessor = new LimelightProcessor(robot.limelight, LLConfig);
+        limelightSampleDetector = new LimelightSampleDetector(robot.limelight, LLConfig);
 
         robot.limelight.pipelineSwitch(pipelineNo);
         robot.limelight.start();
@@ -64,7 +66,7 @@ public class LimelightTest2 extends LinearOpMode {
             telemetry.addData("Pipeline", "Index: %d, Type: %s",
                     status.getPipelineIndex(), status.getPipelineType());
 
-            Coordinates objectPosition = limelightProcessor.getObjectPosition(objectCenterHeightInch);
+            Coordinates objectPosition = limelightSampleDetector.getObjectPosition(0.5);
             telemetry.addData("objectXPos",objectPosition.x);
             telemetry.addData("objectYPos",objectPosition.y);
             telemetry.addData("objectAngleRadians",objectPosition.angle);
@@ -109,6 +111,7 @@ public class LimelightTest2 extends LinearOpMode {
             gamepad.update();
             robot.updateEverything();
             telemetry.update();
+            limelightSampleDetector.updateLimelight();
         }
         robot.limelight.stop();
     }

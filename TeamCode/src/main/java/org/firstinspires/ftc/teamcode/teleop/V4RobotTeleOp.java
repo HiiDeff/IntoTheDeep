@@ -39,7 +39,7 @@ public class V4RobotTeleOp extends LinearOpMode {
     public static double VERTICAL_STAND_POWER = 0.2;
     public static double VERTICAL_SLIDE_MAX_POWER = 1.0;
     public static double MIN_DRIVE_POWER = 0.01;
-    public static double DELIVERY_CHAMBER_HEIGHT = 21.3;
+    public static double DELIVERY_CHAMBER_HEIGHT = 21.3, CLIP_UP_HEIGHT = 4.4;
     public static double DELIVERY_HIGH_BASKET_HEIGHT = 38.6;
     public static double DELIVERY_LOW_BASKET_HEIGHT = 24.0;
     public static double MAX_SLIDE_EXTENSION_INCH = 21.0;
@@ -228,14 +228,14 @@ public class V4RobotTeleOp extends LinearOpMode {
 //        }
 //        a = turnLim.calculate(a);
 //        telemetry.addData("driving", x + " " + y + " " + a);
-        if (deliverChamberTask != null) {
-            if (pow > 0.1) {
-                deliverChamberTask.cancel();
-                deliverChamberTask = null;
-            }
-        } else {
+//        if (deliverChamberTask != null) {
+////            if (pow > 0.1) {
+////                deliverChamberTask.cancel();
+////                deliverChamberTask = null;
+////            }
+//        } else {
             robot.setDrivePowers(new PoseVelocity2d(new Vector2d(x, y), a));
-        }
+//        }
     }
 
     private void runDelivery() {
@@ -320,29 +320,27 @@ public class V4RobotTeleOp extends LinearOpMode {
     }
 
     private void createSpecimenDeliveryTaskLite() {
-        if (robot.getVerticalSlidesHeightInch() > 15) {
-            deliverChamberTask = new ParallelTask(
-                    new HorizontalSlidesTask(robot, 0, 1.0, 700),
-                    new VerticalSlidesTask(robot, 0, 1.0, 1000),
-                    new SeriesTask(
-                            new SleepTask(1000),
-                            new DeliveryArmTask(robot, DeliveryArmTask.Position.FLAT)
-                    ),
-                    new SeriesTask(
-                            new SleepTask(CLAW_OPEN_DELAY),
-                            new ClawTask(robot, ClawTask.ClawPosition.OPEN)
-                    )
-            );
+        if (robot.getVerticalSlidesHeightInch() > 1) {
+            deliverChamberTask =
+                new SeriesTask(
+                        new VerticalSlidesTask(robot, CLIP_UP_HEIGHT+2.5, 1.0, 2000),
+                        new ParallelTask(
+                                new ClawTask(robot, ClawTask.ClawPosition.OPEN),
+                                new HorizontalSlidesTask(robot, 0, 1.0, 700),
+                                new VerticalSlidesTask(robot, 0, 1.0, 1000),
+                                new DeliveryArmTask(robot, DeliveryArmTask.Position.FLAT)
+                        )
+                );
         } else {
             deliverChamberTask = new ParallelTask(
                     new ClawTask(robot, ClawTask.ClawPosition.CLOSE),
                     new ParallelTask(
                             new SeriesTask(
-                                    new SleepTask(50),
-                                    new VerticalSlidesTask(robot, DELIVERY_CHAMBER_HEIGHT, 1.0, 2000)
+                                    new SleepTask(200),
+                                    new VerticalSlidesTask(robot, CLIP_UP_HEIGHT, 1.0, 2000)
                             ),
                             new SeriesTask(
-                                    new SleepTask(500),
+                                    new SleepTask(200),
                                     new DeliveryArmTask(robot, DeliveryArmTask.Position.CHAMBER_DELIVER)
                             )
                     )
