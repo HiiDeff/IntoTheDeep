@@ -10,6 +10,7 @@ public class LimelightConfig {
     // xOffset: right is positive, left is negative
     // yOffset: forwards is positive, backwards is negative
     // zOffset: up is positive, down is negative
+    // offsets are relative to the tracking point of road runner, which is usually the center of the robot.
 
     // When all the values are correct, everything should be very accurate, only the zOffset (height of the camera) should be used to tune the yOffset
 
