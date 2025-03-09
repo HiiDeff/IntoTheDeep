@@ -5,6 +5,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.teamcode.drive.V3Robot.V3Robot;
 import org.firstinspires.ftc.teamcode.drive.V4Robot.V4Robot;
+import org.firstinspires.ftc.teamcode.drive.V5Robot.V5Robot;
 import org.firstinspires.ftc.teamcode.drive_rr.TestRobotDeadWheels;
 import org.firstinspires.ftc.teamcode.drive_rr.TestRobotPinpoint;
 import org.firstinspires.ftc.teamcode.roadrunner.MecanumDrive;
@@ -14,10 +15,11 @@ public class RobotFactory {
     public enum Robot {
         V3_ROBOT,
         V4_ROBOT,
+        V5_ROBOT,
         TEST_ROBOT_DEAD_WHEELS,
         TEST_ROBOT_PINPOINT;
     }
-    public static Robot ACTIVE_ROBOT = Robot.V3_ROBOT;
+    public static Robot ACTIVE_ROBOT = Robot.V5_ROBOT;
 
     public static Robot getActiveRobot() {
         return ACTIVE_ROBOT;
@@ -31,6 +33,8 @@ public class RobotFactory {
                 return new TestRobotPinpoint(hardwareMap);
             case V3_ROBOT:
                 return new V3Robot(hardwareMap);
+            case V5_ROBOT:
+                return new V5Robot(hardwareMap);
             case V4_ROBOT:
             default:
                 return new V4Robot(hardwareMap);

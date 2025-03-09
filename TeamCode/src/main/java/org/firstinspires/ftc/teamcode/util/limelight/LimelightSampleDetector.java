@@ -17,7 +17,7 @@ public class LimelightSampleDetector extends LimelightProcessorBase {
     //in degrees
     public static double HORIZONTAL_THRESHOLD_MIN = 10.0, HORIZONTAL_THRESHOLD_MAX = 170.0;
     public static double VERTICAL_THRESHOLD_MIN = 70.0, VERTICAL_THRESHOLD_MAX = 110.0;
-    public static final double SAMPLE_HEIGHT_INCH = 1.4;
+    public static double SAMPLE_HEIGHT_INCH = 1.4;
 
     public LimelightSampleDetector(Limelight3A limelight, LimelightConfig LLConfig) {
         super(limelight, LLConfig);

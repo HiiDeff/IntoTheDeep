@@ -1,10 +1,11 @@
-package org.firstinspires.ftc.teamcode.task;
+package org.firstinspires.ftc.teamcode.task.v5_tasks;
 
 import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.teamcode.drive.RobotBase;
 import org.firstinspires.ftc.teamcode.drive.V5Robot.V5Robot;
+import org.firstinspires.ftc.teamcode.task.TimedTask;
 import org.firstinspires.ftc.teamcode.util.Utils;
 
 /**
@@ -41,6 +42,8 @@ public class V5IntakeArmTask extends TimedTask {
 
     public enum Position {
         TRANSFER,
+        HOVER,
+        BACK,
         DOWN
     }
 }

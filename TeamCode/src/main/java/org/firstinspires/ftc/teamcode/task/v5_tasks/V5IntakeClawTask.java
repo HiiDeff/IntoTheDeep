@@ -1,7 +1,8 @@
-package org.firstinspires.ftc.teamcode.task;
+package org.firstinspires.ftc.teamcode.task.v5_tasks;
 
 import org.firstinspires.ftc.teamcode.drive.RobotBase;
 import org.firstinspires.ftc.teamcode.drive.V5Robot.V5Robot;
+import org.firstinspires.ftc.teamcode.task.TimedTask;
 import org.firstinspires.ftc.teamcode.util.Utils;
 
 public class V5IntakeClawTask extends TimedTask {
@@ -11,9 +12,9 @@ public class V5IntakeClawTask extends TimedTask {
 
     private final V5Robot robot;
     private boolean started;
-    private final ClawPosition position;
+    private final Position position;
 
-    public V5IntakeClawTask(V5Robot robot, ClawPosition position) {
+    public V5IntakeClawTask(V5Robot robot, Position position) {
         this.robot = robot;
         this.position = position;
     }
@@ -21,17 +22,17 @@ public class V5IntakeClawTask extends TimedTask {
     @Override
     public boolean performInternal() {
         if (!started) {
-            double currPos = robot.claw.getPosition();
-            double targetPos = robot.getClawPosition(position);
+            double currPos = robot.intakeClaw.getPosition();
+            double targetPos = robot.getIntakeClawPosition(position);
             setFinishTimeMillis(Utils.getEstimatedServoTime(RPM, MAX_ROTATION_DEGREE,
                     targetPos - currPos));
-            robot.claw.setPosition(targetPos);
+            robot.intakeClaw.setPosition(targetPos);
             started = true;
         }
         return false;
     }
 
-    public enum ClawPosition {
+    public enum Position {
         OPEN,
         CLOSE
     }

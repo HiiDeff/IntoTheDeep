@@ -1,10 +1,11 @@
-package org.firstinspires.ftc.teamcode.task;
+package org.firstinspires.ftc.teamcode.task.v5_tasks;
 
 
 import org.firstinspires.ftc.teamcode.drive.RobotBase;
 import org.firstinspires.ftc.teamcode.drive.V5Robot.V5Robot;
+import org.firstinspires.ftc.teamcode.task.TimedTask;
 
-public class V5HorizontalSlidesTask extends TimedTask{
+public class V5HorizontalSlidesTask extends TimedTask {
 
     private V5Robot robot;
     private final double distInInches;

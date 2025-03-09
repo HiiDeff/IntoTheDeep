@@ -11,6 +11,7 @@ import com.qualcomm.hardware.limelightvision.LLStatus;
 import com.qualcomm.hardware.limelightvision.Limelight3A;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.util.limelight.Coordinates;
 import org.firstinspires.ftc.teamcode.util.limelight.LimelightConfig;
@@ -18,6 +19,7 @@ import org.firstinspires.ftc.teamcode.util.limelight.LimelightProcessorBase;
 import org.firstinspires.ftc.teamcode.util.limelight.LimelightSampleDetector;
 import org.firstinspires.ftc.teamcode.util.limelight.ObjectOrientation;
 
+import java.util.Arrays;
 import java.util.List;
 
 @TeleOp(name = "Limelight Tester", group = "Test")
@@ -27,13 +29,13 @@ public class LimelightTest extends LinearOpMode {
 //    public static LimelightConfig LLConfig = new LimelightConfig(320, 240,
 //            -30, 54,41,
 //            7.5,-3.5,12.75); // ROBOT 3
-    public static LimelightConfig LLConfig = new LimelightConfig(320, 240,
+    public static LimelightConfig LLConfig = new LimelightConfig(640, 480,
         -30, 54,41,
         7.7,4.0,13.75); //ROBOT 4 MEASUREMENTS
     private LimelightSampleDetector limelightSampleDetector;
     private Limelight3A limelight;
     public MultipleTelemetry multipleTelemetry;
-
+    private ElapsedTime elapsedTime = null;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -43,13 +45,14 @@ public class LimelightTest extends LinearOpMode {
         limelight = hardwareMap.get(Limelight3A.class, "limelight");
         limelightSampleDetector = new LimelightSampleDetector(limelight, LLConfig);
 
-        limelight.pipelineSwitch(1);
+        limelight.pipelineSwitch(6);
         limelight.start();
 
         waitForStart();
+        elapsedTime = new ElapsedTime();
 
         while (opModeIsActive()) {
-
+            elapsedTime.reset();
             LLStatus status = limelight.getStatus();
             multipleTelemetry.addData("Name", "%s",
                     status.getName());
@@ -58,6 +61,14 @@ public class LimelightTest extends LinearOpMode {
             multipleTelemetry.addData("Pipeline", "Index: %d, Type: %s",
                     status.getPipelineIndex(), status.getPipelineType());
 
+            LLResult temp2 = limelightSampleDetector.getLLResult();
+            multipleTelemetry.addData("is result valid",(temp2!=null));
+            if(temp2 != null) {
+                double[] temp = temp2.getPythonOutput();
+                if(temp!= null) {
+                    multipleTelemetry.addData("python output array size", Arrays.toString(temp));
+                }
+            }
             Coordinates objectPosition = limelightSampleDetector.getObjectPosition(0.5);
             multipleTelemetry.addData("objectXPos",objectPosition.x);
             multipleTelemetry.addData("objectYPos",objectPosition.y);
@@ -65,8 +76,10 @@ public class LimelightTest extends LinearOpMode {
             ObjectOrientation orientation = limelightSampleDetector.getObjectOrientation();
             multipleTelemetry.addData("orientation",orientation.toString());
 
-            multipleTelemetry.update();
+
             limelightSampleDetector.updateLimelight();
+            multipleTelemetry.addData("loop times",elapsedTime.milliseconds());
+            multipleTelemetry.update();
 
         }
         limelight.stop();

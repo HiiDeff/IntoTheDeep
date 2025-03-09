@@ -8,11 +8,18 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.drive.RobotFactory;
 import org.firstinspires.ftc.teamcode.drive.V5Robot.V5Robot;
+import org.firstinspires.ftc.teamcode.task.ParallelTask;
+import org.firstinspires.ftc.teamcode.task.SeriesTask;
+import org.firstinspires.ftc.teamcode.task.SleepTask;
 import org.firstinspires.ftc.teamcode.task.Task;
-import org.firstinspires.ftc.teamcode.task.V5HorizontalSlidesTask;
-import org.firstinspires.ftc.teamcode.task.V5IntakeArmTask;
-import org.firstinspires.ftc.teamcode.task.V5IntakeClawTask;
-import org.firstinspires.ftc.teamcode.task.V5IntakeWristTask;
+import org.firstinspires.ftc.teamcode.task.v5_tasks.V5DeliveryClawTask;
+import org.firstinspires.ftc.teamcode.task.v5_tasks.V5DiffyTask;
+import org.firstinspires.ftc.teamcode.task.v5_tasks.V5HorizontalSlidesTask;
+import org.firstinspires.ftc.teamcode.task.v5_tasks.V5IntakeArmTask;
+import org.firstinspires.ftc.teamcode.task.v5_tasks.V5IntakeClawTask;
+import org.firstinspires.ftc.teamcode.task.v5_tasks.V5IntakePivotTask;
+import org.firstinspires.ftc.teamcode.task.v5_tasks.V5IntakeWristTask;
+import org.firstinspires.ftc.teamcode.task.v5_tasks.V5TurretTask;
 import org.firstinspires.ftc.teamcode.util.GamePad;
 import org.firstinspires.ftc.teamcode.util.limelight.LimelightConfig;
 import org.firstinspires.ftc.teamcode.util.limelight.LimelightProcessorBase;
@@ -20,40 +27,27 @@ import org.firstinspires.ftc.teamcode.util.limelight.LimelightProcessorBase;
 @TeleOp(name = "V5 Robot TeleOp")
 public class V5RobotTeleOp extends LinearOpMode {
 
-    public static LimelightConfig LLConfig = new LimelightConfig(320, 240,
-            -30, 54,41,
-            7.7,4.0,13.25); //ROBOT 4 MEASUREMENTS
-    public static double objectCenterHeightInch = 0.0;
-    private LimelightProcessorBase limelightProcessorBase;
-    public static int pipelineNo = 1;
-    public static double distBeforeSampleInch = 13.0;
+    public static int pipelineNo = 6;
     private Task task = null;
+    private IntakeState intakeState = IntakeState.NEUTRAL;
 
-    public ElapsedTime elapsedTime = new ElapsedTime();
 
     private V5Robot robot;
     private GamePad gp1, gp2;
-    private ElapsedTime cycleTimer;
-    private double cycleSum, cycleCnt, cycleAvg;
 
-    private boolean clawOpen, horizontalPositionUpdated, hangUp, swipeStickOut;
+    private boolean clawOpen, intakeClawVertical = true;
 
     public static double MAX_SLIDE_EXTENSION_INCH = 21.0;
 
     @Override
     public void runOpMode() throws InterruptedException {
         robot = (V5Robot) RobotFactory.createRobot(hardwareMap);
+        robot.limelight.pipelineSwitch(pipelineNo);
         robot.teleOpInit();
         gp1 = new GamePad(gamepad1);
         gp2 = new GamePad(gamepad2);
         waitForStart();
-        cycleTimer = new ElapsedTime();
-//        limelightProcessor = new LimelightProcessor(robot.limelight, LLConfig);
-
-//
-//        robot.limelight.pipelineSwitch(pipelineNo);
-//        robot.limelight.start();
-        robot.setIntakeArmPos(V5IntakeArmTask.Position.DOWN);
+        robot.limelight.start();
 
         while (opModeIsActive()) {
 
@@ -62,47 +56,11 @@ public class V5RobotTeleOp extends LinearOpMode {
             runHorizontalSlides();
             checkPreset();
             update();
-            elapsedTime.reset();
         }
-//        robot.limelight.stop();
+        robot.limelight.stop();
     }
     private void checkPreset() {
-        if(gp1.onceA()) {
-            if(task != null) {
-                task.cancel();
-                task = null;
-            } else{
-//                task = new SeriesTask(
-//                        new V5IntakeArmTask(robot, V5IntakeArmTask.Position.TRANSFER),
-//                        new ParallelTask(
-//                                new RuntimeDrivingTask(robot, builder -> {
-//                                    return builder
-//                                            .turnTo(currentRobotPosition.getHeading(AngleUnit.RADIANS)-objectPosition.angle)
-//                                            .build();
-//                                }
-//                                ),
-//                                new HorizontalSlidesTask(robot, absoluteDist - distBeforeSampleInch,1.0,1500)
-//                        ),
-//                        new IntakeArmTask(robot, IntakeArmTask.Position.DOWN),
-//                        new ParallelTask(
-//                                new HorizontalSlidesTask(robot, absoluteDist-distBeforeSampleInch+forwardDist, 1.0, 1500),
-//                                new UnboundedIntakeTask(robot, 1.0)
-//                        ),
-//                        new ParallelTask(
-//                                new HorizontalSlidesTask(robot, 0, 1.0, 1500),
-//                                new IntakeArmTask(robot, IntakeArmTask.Position.TRANSFER),
-//                                new UnboundedIntakeTask(robot, 0.5),
-//                                new RuntimeDrivingTask(robot, builder ->{
-//                                    return builder
-//                                            .turnTo(currentRobotPosition.getHeading(AngleUnit.RADIANS))
-//                                            .build();
-//                                }
-//                                )
-//                        ),
-//                        new IntakeArmTask(robot, IntakeArmTask.Position.DOWN)
-//                );
-            }
-        }
+
     }
 
     private void driveRobot() {
@@ -129,49 +87,121 @@ public class V5RobotTeleOp extends LinearOpMode {
     }
 
     private void runHorizontalSlides() { //TODO: check this logic
-        if(task!=null) return;
-        if ((robot.getHorizontalSlideDistInch() < MAX_SLIDE_EXTENSION_INCH && -gp2.leftStickY() > 0.3) || (-gp2.leftStickY() < -0.3)) {
-            robot.setHorizontalSlidesPowerWithoutEncoder(-gp2.leftStickY() > 0.3 ? 1.0 : -1.0);
-            if (gp2.rightBumper()) {
-                robot.resetHorizontalAndVerticalSlidesEncoderPositions();
-            } else {
-                robot.updateLastHorizontalEncoder();
-                horizontalPositionUpdated = true;
+        if(gp1.onceRightBumper()) {
+            if(task!=null) {
+                task.cancel();
             }
-        }
-        else{
-
-            if (horizontalPositionUpdated) {
-                robot.brakeHorizontalSlides(0.01); // TODO: CHECK THIS
-                horizontalPositionUpdated = false;
+            task = new V5HorizontalSlidesTask(robot, 20, 1.0, 1500);
+        } else if(gp1.onceLeftBumper()) {
+            if(task!=null) {
+                task.cancel();
             }
+            task = new V5HorizontalSlidesTask(robot, 10, 1.0, 1500);
         }
+//        if(task!=null) return;
+//        if ((robot.getHorizontalSlideDistInch() < MAX_SLIDE_EXTENSION_INCH && -gp2.leftStickY() > 0.3) || (-gp2.leftStickY() < -0.3)) {
+//            robot.setHorizontalSlidesPowerWithoutEncoder(-gp2.leftStickY() > 0.3 ? 1.0 : -1.0);
+//            if (gp2.rightBumper()) {
+//                robot.resetHorizontalAndVerticalSlidesEncoderPositions();
+//            } else {
+//                robot.updateLastHorizontalEncoder();
+//                horizontalPositionUpdated = true;
+//            }
+//        }
+//        else{
+//            if (horizontalPositionUpdated) {
+//                robot.brakeHorizontalSlides(0.01); // TODO: CHECK THIS
+//                horizontalPositionUpdated = false;
+//            }
+//        }
     }
 
     private void runIntake(){
-        if (-gp2.rightStickY()>0.3) {
-            robot.setIntakeArmPos(V5IntakeArmTask.Position.TRANSFER);
-        } else if (-gp2.rightStickY()<-0.3) {
-            robot.setIntakeArmPos(V5IntakeArmTask.Position.DOWN);
-        }
 
-        if (gp2.onceRightTrigger()) {
-            robot.setClawPosition(clawOpen ? V5IntakeClawTask.ClawPosition.CLOSE : V5IntakeClawTask.ClawPosition.OPEN);
-            clawOpen = !clawOpen;
-        }
-        if(gp2.onceY()) {
-            if(robot.getHorizontalSlideDistInch()>1.0){
-                task = new V5HorizontalSlidesTask(robot, 0.0, 1.0, 1500);
-            } else {
-                task = new V5HorizontalSlidesTask(robot, 20.0, 1.0, 1500);
+        if(gp2.onceRightTrigger()) {
+            if(task != null) task.cancel();
+            if(intakeState == IntakeState.NEUTRAL) {
+                //go to hover
+                task = new SeriesTask(
+                        new V5DeliveryClawTask(robot, V5DeliveryClawTask.Position.OPEN),
+                        new ParallelTask(
+                            new V5IntakeArmTask(robot, V5IntakeArmTask.Position.HOVER),
+                            new V5IntakeClawTask(robot, V5IntakeClawTask.Position.OPEN),
+                            new V5IntakePivotTask(robot, V5IntakePivotTask.Position.VERTICAL),
+                            new V5IntakeWristTask(robot, V5IntakeWristTask.Position.HOVER),
+                            new V5TurretTask(robot, V5TurretTask.Position.STRAIGHT),
+                            new V5DiffyTask(robot, V5DiffyTask.WhichDiffy.LEFT, V5DiffyTask.Position.TRANSFER),
+                            new V5DiffyTask(robot, V5DiffyTask.WhichDiffy.RIGHT, V5DiffyTask.Position.TRANSFER)
+                        )
+                );
+                intakeClawVertical = true;
+                intakeState = IntakeState.HOVER;
+            } else if(intakeState == IntakeState.TRANSFER) {
+                //go to neutral
+                task = new ParallelTask(
+                        new V5TurretTask(robot, V5TurretTask.Position.STRAIGHT),
+                        new V5IntakeArmTask(robot, V5IntakeArmTask.Position.BACK),
+                        new V5IntakeWristTask(robot, V5IntakeWristTask.Position.TRANSFER),
+                        new V5IntakePivotTask(robot, V5IntakePivotTask.Position.VERTICAL)
+                );
+                intakeClawVertical = true;
+                intakeState = IntakeState.NEUTRAL;
+            } else if(intakeState == IntakeState.HOVER) {
+                //try to intake
+                task = new SeriesTask(
+                        new ParallelTask(
+                                new V5IntakeArmTask(robot, V5IntakeArmTask.Position.DOWN),
+                                new V5IntakeWristTask(robot, V5IntakeWristTask.Position.DOWN)
+                        ),
+                        new ParallelTask(
+                                new V5IntakeClawTask(robot, V5IntakeClawTask.Position.CLOSE)
+                        ),
+                        new SleepTask(400),
+                        new ParallelTask(
+                                new V5IntakeArmTask(robot, V5IntakeArmTask.Position.HOVER),
+                                new V5IntakeWristTask(robot, V5IntakeWristTask.Position.HOVER)
+                        )
+                );
+                intakeState = IntakeState.HOVER;
+            }
+        } else if(gp2.onceLeftTrigger()) {
+            if(intakeState == IntakeState.HOVER) {
+                if(task != null) task.cancel();
+                //go to transfer
+                task = new SeriesTask(
+                        new ParallelTask(
+                                new V5DeliveryClawTask(robot, V5DeliveryClawTask.Position.OPEN),
+                                new V5DiffyTask(robot, V5DiffyTask.WhichDiffy.LEFT, V5DiffyTask.Position.TRANSFER),
+                                new V5DiffyTask(robot, V5DiffyTask.WhichDiffy.RIGHT, V5DiffyTask.Position.TRANSFER)
+                        ),
+                        new ParallelTask(
+                                new V5HorizontalSlidesTask(robot, 0, 1.0, 1500),
+                                new V5IntakeArmTask(robot, V5IntakeArmTask.Position.TRANSFER),
+                                new V5IntakeClawTask(robot, V5IntakeClawTask.Position.CLOSE),
+                                new V5IntakePivotTask(robot, V5IntakePivotTask.Position.VERTICAL),
+                                new V5IntakeWristTask(robot, V5IntakeWristTask.Position.TRANSFER),
+                                new V5TurretTask(robot, V5TurretTask.Position.STRAIGHT)
+                        ),
+                        new V5DeliveryClawTask(robot, V5DeliveryClawTask.Position.CLOSE),
+                        new V5IntakeClawTask(robot, V5IntakeClawTask.Position.OPEN),
+                        new ParallelTask(
+                                new V5DiffyTask(robot, V5DiffyTask.WhichDiffy.LEFT, V5DiffyTask.Position.FLAT),
+                                new V5DiffyTask(robot, V5DiffyTask.WhichDiffy.RIGHT, V5DiffyTask.Position.FLAT)
+                        )
+                );
+                intakeClawVertical = true;
+                intakeState = IntakeState.TRANSFER;
             }
         }
 
-        if(gp2.leftBumper()){
-            robot.setWristPos(V5IntakeWristTask.WristPosition.HORIZONTAL);
+        if (gp2.onceA()) {
+            robot.setDeliveryClawPos(clawOpen ? V5DeliveryClawTask.Position.CLOSE : V5DeliveryClawTask.Position.OPEN);
+            clawOpen = !clawOpen;
         }
-        else if(gp2.rightBumper()){
-            robot.setWristPos(V5IntakeWristTask.WristPosition.VERTICAL);
+
+        if (gp2.onceRightTrigger()) {
+            robot.setIntakePivotPos(intakeClawVertical? V5IntakePivotTask.Position.HORIZONTAL : V5IntakePivotTask.Position.VERTICAL);
+            intakeClawVertical = ! intakeClawVertical;
         }
     }
 
@@ -194,6 +224,12 @@ public class V5RobotTeleOp extends LinearOpMode {
         gp1.update();
         gp2.update();
         robot.updateEverything();
+    }
+
+    private enum IntakeState {
+        NEUTRAL,
+        TRANSFER,
+        HOVER
     }
 
 }

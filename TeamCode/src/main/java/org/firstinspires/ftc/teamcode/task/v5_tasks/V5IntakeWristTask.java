@@ -1,7 +1,8 @@
-package org.firstinspires.ftc.teamcode.task;
+package org.firstinspires.ftc.teamcode.task.v5_tasks;
 
 import org.firstinspires.ftc.teamcode.drive.RobotBase;
 import org.firstinspires.ftc.teamcode.drive.V5Robot.V5Robot;
+import org.firstinspires.ftc.teamcode.task.TimedTask;
 import org.firstinspires.ftc.teamcode.util.Utils;
 
 public class V5IntakeWristTask extends TimedTask {
@@ -11,9 +12,9 @@ public class V5IntakeWristTask extends TimedTask {
 
     private final V5Robot robot;
     private boolean started;
-    private final WristPosition position;
+    private final Position position;
 
-    public V5IntakeWristTask(V5Robot robot, WristPosition position) {
+    public V5IntakeWristTask(V5Robot robot, Position position) {
         this.robot = robot;
         this.position = position;
     }
@@ -22,7 +23,7 @@ public class V5IntakeWristTask extends TimedTask {
     public boolean performInternal() {
         if (!started) {
             double currPos = robot.intakeWrist.getPosition();
-            double targetPos = robot.getWristPosition(position);
+            double targetPos = robot.getIntakeWristPosition(position);
             setFinishTimeMillis(Utils.getEstimatedServoTime(RPM, MAX_ROTATION_DEGREE,
                     targetPos - currPos));
             robot.intakeWrist.setPosition(targetPos);
@@ -31,8 +32,10 @@ public class V5IntakeWristTask extends TimedTask {
         return false;
     }
 
-    public enum WristPosition {
-        VERTICAL,
-        HORIZONTAL
+    public enum Position {
+        TRANSFER,
+        HOVER,
+        BACK,
+        DOWN
     }
 }

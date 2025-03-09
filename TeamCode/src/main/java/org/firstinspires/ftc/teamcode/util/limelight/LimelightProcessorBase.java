@@ -24,23 +24,34 @@ public abstract class LimelightProcessorBase {
     }
 
     public synchronized Coordinates getObjectPosition(double objectCenterHeight) {
-        if(result!=null && result.isValid()){
-            List<LLResultTypes.ColorResult> colorResults = result.getColorResults();
-            LLResultTypes.ColorResult firstResult = colorResults.get(0);
-
-            Coordinates pixelCoordinates = new Coordinates(firstResult.getTargetXPixels(), firstResult.getTargetYPixels());
-            Coordinates normalizedCoordinates = pixelCoordinatesToNormalizedCoordinates(pixelCoordinates);
-            return normalizedPixelToRealWorldCoordinates(normalizedCoordinates, objectCenterHeight);
+        if(result!=null){
+            double[] pythonResult = result.getPythonOutput();
+            if(pythonResult != null && pythonResult[0]>0) {
+                Coordinates pixelCoordinates = new Coordinates(pythonResult[1], pythonResult[2]);
+                Coordinates normalizedCoordinates = pixelCoordinatesToNormalizedCoordinates(pixelCoordinates);
+                return normalizedPixelToRealWorldCoordinates(normalizedCoordinates, objectCenterHeight);
+            }
+//            List<LLResultTypes.ColorResult> colorResults = result.getColorResults();
+//            LLResultTypes.ColorResult firstResult = colorResults.get(0);
+//            Coordinates pixelCoordinates = new Coordinates(firstResult.getTargetXPixels(), firstResult.getTargetYPixels());
+//            Coordinates normalizedCoordinates = pixelCoordinatesToNormalizedCoordinates(pixelCoordinates);
+//            return normalizedPixelToRealWorldCoordinates(normalizedCoordinates, objectCenterHeight);
         }
-        else return new Coordinates(0, 0);
+        return new Coordinates(10, 0);
     }
     public synchronized ObjectOrientation getObjectOrientation() {
-        if(result!=null && result.isValid()) {
-            List<LLResultTypes.ColorResult> colorResults = result.getColorResults();
-            LLResultTypes.ColorResult firstResult = colorResults.get(0);
-            List<List<Double>> corners = firstResult.getTargetCorners();
-            double angle = calcObjectAngleDegrees(corners);
-            return getOrientationFromAngle(angle);
+        if(result!=null) {
+            double[] pythonResult = result.getPythonOutput();
+            if(pythonResult != null && pythonResult[0]>0) {
+                double angle = pythonResult[3];
+                return getOrientationFromAngle(angle);
+            }
+//            List<LLResultTypes.ColorResult> colorResults = result.getColorResults();
+//            double[] test = result.getPythonOutput();
+//            LLResultTypes.ColorResult firstResult = colorResults.get(0);
+//            List<List<Double>> corners = firstResult.getTargetCorners();
+//            double angle = calcObjectAngleDegrees(corners);
+//            return getOrientationFromAngle(angle);
         }
         return ObjectOrientation.VERTICAL;
     }
