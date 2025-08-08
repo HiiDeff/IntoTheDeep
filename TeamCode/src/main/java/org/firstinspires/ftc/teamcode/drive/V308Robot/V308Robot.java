@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.drive.V308Robot;
 
+import static org.firstinspires.ftc.teamcode.util.Utils.clamp;
+
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.ftc.GoBildaPinpointDriver;
 import com.acmerobotics.roadrunner.ftc.GoBildaPinpointDriverRR;
@@ -15,6 +17,10 @@ import org.firstinspires.ftc.teamcode.task.DeliveryArmTask;
 import org.firstinspires.ftc.teamcode.task.HangTask;
 import org.firstinspires.ftc.teamcode.task.IntakeArmTask;
 import org.firstinspires.ftc.teamcode.task.IntakeClawTask;
+import org.firstinspires.ftc.teamcode.task.IntakePivotTask;
+import org.firstinspires.ftc.teamcode.task.IntakeWristTask;
+import org.firstinspires.ftc.teamcode.task.TurretTask;
+import org.firstinspires.ftc.teamcode.util.Utils;
 import org.firstinspires.ftc.teamcode.util.pid.PIDCoefficients;
 import org.firstinspires.ftc.teamcode.util.profile.ProfileConstraints;
 
@@ -64,6 +70,12 @@ public class V308Robot extends RobotBase {
     // TODO: I don't know how to tune this
     public static double INTAKE_CLAW_OPEN_POS = 0.60;
     public static double INTAKE_CLAW_CLOSE_POS = 0.38;
+    public static double INTAKE_WRIST_DOWN_POS = 0.6;
+    public static double INTAKE_WRIST_TRANSFER_POS = 0.1;
+
+    public static double TURRET_DEGREE_45_POS = 0.25;
+    public static double TURRET_CENTER_POS = 0.5;
+    public static double TURRET_DEGREE_NEGATIVE_45_POS = 0.75;
 
 
     ///////////////////* HARDWARE *///////////////////
@@ -149,6 +161,8 @@ public class V308Robot extends RobotBase {
                 return TRANSFER_POS;
         }
     }
+
+    // Intake implementations
     @Override
     public double getIntakeArmPosition(IntakeArmTask.Position position) {
         switch(position) {
@@ -184,6 +198,35 @@ public class V308Robot extends RobotBase {
                 return INTAKE_CLAW_OPEN_POS;
         }
     }
+
+    @Override
+    public double getIntakeWristPosition(IntakeWristTask.WristPosition position){
+        switch (position){
+            case DOWN:
+                return INTAKE_WRIST_DOWN_POS;
+            case TRANSFER:
+            default:
+                return INTAKE_WRIST_TRANSFER_POS;
+        }
+    }
+
+    @Override
+    public double getTurretPosition(TurretTask.TurretPosition position){
+        switch (position){
+            case DEGREE_45:
+                return TURRET_DEGREE_45_POS;
+            case DEGREES_NEGATIVE_45:
+                return TURRET_DEGREE_NEGATIVE_45_POS;
+            case CENTER:
+            default:
+                return TURRET_CENTER_POS;
+        }
+    }
+
+    //@Override
+    //public double getIntakePivotPosition(double angle){
+    //    return Utils.clamp(angle, 0, IntakePivotTask.MAX_ROTATION_DEGREE)/360 * IntakePivotTask.MAX_ROTATION_DEGREE;
+    //}
 
     @Override
     public ProfileConstraints getDeliveryArmServoProfileConstraints() {

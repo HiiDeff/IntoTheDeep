@@ -15,7 +15,9 @@ import org.firstinspires.ftc.teamcode.task.DeliveryArmTask;
 import org.firstinspires.ftc.teamcode.task.HangTask;
 import org.firstinspires.ftc.teamcode.task.IntakeArmTask;
 import org.firstinspires.ftc.teamcode.task.IntakeClawTask;
+import org.firstinspires.ftc.teamcode.task.IntakeWristTask;
 import org.firstinspires.ftc.teamcode.task.SwipeStickTask;
+import org.firstinspires.ftc.teamcode.task.TurretTask;
 import org.firstinspires.ftc.teamcode.util.Utils;
 import org.firstinspires.ftc.teamcode.util.pid.PIDCoefficients;
 import org.firstinspires.ftc.teamcode.util.profile.ProfileConstraints;
@@ -58,6 +60,7 @@ public abstract class RobotBase extends PinpointDrive {
     public final Servo swipeStick;
 
     public final Servo turret, intakeArm, intakePivot, intakeWrist, intakeClaw;
+    // TODO: [x]turret []intakearm [x]intakepivot [x]intakewrist [x]takeclaw
 
     // Motion PIDs + Profilers
     public static PIDCoefficients VERTICAL_SLIDES_PID_COEFFICIENTS; // = new PIDCoefficients(0.3, 1.0, 0.015, 0.0, 0.0,0.22); // new PIDCoefficients(0.3, 1.0, 0.006, 0.0, 0.0,0.16); //0.07 min ff, 0.37 = max ff, so do
@@ -134,14 +137,16 @@ public abstract class RobotBase extends PinpointDrive {
     ///////////////////* INIT *///////////////////
 
     public void teleOpInit() {
-        setIntakeArmPos(IntakeArmTask.Position.DOWN);
+        setIntakeClawPosition(IntakeClawTask.ClawPosition.OPEN);
+        setIntakeWristPosition(IntakeWristTask.WristPosition.TRANSFER);
+
         deliveryArm.setPosition(getDeliveryArmServoPosition(DeliveryArmTask.Position.CARRY));
 //        initHang();
         setClawPosition(ClawTask.ClawPosition.OPEN);
         swipeStick.setPosition(SwipeStickTask.getTargetPos(SwipeStickTask.Position.IN));
     }
     public void autoInit() {
-        setIntakeArmPos(IntakeArmTask.Position.DOWN);
+        //setIntakeArmPos(IntakeArmTask.Position.DOWN);
         deliveryArm.setPosition(getDeliveryArmServoPosition(DeliveryArmTask.Position.CARRY));
         lowerHang();
         setClawPosition(ClawTask.ClawPosition.OPEN);
@@ -149,7 +154,7 @@ public abstract class RobotBase extends PinpointDrive {
     }
 
     public void autoClipInit() {
-        setIntakeArmPos(IntakeArmTask.Position.TRANSFER);
+        //setIntakeArmPos(IntakeArmTask.Position.TRANSFER);
         deliveryArm.setPosition(getDeliveryArmServoPosition(DeliveryArmTask.Position.FLAT));
         lowerHang();
         setClawPosition(ClawTask.ClawPosition.CLOSE);
@@ -286,6 +291,24 @@ public abstract class RobotBase extends PinpointDrive {
     public void setIntakeClawPosition(IntakeClawTask.ClawPosition position){
         intakeClaw.setPosition(getIntakeClawPosition(position));
     }
+
+    public abstract double getIntakeWristPosition(IntakeWristTask.WristPosition position);
+
+    public void setIntakeWristPosition(IntakeWristTask.WristPosition position){
+        intakeWrist.setPosition(getIntakeWristPosition(position));
+    }
+
+    public abstract double getTurretPosition(TurretTask.TurretPosition position);
+
+    public void setTurretPosition(TurretTask.TurretPosition position){
+        turret.setPosition(getTurretPosition(position));
+    }
+
+    //public abstract double getIntakePivotPosition(double angle);
+
+    //public void setIntakePivotPosition(double angle){
+        //intakePivot.setPosition(getIntakePivotPosition(angle));
+    //}
 
     ///////////////////* COLOR SENSOR + LIGHTS UTILS *///////////////////
 
