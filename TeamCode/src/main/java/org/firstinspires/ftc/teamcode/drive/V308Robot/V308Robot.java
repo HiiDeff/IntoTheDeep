@@ -1,14 +1,11 @@
-package org.firstinspires.ftc.teamcode.drive.V3Robot;
+package org.firstinspires.ftc.teamcode.drive.V308Robot;
 
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.ftc.GoBildaPinpointDriver;
 import com.acmerobotics.roadrunner.ftc.GoBildaPinpointDriverRR;
 import com.qualcomm.hardware.rev.RevColorSensorV3;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
-import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.teamcode.drive.RobotBase;
 import org.firstinspires.ftc.teamcode.roadrunner.MecanumDrive;
@@ -17,13 +14,12 @@ import org.firstinspires.ftc.teamcode.task.ClawTask;
 import org.firstinspires.ftc.teamcode.task.DeliveryArmTask;
 import org.firstinspires.ftc.teamcode.task.HangTask;
 import org.firstinspires.ftc.teamcode.task.IntakeArmTask;
-import org.firstinspires.ftc.teamcode.task.SwipeStickTask;
-import org.firstinspires.ftc.teamcode.util.Utils;
+import org.firstinspires.ftc.teamcode.task.IntakeClawTask;
 import org.firstinspires.ftc.teamcode.util.pid.PIDCoefficients;
 import org.firstinspires.ftc.teamcode.util.profile.ProfileConstraints;
 
 @Config
-public class V3Robot extends RobotBase {
+public class V308Robot extends RobotBase {
 
 
     ///////////////////* CONSTANTS *///////////////////
@@ -64,16 +60,21 @@ public class V3Robot extends RobotBase {
     public static double RIGHT_HANG_POS = 0.13;
     public static double RIGHT_VERTICAL_POS = 0.70;
 
+    // Intake Sequence Tuning
+    // TODO: I don't know how to tune this
+    public static double INTAKE_CLAW_OPEN_POS = 0.60;
+    public static double INTAKE_CLAW_CLOSE_POS = 0.38;
+
 
     ///////////////////* HARDWARE *///////////////////
 
     // Sensors
     public final RevColorSensorV3 leftIntakeColorSensor, rightIntakeColorSensor;
 
-    public final V3IntakeSampleState intakeSampleState;
+    public final V308IntakeSampleState intakeSampleState;
 
 
-    public V3Robot(HardwareMap hardwareMap) {
+    public V308Robot(HardwareMap hardwareMap) {
         super(hardwareMap);
 
         // Sensors:
@@ -81,7 +82,7 @@ public class V3Robot extends RobotBase {
         rightIntakeColorSensor = hardwareMap.get(RevColorSensorV3.class, "intakeColorRight");
 
         // States:
-        intakeSampleState = new V3IntakeSampleState(this);
+        intakeSampleState = new V308IntakeSampleState(this);
 
         setDriveParams();
         init(hardwareMap);
@@ -172,6 +173,18 @@ public class V3Robot extends RobotBase {
                 return CLAW_OPEN_POS;
         }
     }
+
+    @Override
+    public double getIntakeClawPosition(IntakeClawTask.ClawPosition position){
+        switch (position){
+            case CLOSE:
+                return INTAKE_CLAW_CLOSE_POS;
+            case OPEN:
+            default:
+                return INTAKE_CLAW_OPEN_POS;
+        }
+    }
+
     @Override
     public ProfileConstraints getDeliveryArmServoProfileConstraints() {
         return DELIVERY_ARM_CONSTRAINTS;

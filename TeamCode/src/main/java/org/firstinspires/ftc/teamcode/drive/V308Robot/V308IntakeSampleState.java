@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.drive.V3Robot;
+package org.firstinspires.ftc.teamcode.drive.V308Robot;
 
 import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.hardware.rev.RevBlinkinLedDriver;
@@ -8,13 +8,11 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.util.objectdetector.HSV;
 import org.firstinspires.ftc.teamcode.util.objectdetector.ImageProcessor;
 
-import java.util.Arrays;
-
 @Config
-public class V3IntakeSampleState {
+public class V308IntakeSampleState {
 
     public static double MIN_DIST_WITH_SAMPLE = 1.2;
-    private V3Robot robot;
+    private V308Robot robot;
     private SampleColor[] sampleColors = {SampleColor.COLOR_UNSPECIFIED, SampleColor.COLOR_UNSPECIFIED};
     private int numOfSamples = 0;
     private boolean leftSensorDetected;
@@ -54,7 +52,7 @@ public class V3IntakeSampleState {
         return color == SampleColor.COLOR_UNSPECIFIED;
     }
 
-    public V3IntakeSampleState(V3Robot robot) {
+    public V308IntakeSampleState(V308Robot robot) {
         this.robot = robot;
     }
 
@@ -118,15 +116,15 @@ public class V3IntakeSampleState {
     private SampleColor toHDColor(NormalizedRGBA color) {
         HSV hsv = ImageProcessor.ColorToHsv(color);
         if (ImageProcessor.isYellow(hsv)) {
-            return V3IntakeSampleState.SampleColor.COLOR_YELLOW;
+            return V308IntakeSampleState.SampleColor.COLOR_YELLOW;
         }
         if (ImageProcessor.isRed(hsv)) {
-            return V3IntakeSampleState.SampleColor.COLOR_RED;
+            return V308IntakeSampleState.SampleColor.COLOR_RED;
         }
         if (ImageProcessor.isBlue(hsv)) {
-            return V3IntakeSampleState.SampleColor.COLOR_BLUE;
+            return V308IntakeSampleState.SampleColor.COLOR_BLUE;
         }
-        return V3IntakeSampleState.SampleColor.COLOR_UNSPECIFIED;
+        return V308IntakeSampleState.SampleColor.COLOR_UNSPECIFIED;
     }
 
     public enum SampleColor {

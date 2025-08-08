@@ -13,7 +13,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.drive.RobotFactory;
-import org.firstinspires.ftc.teamcode.drive.V3Robot.V3Robot;
+import org.firstinspires.ftc.teamcode.drive.V308Robot.V308Robot;
 import org.firstinspires.ftc.teamcode.task.ClawTask;
 import org.firstinspires.ftc.teamcode.task.DeliveryArmTask;
 import org.firstinspires.ftc.teamcode.task.HorizontalSlidesTask;
@@ -49,7 +49,7 @@ public class XTeleOp extends LinearOpMode {
     public static double MIN_HEIGHT_CONSIDERED_CHAMBER_DELIVERY = 15;
     public static double DELIVERY_HIGH_BASKET_HEIGHT = 38.6;
     public static double DELIVERY_LOW_BASKET_HEIGHT = 24.0;
-    private V3Robot robot;
+    private V308Robot robot;
 
     public MultipleTelemetry multipleTelemetry;
     private XGamepad gp1, gp2;
@@ -60,7 +60,7 @@ public class XTeleOp extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
-        robot = (V3Robot) RobotFactory.createRobot(hardwareMap);
+        robot = (V308Robot) RobotFactory.createRobot(hardwareMap);
         robot.teleOpInit();
         SwipeStickTask.setPosition(robot, SwipeStickTask.Position.IN);
         gp1 = new XGamepad(new GamePad(gamepad1));

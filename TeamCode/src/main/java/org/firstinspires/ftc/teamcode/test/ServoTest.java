@@ -5,9 +5,6 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.Servo;
 
-import org.firstinspires.ftc.teamcode.drive.V3Robot.V3Robot;
-import org.firstinspires.ftc.teamcode.util.GamePad;
-
 @TeleOp(name = "Servo Tester", group = "Test")
 @Config
 

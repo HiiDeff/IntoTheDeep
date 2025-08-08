@@ -14,6 +14,7 @@ import org.firstinspires.ftc.teamcode.task.ClawTask;
 import org.firstinspires.ftc.teamcode.task.DeliveryArmTask;
 import org.firstinspires.ftc.teamcode.task.HangTask;
 import org.firstinspires.ftc.teamcode.task.IntakeArmTask;
+import org.firstinspires.ftc.teamcode.task.IntakeClawTask;
 import org.firstinspires.ftc.teamcode.task.SwipeStickTask;
 import org.firstinspires.ftc.teamcode.util.Utils;
 import org.firstinspires.ftc.teamcode.util.pid.PIDCoefficients;
@@ -50,14 +51,13 @@ public abstract class RobotBase extends PinpointDrive {
     // Motors
     public final DcMotorEx horizontalSlides;
     public final DcMotorEx verticalSlidesLeft, verticalSlidesRight;
-    public final DcMotorEx intakeRoller;
-
     // Servos
     public final Servo claw;
-    public final Servo intakeArm;
     public final Servo deliveryArm;
     public final Servo leftHang, rightHang;
     public final Servo swipeStick;
+
+    public final Servo turret, intakeArm, intakePivot, intakeWrist, intakeClaw;
 
     // Motion PIDs + Profilers
     public static PIDCoefficients VERTICAL_SLIDES_PID_COEFFICIENTS; // = new PIDCoefficients(0.3, 1.0, 0.015, 0.0, 0.0,0.22); // new PIDCoefficients(0.3, 1.0, 0.006, 0.0, 0.0,0.16); //0.07 min ff, 0.37 = max ff, so do
@@ -93,9 +93,6 @@ public abstract class RobotBase extends PinpointDrive {
         horizontalSlides.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         horizontalSlides.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-        intakeRoller = hardwareMap.get(DcMotorEx.class, "iRoller");
-        intakeRoller.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-
         verticalSlidesLeft = hardwareMap.get(DcMotorEx.class, "vSlidesL");
         verticalSlidesLeft.setDirection(DcMotor.Direction.REVERSE);
         verticalSlidesLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -111,9 +108,14 @@ public abstract class RobotBase extends PinpointDrive {
         swipeStick = hardwareMap.get(Servo.class, "swipeStick");
         deliveryArm = hardwareMap.get(Servo.class, "dArm");
         claw = hardwareMap.get(Servo.class, "claw");
-        intakeArm = hardwareMap.get(Servo.class, "iArm");
         leftHang = hardwareMap.get(Servo.class, "lHang");
         rightHang = hardwareMap.get(Servo.class, "rHang");
+
+        turret = hardwareMap.get(Servo.class, "iTurret");
+        intakeArm = hardwareMap.get(Servo.class, "iArm");
+        intakePivot = hardwareMap.get(Servo.class, "iPivot");
+        intakeWrist = hardwareMap.get(Servo.class, "iWrist");
+        intakeClaw = hardwareMap.get(Servo.class, "iClaw");
 
         deliveryArmProfiler = new ServoProfiler(deliveryArm, getDeliveryArmServoProfileConstraints());
 
@@ -267,6 +269,8 @@ public abstract class RobotBase extends PinpointDrive {
     }
 
 
+    public abstract double getIntakeArmPosition(IntakeArmTask.Position position);
+
     ///////////////////* CLAW UTILS *///////////////////
 
     public abstract double getClawPosition(ClawTask.ClawPosition position);
@@ -277,21 +281,11 @@ public abstract class RobotBase extends PinpointDrive {
 
     ///////////////////* INTAKE UTILS *///////////////////
 
-    public abstract double getIntakeArmPosition(IntakeArmTask.Position position);
-    public void setIntakeArmPos(IntakeArmTask.Position position) {
-        intakeArm.setPosition(getIntakeArmPosition(position));
-    }
-    public void runIntakeIn() {
-        intakeRoller.setPower(INTAKE_POWER);
-    }
-    public void runIntakeWithPower(double power) { intakeRoller.setPower(power);}
-    public void runIntakeOut() {
-        intakeRoller.setPower(OUTTAKE_POWER);
-    }
-    public void stopIntake() {
-        intakeRoller.setPower(0.0);
-    }
+    public abstract double getIntakeClawPosition(IntakeClawTask.ClawPosition position);
 
+    public void setIntakeClawPosition(IntakeClawTask.ClawPosition position){
+        intakeClaw.setPosition(getIntakeClawPosition(position));
+    }
 
     ///////////////////* COLOR SENSOR + LIGHTS UTILS *///////////////////
 

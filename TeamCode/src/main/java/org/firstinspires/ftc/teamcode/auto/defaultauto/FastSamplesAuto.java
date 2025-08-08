@@ -7,7 +7,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.teamcode.drive.RobotBase;
-import org.firstinspires.ftc.teamcode.drive.V3Robot.V3Robot;
+import org.firstinspires.ftc.teamcode.drive.V308Robot.V308Robot;
 
 @Config
 @Disabled
@@ -25,7 +25,7 @@ public class FastSamplesAuto extends FastSamplesAutoPath{
 
     @Override
     protected RobotBase createRobot(HardwareMap hardwareMap) {
-        return new V3Robot(hardwareMap);
+        return new V308Robot(hardwareMap);
     }
 
     @Override

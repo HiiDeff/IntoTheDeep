@@ -6,7 +6,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 
-import org.firstinspires.ftc.teamcode.drive.V3Robot.V3Robot;
+import org.firstinspires.ftc.teamcode.drive.V308Robot.V308Robot;
 import org.firstinspires.ftc.teamcode.util.GamePad;
 
 @TeleOp(name = "Motor Tester", group = "Test")
@@ -16,7 +16,7 @@ import org.firstinspires.ftc.teamcode.util.GamePad;
 public class MotorTest extends LinearOpMode {
 
     //private final FtcDashboard dashboard = FtcDashboard.getInstance();
-    private V3Robot robot;
+    private V308Robot robot;
     private GamePad gp1;
 
     //DcMotorEx testMotor;

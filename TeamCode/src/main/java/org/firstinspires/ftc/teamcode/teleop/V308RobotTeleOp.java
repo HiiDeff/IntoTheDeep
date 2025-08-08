@@ -13,7 +13,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.drive.RobotFactory;
 import org.firstinspires.ftc.teamcode.drive.SensorUpdateThread;
-import org.firstinspires.ftc.teamcode.drive.V3Robot.V3Robot;
+import org.firstinspires.ftc.teamcode.drive.V308Robot.V308Robot;
 import org.firstinspires.ftc.teamcode.task.ClawTask;
 import org.firstinspires.ftc.teamcode.task.DeliveryArmTask;
 import org.firstinspires.ftc.teamcode.task.HorizontalSlidesTask;
@@ -29,9 +29,9 @@ import org.firstinspires.ftc.teamcode.task.UnboundedIntakeTask;
 import org.firstinspires.ftc.teamcode.task.VerticalSlidesTask;
 import org.firstinspires.ftc.teamcode.util.GamePad;
 
-@TeleOp(name = "V3 TeleOp")
+@TeleOp(name = "V308 (Andrew Testing) TeleOp")
 @Config
-public class V3RobotTeleOp extends LinearOpMode {
+public class V308RobotTeleOp extends LinearOpMode {
 
     public static int PRESET_CYCLE_CNT = 3, CLAW_OPEN_DELAY = 420;
 
@@ -48,7 +48,7 @@ public class V3RobotTeleOp extends LinearOpMode {
     public MultipleTelemetry multipleTelemetry;
     public ElapsedTime elapsedTime = new ElapsedTime();
 
-    private V3Robot robot;
+    private V308Robot robot;
     private GamePad gp1, gp2;
     private ElapsedTime cycleTimer;
     private double cycleSum, cycleCnt, cycleAvg;
@@ -65,7 +65,7 @@ public class V3RobotTeleOp extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
-        robot = (V3Robot) RobotFactory.createRobot(hardwareMap);
+        robot = (V308Robot) RobotFactory.createRobot(hardwareMap);
         robot.teleOpInit();
         SwipeStickTask.setPosition(robot, SwipeStickTask.Position.IN);
         gp1 = new GamePad(gamepad1);
