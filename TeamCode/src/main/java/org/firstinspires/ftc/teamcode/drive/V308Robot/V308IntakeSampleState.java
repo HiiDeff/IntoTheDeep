@@ -70,17 +70,17 @@ public class V308IntakeSampleState {
         SampleColor[] tempSampleColors = {SampleColor.COLOR_UNSPECIFIED, SampleColor.COLOR_UNSPECIFIED};
         boolean tempLeftSensorDetected = false;
 
-        double leftDist = robot.leftIntakeColorSensor.getDistance(DistanceUnit.INCH);
-        if(leftDist < MIN_DIST_WITH_SAMPLE){
-            tempNumOfSamples++;
-            tempSampleColors[0] = toHDColor(robot.leftIntakeColorSensor.getNormalizedColors());
-            tempLeftSensorDetected = true;
-        }
-        double rightDist = robot.rightIntakeColorSensor.getDistance(DistanceUnit.INCH);
-        if (rightDist < MIN_DIST_WITH_SAMPLE) {
-            tempNumOfSamples++;
-            tempSampleColors[1] = toHDColor(robot.rightIntakeColorSensor.getNormalizedColors());
-        }
+//        double leftDist = robot.leftIntakeColorSensor.getDistance(DistanceUnit.INCH);
+//        if(leftDist < MIN_DIST_WITH_SAMPLE){
+//            tempNumOfSamples++;
+//            tempSampleColors[0] = toHDColor(robot.leftIntakeColorSensor.getNormalizedColors());
+//            tempLeftSensorDetected = true;
+//        }
+//        double rightDist = robot.rightIntakeColorSensor.getDistance(DistanceUnit.INCH);
+//        if (rightDist < MIN_DIST_WITH_SAMPLE) {
+//            tempNumOfSamples++;
+//            tempSampleColors[1] = toHDColor(robot.rightIntakeColorSensor.getNormalizedColors());
+//        }
 
 //        sampleColors[0] = SampleColor.COLOR_UNSPECIFIED;
 //        sampleColors[1] = SampleColor.COLOR_UNSPECIFIED;

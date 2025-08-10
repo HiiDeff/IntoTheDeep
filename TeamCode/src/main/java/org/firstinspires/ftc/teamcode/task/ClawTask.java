@@ -20,11 +20,11 @@ public class ClawTask extends TimedTask {
     @Override
     public boolean performInternal() {
         if (!started) {
-            double currPos = robot.claw.getPosition();
-            double targetPos = robot.getClawPosition(position);
-            setFinishTimeMillis(Utils.getEstimatedServoTime(RPM, MAX_ROTATION_DEGREE,
-                    targetPos - currPos));
-            robot.claw.setPosition(targetPos);
+//            //double currPos = robot.claw.getPosition();
+//            double targetPos = robot.getClawPosition(position);
+//            setFinishTimeMillis(Utils.getEstimatedServoTime(RPM, MAX_ROTATION_DEGREE,
+//                    targetPos - currPos));
+//            robot.claw.setPosition(targetPos);
             started = true;
         }
         return false;

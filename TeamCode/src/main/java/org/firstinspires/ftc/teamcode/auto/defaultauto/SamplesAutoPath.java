@@ -12,14 +12,14 @@ import org.firstinspires.ftc.teamcode.task.DeliveryArmTask;
 import org.firstinspires.ftc.teamcode.task.HangTask;
 import org.firstinspires.ftc.teamcode.task.HorizontalSlidesTask;
 import org.firstinspires.ftc.teamcode.task.IntakeArmTask;
-import org.firstinspires.ftc.teamcode.task.IntakeTask;
+//import org.firstinspires.ftc.teamcode.task.IntakeTask;
 import org.firstinspires.ftc.teamcode.task.IntakeWithExtensionTask;
 import org.firstinspires.ftc.teamcode.task.ParallelTask;
 import org.firstinspires.ftc.teamcode.task.RuntimeDrivingTask;
 import org.firstinspires.ftc.teamcode.task.SeriesTask;
 import org.firstinspires.ftc.teamcode.task.SleepTask;
 import org.firstinspires.ftc.teamcode.task.Task;
-import org.firstinspires.ftc.teamcode.task.UnboundedIntakeTask;
+//import org.firstinspires.ftc.teamcode.task.UnboundedIntakeTask;
 import org.firstinspires.ftc.teamcode.task.VerticalSlidesTask;
 
 @Config
@@ -82,21 +82,21 @@ public abstract class SamplesAutoPath extends AutoBase {
                         new ParallelTask(
                                 new IntakeArmTask(robot, IntakeArmTask.Position.TRANSFER),
                                 new DeliveryArmTask(robot, DeliveryArmTask.Position.TRANSFER),
-                                new HorizontalSlidesTask(robot, robot.getHorizontalSlideTransferPos(), 1.0, 1200),
-                                new UnboundedIntakeTask(robot, 1.0)
+                                new HorizontalSlidesTask(robot, robot.getHorizontalSlideTransferPos(), 1.0, 1200)
+                                //new UnboundedIntakeTask(robot, 1.0)
                         ),
                         new ParallelTask(
-                                new IntakeTask(robot, 300, -0.8),
+                                //new IntakeTask(robot, 300, -0.8),
                                 new HorizontalSlidesTask(robot, robot.getHorizontalSlideTransferPos(), 1.0, 300)
                         ),
                         new SeriesTask(
                                 new ConditionalTask(new SampleStateCondition(robot)),
                                 new ParallelTask(
-                                        new UnboundedIntakeTask(robot, 1.0),
+                                        //new UnboundedIntakeTask(robot, 1.0),
                                         new SleepTask(100),
                                         new HorizontalSlidesTask(robot, robot.getHorizontalSlideTransferPos(), 1.0, 300)
-                                ),
-                                new IntakeTask(robot,1000,-1.0)
+                                )
+                                //new IntakeTask(robot,1000,-1.0)
                         ),
                         new ParallelTask(
                                 new DeliveryArmTask(robot, DeliveryArmTask.Position.TRANSFER),
@@ -159,21 +159,21 @@ public abstract class SamplesAutoPath extends AutoBase {
                 new SeriesTask(
                         new ParallelTask(
                                 new IntakeArmTask(robot, IntakeArmTask.Position.TRANSFER),
-                                new HorizontalSlidesTask(robot, robot.getHorizontalSlideTransferPos(), 1.0, 1200),
-                                new UnboundedIntakeTask(robot, 1.0)
+                                new HorizontalSlidesTask(robot, robot.getHorizontalSlideTransferPos(), 1.0, 1200)
+                                //new UnboundedIntakeTask(robot, 1.0)
                         ),
                         new ParallelTask(
-                                new IntakeTask(robot, 300, -0.8),
+                                //new IntakeTask(robot, 300, -0.8),
                                 new HorizontalSlidesTask(robot, robot.getHorizontalSlideTransferPos(), 1.0, 300)
                         ),
                         new SeriesTask(
                                 new ConditionalTask(new SampleStateCondition(robot)),
                                 new ParallelTask(
-                                        new UnboundedIntakeTask(robot, 1.0),
+                                        //new UnboundedIntakeTask(robot, 1.0),
                                         new SleepTask(100),
                                         new HorizontalSlidesTask(robot, robot.getHorizontalSlideTransferPos(), 1.0, 300)
-                                ),
-                                new IntakeTask(robot,1000,-1.0)
+                                )
+                                //new IntakeTask(robot,1000,-1.0)
                         ),
                         new ParallelTask(
                                 new DeliveryArmTask(robot, DeliveryArmTask.Position.TRANSFER),
@@ -235,21 +235,21 @@ public abstract class SamplesAutoPath extends AutoBase {
                 new SeriesTask(
                         new ParallelTask(
                                 new IntakeArmTask(robot, IntakeArmTask.Position.TRANSFER),
-                                new HorizontalSlidesTask(robot, robot.getHorizontalSlideTransferPos(), 1.0, 1200),
-                                new UnboundedIntakeTask(robot, 1.0)
+                                new HorizontalSlidesTask(robot, robot.getHorizontalSlideTransferPos(), 1.0, 1200)
+//                                new UnboundedIntakeTask(robot, 1.0)
                         ),
                         new ParallelTask(
-                                new IntakeTask(robot, 300, -0.8),
+                                //new IntakeTask(robot, 300, -0.8),
                                 new HorizontalSlidesTask(robot, robot.getHorizontalSlideTransferPos(), 1.0, 300)
                         ),
                         new SeriesTask(
                                 new ConditionalTask(new SampleStateCondition(robot)),
                                 new ParallelTask(
-                                        new UnboundedIntakeTask(robot, 1.0),
+                                        //new UnboundedIntakeTask(robot, 1.0),
                                         new SleepTask(100),
                                         new HorizontalSlidesTask(robot, robot.getHorizontalSlideTransferPos(), 1.0, 300)
-                                ),
-                                new IntakeTask(robot,1000,-1.0)
+                                )
+                                //new IntakeTask(robot,1000,-1.0)
                         ),
                         new ParallelTask(
                                 new DeliveryArmTask(robot, DeliveryArmTask.Position.TRANSFER),

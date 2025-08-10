@@ -47,7 +47,7 @@ public class V308Robot extends RobotBase {
     public static ProfileConstraints DELIVERY_ARM_CONSTRAINTS = new ProfileConstraints(10, 12, 16);
 
     // Intake Servo Positions
-    public static double INTAKE_ARM_DOWN = 0.17,
+    public static double INTAKE_ARM_DOWN = 0.6,
             INTAKE_ARM_TRANSFER = 0.83,
             INTAKE_ARM_CLEAR = 0.70,
             INTAKE_ARM_SLIGHTLY_UP = 0.25; //TODO: make this closer to transfer position
@@ -70,18 +70,19 @@ public class V308Robot extends RobotBase {
     // TODO: I don't know how to tune this
     public static double INTAKE_CLAW_OPEN_POS = 0.60;
     public static double INTAKE_CLAW_CLOSE_POS = 0.38;
-    public static double INTAKE_WRIST_DOWN_POS = 0.6;
+    public static double INTAKE_WRIST_DOWN_POS = 0.87;
     public static double INTAKE_WRIST_TRANSFER_POS = 0.1;
 
-    public static double TURRET_DEGREE_45_POS = 0.25;
-    public static double TURRET_CENTER_POS = 0.5;
-    public static double TURRET_DEGREE_NEGATIVE_45_POS = 0.75;
+    public static double TURRET_DEGREE_45_POS = 0.1;
+    public static double TURRET_CENTER_POS = 0.3;
+    public static double TURRET_DEGREE_NEGATIVE_45_POS = 0.5;
+
 
 
     ///////////////////* HARDWARE *///////////////////
 
     // Sensors
-    public final RevColorSensorV3 leftIntakeColorSensor, rightIntakeColorSensor;
+    //public final RevColorSensorV3 leftIntakeColorSensor, rightIntakeColorSensor;
 
     public final V308IntakeSampleState intakeSampleState;
 
@@ -90,14 +91,14 @@ public class V308Robot extends RobotBase {
         super(hardwareMap);
 
         // Sensors:
-        leftIntakeColorSensor = hardwareMap.get(RevColorSensorV3.class, "intakeColorLeft");
-        rightIntakeColorSensor = hardwareMap.get(RevColorSensorV3.class, "intakeColorRight");
+        //leftIntakeColorSensor = hardwareMap.get(RevColorSensorV3.class, "intakeColorLeft");
+        //rightIntakeColorSensor = hardwareMap.get(RevColorSensorV3.class, "intakeColorRight");
 
         // States:
         intakeSampleState = new V308IntakeSampleState(this);
 
         setDriveParams();
-        init(hardwareMap);
+        initWithLocalizer(hardwareMap, LocalizerMode.DRIVE_ENCODER);
     }
 
     private void setDriveParams() {
@@ -223,10 +224,10 @@ public class V308Robot extends RobotBase {
         }
     }
 
-    //@Override
-    //public double getIntakePivotPosition(double angle){
-    //    return Utils.clamp(angle, 0, IntakePivotTask.MAX_ROTATION_DEGREE)/360 * IntakePivotTask.MAX_ROTATION_DEGREE;
-    //}
+    @Override
+    public double getIntakePivotPosition(double angle){ // TODO: What?
+        return 0;
+    }
 
     @Override
     public ProfileConstraints getDeliveryArmServoProfileConstraints() {
@@ -264,7 +265,7 @@ public class V308Robot extends RobotBase {
     // Color Sensor Utils
     @Override
     public void updateIntakeSampleState() {
-        intakeSampleState.update();
+        //intakeSampleState.update();
     }
     @Override
     public boolean isSampleIn() {

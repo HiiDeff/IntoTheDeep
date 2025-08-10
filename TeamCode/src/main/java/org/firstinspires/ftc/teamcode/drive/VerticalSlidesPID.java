@@ -24,7 +24,8 @@ public class VerticalSlidesPID extends PIDModel {
 
     @Override
     public double getError() {
-        return targetPosition - robot.getVerticalSlidesHeightTicks(); //return error of position
+        return 0.0;
+        //return targetPosition - robot.getVerticalSlidesHeightTicks(); //return error of position
     }
 
     @Override

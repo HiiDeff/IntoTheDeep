@@ -19,7 +19,7 @@ public class SwipeStickTask extends TimedTask {
     private boolean started;
 
     public static void setPosition(RobotBase robot, Position position) {
-        robot.swipeStick.setPosition(getTargetPos(position));
+        //robot.swipeStick.setPosition(getTargetPos(position));
     }
 
     public SwipeStickTask(RobotBase robot, Position position) {
@@ -30,14 +30,14 @@ public class SwipeStickTask extends TimedTask {
     @Override
     protected boolean performInternal() {
         if (!started) {
-            double currPos = robot.swipeStick.getPosition();
-            double targetPos = getTargetPos(position);
-            // Only consider the half of normal time since we don't have to wait for the servo to
-            // finish.
-            setFinishTimeMillis(Utils.getEstimatedServoTime(RPM, MAX_ROTATION_DEGREE,
-                    targetPos - currPos) / 2);
-            robot.swipeStick.setPosition(targetPos);
-            started = true;
+//            double currPos = robot.swipeStick.getPosition();
+//            double targetPos = getTargetPos(position);
+//            // Only consider the half of normal time since we don't have to wait for the servo to
+//            // finish.
+//            setFinishTimeMillis(Utils.getEstimatedServoTime(RPM, MAX_ROTATION_DEGREE,
+//                    targetPos - currPos) / 2);
+//            robot.swipeStick.setPosition(targetPos);
+//            started = true;
         }
         return false;
     }

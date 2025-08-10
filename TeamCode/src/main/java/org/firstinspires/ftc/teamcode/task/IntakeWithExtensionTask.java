@@ -19,7 +19,7 @@ public class IntakeWithExtensionTask extends TimedTask {
     @Override
     protected boolean performInternal() {
         if(!started) {
-            robot.runIntakeIn();
+            //robot.runIntakeIn();
             robot.setHorizontalSlideDist(distInInches, 1.0);
             started = true;
         } else{
@@ -40,6 +40,6 @@ public class IntakeWithExtensionTask extends TimedTask {
     @Override
     public void cancel() {
         robot.setHorizontalSlidesPower(0.0);
-        robot.stopIntake();
+        //robot.stopIntake();
     }
 }

@@ -18,6 +18,9 @@ import org.firstinspires.ftc.teamcode.task.ClawTask;
 import org.firstinspires.ftc.teamcode.task.DeliveryArmTask;
 import org.firstinspires.ftc.teamcode.task.HorizontalSlidesTask;
 import org.firstinspires.ftc.teamcode.task.IntakeArmTask;
+import org.firstinspires.ftc.teamcode.task.IntakeClawTask;
+import org.firstinspires.ftc.teamcode.task.IntakePivotTask;
+import org.firstinspires.ftc.teamcode.task.IntakeWristTask;
 import org.firstinspires.ftc.teamcode.task.ParallelTask;
 import org.firstinspires.ftc.teamcode.task.RuntimeDrivingTask;
 import org.firstinspires.ftc.teamcode.task.SeriesTask;
@@ -25,7 +28,8 @@ import org.firstinspires.ftc.teamcode.task.SleepTask;
 import org.firstinspires.ftc.teamcode.task.SwipeStickTask;
 import org.firstinspires.ftc.teamcode.task.Task;
 import org.firstinspires.ftc.teamcode.task.TimedHorizontalSlidesTask;
-import org.firstinspires.ftc.teamcode.task.UnboundedIntakeTask;
+//import org.firstinspires.ftc.teamcode.task.UnboundedIntakeTask;
+import org.firstinspires.ftc.teamcode.task.TurretTask;
 import org.firstinspires.ftc.teamcode.task.VerticalSlidesTask;
 import org.firstinspires.ftc.teamcode.util.GamePad;
 
@@ -60,7 +64,8 @@ public class V308RobotTeleOp extends LinearOpMode {
             deliverChamberTask,
             deliverChamberTaskLite,
             deliverTask,
-            swipeStickTask;
+            swipeStickTask,
+            intakeTask;
     private SensorUpdateThread sensorUpdateThread;
 
     @Override
@@ -99,6 +104,7 @@ public class V308RobotTeleOp extends LinearOpMode {
         if (deliverChamberTaskLite != null && deliverChamberTaskLite.perform()) deliverChamberTaskLite = null;
         if (deliverTask != null && deliverTask.perform()) deliverTask = null;
         if (swipeStickTask != null && swipeStickTask.perform()) swipeStickTask = null;
+        if (intakeTask != null && intakeTask.perform()) intakeTask = null;
         gp1.update();
         gp2.update();
         updateTelemetry();
@@ -146,12 +152,12 @@ public class V308RobotTeleOp extends LinearOpMode {
                             new SeriesTask(
                                     new ParallelTask(
                                             new TimedHorizontalSlidesTask(robot, robot.getHorizontalSlideTransferPos(), 1.0,1000), //TODO: increase this
-                                            new IntakeArmTask(robot, IntakeArmTask.Position.TRANSFER),
-                                            new UnboundedIntakeTask(robot, 1.0)
+                                            new IntakeArmTask(robot, IntakeArmTask.Position.TRANSFER)
+                                            //new UnboundedIntakeTask(robot, 1.0)
                                     ),
                                     new ParallelTask(
-                                            new TimedHorizontalSlidesTask(robot, robot.getHorizontalSlideTransferPos(), 1.0, 500),
-                                            new UnboundedIntakeTask(robot, -1.0)
+                                            new TimedHorizontalSlidesTask(robot, robot.getHorizontalSlideTransferPos(), 1.0, 500)
+                                            //new UnboundedIntakeTask(robot, -1.0)
                                     ),
                                     new ParallelTask(
                                             new IntakeArmTask(robot, IntakeArmTask.Position.CLEAR),
@@ -318,21 +324,40 @@ public class V308RobotTeleOp extends LinearOpMode {
         }
     }
 
+    public static double INTAKE_PIVOT_CENTER_ANGLE = 90;
+
     private void runIntake() {
-        if (-gp2.rightStickY() > 0.5) {
-            robot.setIntakeArmPos(IntakeArmTask.Position.TRANSFER);
-        } else if (gp2.onceRightStickButton()) {
-            robot.setIntakeArmPos(IntakeArmTask.Position.CLEAR);
-        } else if (-gp2.rightStickY() < -0.5) {
-            robot.setIntakeArmPos(IntakeArmTask.Position.DOWN);
+        //if (gp2.onceRightTrigger()){
+
+        //}
+
+        if (gp2.onceRightTrigger()) {
+            intakeTask = new IntakePivotTask(robot, INTAKE_PIVOT_CENTER_ANGLE);
         }
-        if (gp2.rightTrigger() > 0.1){
-            robot.runIntakeIn();
-        } else if (gp2.leftTrigger() > 0.1) {
-            robot.runIntakeOut();
-        } else {
-            robot.stopIntake();
+        if (intakeTask == null){
+            intakeTask = new ParallelTask(
+                    new IntakeWristTask(robot, IntakeWristTask.WristPosition.DOWN),
+                    new IntakeArmTask(robot, IntakeArmTask.Position.DOWN),
+                    new TurretTask(robot, TurretTask.TurretPosition.CENTER),
+                    new IntakeClawTask(robot, IntakeClawTask.ClawPosition.OPEN)
+                    );
         }
+
+//        if (-gp2.rightStickY() > 0.5) {
+//            robot.setIntakeArmPos(IntakeArmTask.Position.TRANSFER);
+//        } else if (gp2.onceRightStickButton()) {
+//            robot.setIntakeArmPos(IntakeArmTask.Position.CLEAR);
+//        } else if (-gp2.rightStickY() < -0.5) {
+//            robot.setIntakeArmPos(IntakeArmTask.Position.DOWN);
+//        }
+//        if (gp2.rightTrigger() > 0.1){
+//            robot.runIntakeIn();
+//        } else if (gp2.leftTrigger() > 0.1) {
+//            robot.runIntakeOut();
+//        } else {
+//            robot.stopIntake();
+//        }
+
     }
 
     private void createSpecimenDeliveryTaskLite() {
@@ -368,13 +393,13 @@ public class V308RobotTeleOp extends LinearOpMode {
 
     private void createSpecimenDeliveryTask() {
         if (deliveryPose == null) {
-            robot.pinpoint.setPosition(new Pose2d(0, 0, 0.05));
+            //set pos to 0
         }
         SeriesTask task = new SeriesTask();
         if (robot.getVerticalSlidesHeightInch() > 15) {
             if (deliveryPose != null) {
                 deliveryPose = new Pose2d(CYCLE_DELIVER_X,
-                        robot.pinpoint.getPosition().getY(DistanceUnit.INCH) + Y_OFFSET,
+                        Y_OFFSET,
                         Math.PI - 0.05);
             }
             task.add(

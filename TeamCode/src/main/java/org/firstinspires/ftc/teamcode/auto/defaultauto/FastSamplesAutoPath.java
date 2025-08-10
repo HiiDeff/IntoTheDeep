@@ -8,7 +8,7 @@ import org.firstinspires.ftc.teamcode.auto.AutoBase;
 import org.firstinspires.ftc.teamcode.task.DeliveryArmTask;
 import org.firstinspires.ftc.teamcode.task.HorizontalSlidesTask;
 import org.firstinspires.ftc.teamcode.task.IntakeArmTask;
-import org.firstinspires.ftc.teamcode.task.IntakeTask;
+//import org.firstinspires.ftc.teamcode.task.IntakeTask;
 import org.firstinspires.ftc.teamcode.task.IntakeWithExtensionTask;
 import org.firstinspires.ftc.teamcode.task.ParallelTask;
 import org.firstinspires.ftc.teamcode.task.RuntimeDrivingTask;
@@ -94,7 +94,7 @@ public abstract class FastSamplesAutoPath extends AutoBase {
                                 new HorizontalSlidesTask(robot, robot.getHorizontalSlideTransferPos(), 1.0, 1200)
                         ),
                         new ParallelTask(
-                                new IntakeTask(robot, 800, -0.8),
+                                //new IntakeTask(robot, 800, -0.8)
                                 new HorizontalSlidesTask(robot, robot.getHorizontalSlideTransferPos(), 1.0, 800)
                         ),
                         new ParallelTask(
@@ -161,7 +161,7 @@ public abstract class FastSamplesAutoPath extends AutoBase {
                                 new HorizontalSlidesTask(robot, robot.getHorizontalSlideTransferPos(), 1.0, 1200)
                         ),
                         new ParallelTask(
-                                new IntakeTask(robot, 800, -0.8),
+                                //new IntakeTask(robot, 800, -0.8),
                                 new HorizontalSlidesTask(robot, robot.getHorizontalSlideTransferPos(), 1.0, 800)
                         ),
                         new ParallelTask(
@@ -227,7 +227,7 @@ public abstract class FastSamplesAutoPath extends AutoBase {
                                 new HorizontalSlidesTask(robot, robot.getHorizontalSlideTransferPos(), 1.0, 1200)
                         ),
                         new ParallelTask(
-                                new IntakeTask(robot, 800, -0.8),
+                                //new IntakeTask(robot, 800, -0.8)
                                 new HorizontalSlidesTask(robot, robot.getHorizontalSlideTransferPos(), 1.0, 800)
                         ),
                         new ParallelTask(

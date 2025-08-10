@@ -10,7 +10,7 @@ public class IntakePivotTask extends TimedTask{
 
     // TODO: Andrew please tune me
     private static final int RPM = 90;
-    private static final int MAX_ROTATION_DEGREE = 300;
+    private static final int MAX_ROTATION_DEGREE = 355;
 
     // TODO: Ethan please help
     private double angle;
@@ -30,7 +30,7 @@ public class IntakePivotTask extends TimedTask{
             // no idea how estimating servo time works but it is very important
             setFinishTimeMillis(Utils.getEstimatedServoTime(RPM, MAX_ROTATION_DEGREE, targetPos -currPos));
 
-            robot.intakeWrist.setPosition(targetPos);
+            robot.intakePivot.setPosition(targetPos);
 
             started = true;
         }

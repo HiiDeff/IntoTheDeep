@@ -26,11 +26,11 @@ public class DeliveryArmTask extends TimedTask {
     @Override
     protected boolean performInternal() {
         if (!started) {
-            double currPos = robot.deliveryArm.getPosition();
-            double targetPos = robot.getDeliveryArmServoPosition(position);
-            setFinishTimeMillis(Utils.getEstimatedServoTime(RPM, MAX_ROTATION_DEGREE,
-                    targetPos - currPos));
-            robot.deliveryArmProfiler.setTargetPosition(targetPos);
+//            double currPos = robot.deliveryArm.getPosition();
+//            double targetPos = robot.getDeliveryArmServoPosition(position);
+//            setFinishTimeMillis(Utils.getEstimatedServoTime(RPM, MAX_ROTATION_DEGREE,
+//                    targetPos - currPos));
+//            robot.deliveryArmProfiler.setTargetPosition(targetPos);
             started = true;
         }
         return false;

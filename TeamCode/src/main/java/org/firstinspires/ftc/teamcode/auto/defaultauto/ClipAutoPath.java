@@ -12,14 +12,14 @@ import org.firstinspires.ftc.teamcode.task.ConditionalTask;
 import org.firstinspires.ftc.teamcode.task.DeliveryArmTask;
 import org.firstinspires.ftc.teamcode.task.HorizontalSlidesTask;
 import org.firstinspires.ftc.teamcode.task.IntakeArmTask;
-import org.firstinspires.ftc.teamcode.task.IntakeTask;
+//import org.firstinspires.ftc.teamcode.task.IntakeTask;
 import org.firstinspires.ftc.teamcode.task.ParallelTask;
 import org.firstinspires.ftc.teamcode.task.RuntimeDrivingTask;
 import org.firstinspires.ftc.teamcode.task.SeriesTask;
 import org.firstinspires.ftc.teamcode.task.SleepTask;
 import org.firstinspires.ftc.teamcode.task.Task;
 import org.firstinspires.ftc.teamcode.task.TimedHorizontalSlidesTask;
-import org.firstinspires.ftc.teamcode.task.UnboundedIntakeTask;
+//import org.firstinspires.ftc.teamcode.task.UnboundedIntakeTask;
 import org.firstinspires.ftc.teamcode.task.VerticalSlidesTask;
 
 @Config
@@ -79,8 +79,8 @@ public abstract class ClipAutoPath extends NewAutoBase {
                         new SeriesTask(
                                 new SleepTask(800), //TODO: save time here
                                 new HorizontalSlidesTask(robot, 22.0, 1.0, 600) //TODO: 300?
-                        ),
-                        new UnboundedIntakeTask(robot, 1.0)
+                        )
+                        //new UnboundedIntakeTask(robot, 1.0)
                 )
         );
 //        task.add(new SleepTask(1000));
@@ -99,11 +99,11 @@ public abstract class ClipAutoPath extends NewAutoBase {
                         new HorizontalSlidesTask(robot, 21.0, 1.0, 300),
                         new SeriesTask(
                                 new ParallelTask(
-                                        new UnboundedIntakeTask(robot, 0.5),
+                                        //new UnboundedIntakeTask(robot, 0.5),
                                         new SleepTask(600)
                                 ),
                                 new ParallelTask(
-                                        new UnboundedIntakeTask(robot, -1.0),
+                                        //new UnboundedIntakeTask(robot, -1.0),
                                         new SleepTask(120)
                                 )
                         )
@@ -111,14 +111,14 @@ public abstract class ClipAutoPath extends NewAutoBase {
         );
         task.add(
                 new SeriesTask(
-                        new ConditionalTask(new SampleStateCondition(robot)),
-                        new IntakeTask(robot,200,-1.0)
+                        new ConditionalTask(new SampleStateCondition(robot))
+                        //new IntakeTask(robot,200,-1.0)
                 )
         );
         new SleepTask(1000);
         task.add(
                 new ParallelTask(
-                        new UnboundedIntakeTask(robot, 1.0),
+                        //new UnboundedIntakeTask(robot, 1.0),
                         new RuntimeDrivingTask(
                                 robot,
                                 builder -> {
@@ -153,11 +153,11 @@ public abstract class ClipAutoPath extends NewAutoBase {
                         ),
                         new SeriesTask(
                                 new ParallelTask(
-                                        new UnboundedIntakeTask(robot, 0.5),
+                                        //new UnboundedIntakeTask(robot, 0.5),
                                         new SleepTask(600)
                                 ),
                                 new ParallelTask(
-                                        new UnboundedIntakeTask(robot, -1.0),
+                                        //new UnboundedIntakeTask(robot, -1.0),
                                         new SleepTask(120)
                                 )
                         ),
@@ -170,14 +170,14 @@ public abstract class ClipAutoPath extends NewAutoBase {
         );
         task.add(
                 new SeriesTask(
-                        new ConditionalTask(new SampleStateCondition(robot)),
-                        new IntakeTask(robot,200,-1.0)
+                        new ConditionalTask(new SampleStateCondition(robot))
+                        //new IntakeTask(robot,200,-1.0)
                 )
         );
 //        new SleepTask(1000);
         task.add(
                 new ParallelTask(
-                        new UnboundedIntakeTask(robot, 1.0),
+                        //new UnboundedIntakeTask(robot, 1.0),
                         new RuntimeDrivingTask(
                                 robot,
                                 builder -> {
@@ -212,11 +212,11 @@ public abstract class ClipAutoPath extends NewAutoBase {
                         ),
                         new SeriesTask(
                                 new ParallelTask(
-                                        new UnboundedIntakeTask(robot, 0.5),
+                                        //new UnboundedIntakeTask(robot, 0.5),
                                         new SleepTask(600)
                                 ),
                                 new ParallelTask(
-                                        new UnboundedIntakeTask(robot, -1.0),
+                                        //new UnboundedIntakeTask(robot, -1.0),
                                         new SleepTask(120)
                                 )
                         ),
@@ -229,8 +229,8 @@ public abstract class ClipAutoPath extends NewAutoBase {
         );
         task.add(
                 new SeriesTask(
-                        new ConditionalTask(new SampleStateCondition(robot)),
-                        new IntakeTask(robot,200,-1.0)
+                        new ConditionalTask(new SampleStateCondition(robot))
+                        //new IntakeTask(robot,200,-1.0)
                 )
         );
 //        new SleepTask(1000);
@@ -293,7 +293,7 @@ public abstract class ClipAutoPath extends NewAutoBase {
         SeriesTask task = new SeriesTask();
         task.add(
                 new ParallelTask(
-                        new UnboundedIntakeTask(robot, 1.0),
+                        //new UnboundedIntakeTask(robot, 1.0),
                         new SeriesTask(
                                 new SleepTask(300),
                                 new HorizontalSlidesTask(robot, 21.0, 1.0, 2000)
