@@ -48,7 +48,7 @@ public class V308Robot extends RobotBase {
 
     // Intake Servo Positions
     public static double INTAKE_ARM_DOWN = 0.6,
-            INTAKE_ARM_TRANSFER = 0.83,
+            INTAKE_ARM_TRANSFER = 0,
             INTAKE_ARM_CLEAR = 0.70,
             INTAKE_ARM_SLIGHTLY_UP = 0.25; //TODO: make this closer to transfer position
 
@@ -71,7 +71,7 @@ public class V308Robot extends RobotBase {
     public static double INTAKE_CLAW_OPEN_POS = 0.60;
     public static double INTAKE_CLAW_CLOSE_POS = 0.38;
     public static double INTAKE_WRIST_DOWN_POS = 0.87;
-    public static double INTAKE_WRIST_TRANSFER_POS = 0.1;
+    public static double INTAKE_WRIST_TRANSFER_POS = 0;
 
     public static double TURRET_DEGREE_45_POS = 0.1;
     public static double TURRET_CENTER_POS = 0.3;

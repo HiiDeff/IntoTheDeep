@@ -142,7 +142,7 @@ public class V308RobotTeleOp extends LinearOpMode {
         }
         // Transfer Preset
         else if (gp2.onceX()) {
-            transferTask = new SeriesTask(
+            /*transferTask = new SeriesTask(
                     new ParallelTask(
                             new DeliveryArmTask(robot, DeliveryArmTask.Position.TRANSFER),
                             new ClawTask(robot, ClawTask.ClawPosition.OPEN)
@@ -165,7 +165,16 @@ public class V308RobotTeleOp extends LinearOpMode {
                                     )
                             )
                     )
-            ); clawOpen = true;
+            ); clawOpen = true;*/
+            transferTask = new SeriesTask(
+                    new ParallelTask(
+                            new IntakeWristTask(robot, IntakeWristTask.WristPosition.TRANSFER),
+                            new IntakeArmTask(robot, IntakeArmTask.Position.TRANSFER),
+                            new TurretTask(robot, TurretTask.TurretPosition.CENTER)
+                    ),
+                    new SleepTask(500),
+                    new IntakeClawTask(robot, IntakeClawTask.ClawPosition.OPEN)
+            );
         }
         // Chamber Preset
         else if (gp1.onceLeftTrigger()) {
@@ -324,24 +333,37 @@ public class V308RobotTeleOp extends LinearOpMode {
         }
     }
 
-    public static double INTAKE_PIVOT_CENTER_ANGLE = 90;
+    public static double INTAKE_PIVOT_CENTER_ANGLE = 0;
 
     private void runIntake() {
-        //if (gp2.onceRightTrigger()){
-
-        //}
-
-        if (gp2.onceRightTrigger()) {
-            intakeTask = new IntakePivotTask(robot, INTAKE_PIVOT_CENTER_ANGLE);
+        if (gp2.onceRightTrigger()){
+            if (intakeTask != null){
+                intakeTask.cancel();
+            }
+            intakeTask = new SeriesTask(
+                    new ParallelTask(
+                        new IntakeWristTask(robot, IntakeWristTask.WristPosition.DOWN),
+                        new IntakeArmTask(robot, IntakeArmTask.Position.DOWN),
+                        new TurretTask(robot, TurretTask.TurretPosition.CENTER),
+                        new IntakeClawTask(robot, IntakeClawTask.ClawPosition.OPEN)
+                    ),
+                    new SleepTask(500),
+                    new IntakeClawTask(robot, IntakeClawTask.ClawPosition.CLOSE)
+            );
         }
-        if (intakeTask == null){
-            intakeTask = new ParallelTask(
-                    new IntakeWristTask(robot, IntakeWristTask.WristPosition.DOWN),
-                    new IntakeArmTask(robot, IntakeArmTask.Position.DOWN),
-                    new TurretTask(robot, TurretTask.TurretPosition.CENTER),
-                    new IntakeClawTask(robot, IntakeClawTask.ClawPosition.OPEN)
-                    );
-        }
+
+
+//        if (gp2.rightTrigger()) {
+//            if (intakeTask != null){
+//                intakeTask.cancel();
+//            }
+//            intakeTask = new IntakePivotTask(robot, INTAKE_PIVOT_CENTER_ANGLE);
+//            telemetry.addData("andrew", INTAKE_PIVOT_CENTER_ANGLE);
+//            telemetry.update();
+//        }
+
+
+
 
 //        if (-gp2.rightStickY() > 0.5) {
 //            robot.setIntakeArmPos(IntakeArmTask.Position.TRANSFER);
