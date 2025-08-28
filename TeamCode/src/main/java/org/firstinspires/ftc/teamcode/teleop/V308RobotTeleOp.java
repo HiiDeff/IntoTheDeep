@@ -65,7 +65,8 @@ public class V308RobotTeleOp extends LinearOpMode {
             deliverChamberTaskLite,
             deliverTask,
             swipeStickTask,
-            intakeTask;
+            intakeTask,
+            pivotTask;
     private SensorUpdateThread sensorUpdateThread;
 
     @Override
@@ -105,6 +106,7 @@ public class V308RobotTeleOp extends LinearOpMode {
         if (deliverTask != null && deliverTask.perform()) deliverTask = null;
         if (swipeStickTask != null && swipeStickTask.perform()) swipeStickTask = null;
         if (intakeTask != null && intakeTask.perform()) intakeTask = null;
+        if (pivotTask != null && pivotTask.perform()) pivotTask = null;
         gp1.update();
         gp2.update();
         updateTelemetry();
@@ -345,11 +347,15 @@ public class V308RobotTeleOp extends LinearOpMode {
                         new IntakeWristTask(robot, IntakeWristTask.WristPosition.DOWN),
                         new IntakeArmTask(robot, IntakeArmTask.Position.DOWN),
                         new TurretTask(robot, TurretTask.TurretPosition.CENTER),
-                        new IntakeClawTask(robot, IntakeClawTask.ClawPosition.OPEN)
+                        new IntakeClawTask(robot, IntakeClawTask.ClawPosition.OPEN),
                     ),
                     new SleepTask(500),
                     new IntakeClawTask(robot, IntakeClawTask.ClawPosition.CLOSE)
             );
+        }
+
+        // Pivot to the correct position
+        if (gp2.onceA()){
         }
 
 
